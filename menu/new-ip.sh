@@ -6,7 +6,7 @@ NC='\e[0m'
 ipsaya=$(wget -qO- ipinfo.io/ip)
 data_server=$(curl -v --insecure --silent https://google.com/ 2>&1 | grep Date | sed -e 's/< Date: //')
 date_list=$(date +"%Y-%m-%d" -d "$data_server")
-data_ip="https://raw.githubusercontent.com/yasrilpujianto-ship-it/ip/main/ip"
+data_ip="https://raw.githubusercontent.com/acilshops/ip/main/ip"
 checking_sc() {
 useexp=$(wget -qO- $data_ip | grep $ipsaya | awk '{print $3}')
 if [[ $date_list < $useexp ]]; then
@@ -28,11 +28,11 @@ fi
 }
 checking_sc
 clear
-Repo1="https://raw.githubusercontent.com/yasrilpujianto-ship-it/ip/main/"
+Repo1="https://raw.githubusercontent.com/acilshops/ip/main/"
 export MYIP=$( curl -s https://ipinfo.io/ip/ )
 SELLER=$(curl -sS ${Repo1}ip | grep $MYIP | awk '{print $2}')
 Exp100=$(curl -sS ${Repo1}ip | grep $MYIP | awk '{print $3}')
-data_ip="https://raw.githubusercontent.com/yasrilpujianto-ship-it/ip/main/ip"
+data_ip="https://raw.githubusercontent.com/acilshops/ip/main/ip"
 d2=$(date -d "$date_list" +"+%s")
 d1=$(date -d "$Exp" +"+%s")
 dayleft=$(( ($d1 - $d2) / 86400 ))
@@ -54,9 +54,9 @@ BGX="\033[42m"
 END='\e[0m'
 AKTIF="VERIFIED"
 TOKEN="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"
-REPO="https://github.com/yasrilpujianto-ship-it/ip.git"
+REPO="https://github.com/acilshops/ip.git"
 EMAIL="imanfals51@gmail.com"
-USER="yasrilpujianto-ship-it"
+USER="acilshops"
 add-ip() {
 TIMES="10"
 CHATID="6198984094"
@@ -110,8 +110,8 @@ git init &> /dev/null
 git add . &> /dev/null
 git commit -m m &> /dev/null
 git branch -M main &> /dev/null
-git remote add origin https://raw.githubusercontent.com/yasrilpujianto-ship-it/ip
-git push -f https://${TOKEN}@github.com/yasrilpujianto-ship-it/ip.git &> /dev/null
+git remote add origin https://raw.githubusercontent.com/acilshops/ip
+git push -f https://${TOKEN}@github.com/acilshops/ip.git &> /dev/null
 rm -rf /root/permission
 clear
 sleep 1
@@ -188,8 +188,8 @@ git init &> /dev/null
 git add . &> /dev/null
 git commit -m m &> /dev/null
 git branch -M main &> /dev/null
-git remote add origin https://raw.githubusercontent.com/yasrilpujianto-ship-it/ip
-git push -f https://${TOKEN}@github.com/yasrilpujianto-ship-it/ip.git &> /dev/null
+git remote add origin https://raw.githubusercontent.com/acilshops/ip
+git push -f https://${TOKEN}@github.com/acilshops/ip.git &> /dev/null
 rm -rf /root/permission
 clear
 sleep 1
@@ -252,8 +252,8 @@ git init &> /dev/null
 git add . &> /dev/null
 git commit -m m &> /dev/null
 git branch -M main &> /dev/null
-git remote add origin https://raw.githubusercontent.com/yasrilpujianto-ship-it/ip
-git push -f https://${TOKEN}@github.com/yasrilpujianto-ship-it/ip.git &> /dev/null
+git remote add origin https://raw.githubusercontent.com/acilshops/ip
+git push -f https://${TOKEN}@github.com/acilshops/ip.git &> /dev/null
 rm -rf /root/permission
 clear
 sleep 1

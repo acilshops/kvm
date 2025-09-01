@@ -10,7 +10,7 @@ WH='\033[1;37m'
 ipsaya=$(curl -s -4 icanhazip.com)
 data_server=$(curl -v --insecure --silent https://google.com/ 2>&1 | grep Date | sed -e 's/< Date: //')
 date_list=$(date +"%Y-%m-%d" -d "$data_server")
-data_ip="https://raw.githubusercontent.com/yasrilpujianto-ship-it/ip/main/ip"
+data_ip="https://raw.githubusercontent.com/acilshops/ip/main/ip"
 checking_sc() {
     useexp=$(curl -sS $data_ip | grep $ipsaya | awk '{print $3}')
     if [[ $date_list < $useexp ]]; then
@@ -33,7 +33,7 @@ checking_sc
 function harusadmin(){
 clear
 author=$(cat /etc/profil)
-Isadmin=$(curl -sS https://raw.githubusercontent.com/yasrilpujianto-ship-it/ip/main/ip | grep $MYIP | awk '{print $5}')
+Isadmin=$(curl -sS https://raw.githubusercontent.com/acilshops/ip/main/ip | grep $MYIP | awk '{print $5}')
 if [ "$Isadmin" = "ON" ]; then
 m-ipku.sh
 else
@@ -53,8 +53,8 @@ fi
 cd
 rm -rf /root/casper >/dev/null 
 MYIP=$(curl -sS ipv4.icanhazip.com)
-listuser=$(curl -sS https://raw.githubusercontent.com/yasrilpujianto-ship-it/ip/main/ip | grep $MYIP | awk '{print $2}')
-superadmin=$(curl -sS https://raw.githubusercontent.com/yasrilpujianto-ship-it/ip/main/ip | grep $MYIP | awk '{print $7}')
+listuser=$(curl -sS https://raw.githubusercontent.com/acilshops/ip/main/ip | grep $MYIP | awk '{print $2}')
+superadmin=$(curl -sS https://raw.githubusercontent.com/acilshops/ip/main/ip | grep $MYIP | awk '{print $7}')
 uu=$(curl -sS https://pastebin.com/raw/BZ9Fcnqf)
 
 APIGIT=$(cat /etc/github/api)
@@ -64,7 +64,7 @@ author=$(cat /etc/profil)
 
 function tambahip2(){
 author=$(cat /etc/profil)
-superadmin=$(curl -sS https://raw.githubusercontent.com/yasrilpujianto-ship-it/ip/main/ip | grep $MYIP | awk '{print $7}')
+superadmin=$(curl -sS https://raw.githubusercontent.com/acilshops/ip/main/ip | grep $MYIP | awk '{print $7}')
 if [ "$superadmin" = "VIP" ]; then
 tambahip
 else
@@ -84,7 +84,7 @@ fi
 }
 function gantiip2(){
 author=$(cat /etc/profil)
-superadmin=$(curl -sS https://raw.githubusercontent.com/yasrilpujianto-ship-it/ip/main/ip | grep $MYIP | awk '{print $7}')
+superadmin=$(curl -sS https://raw.githubusercontent.com/acilshops/ip/main/ip | grep $MYIP | awk '{print $7}')
 if [ "$superadmin" = "VIP" ]; then
 mkdir /root/rmbl
 cd /root/casper/ &> /dev/null
@@ -129,13 +129,13 @@ fi
 }
 function add_ip(){
 clear
-nama2=$(curl -sS https://raw.githubusercontent.com/yasrilpujianto-ship-it/ip/main/ip | grep $MYIP | awk '{print $2}')
+nama2=$(curl -sS https://raw.githubusercontent.com/acilshops/ip/main/ip | grep $MYIP | awk '{print $2}')
 author=$(cat /etc/profil)
 TIMES="10"
 CHATID=$(cat /etc/per/id)
 KEY=$(cat /etc/per/token)
 URL="https://api.telegram.org/bot$KEY/sendMessage"
-superadmin=$(curl -sS https://raw.githubusercontent.com/yasrilpujianto-ship-it/ip/main/ip | grep $MYIP | awk '{print $7}')
+superadmin=$(curl -sS https://raw.githubusercontent.com/acilshops/ip/main/ip | grep $MYIP | awk '{print $7}')
 
 echo -e "$COLOR1╭═══════════════════════════════════════════════════╮${NC}"
 echo -e "$COLOR1 ${NC} ${COLBG1}               ${WH} REGISTER IPVPS               ${NC} $COLOR1 $NC"
@@ -227,11 +227,11 @@ case "$list" in
 done
 fi
 MYIP=$(curl -sS ipv4.icanhazip.com)
-U2=$(curl -sS https://raw.githubusercontent.com/yasrilpujianto-ship-it/ip/main/ip | grep $MYIP | awk '{print $2}')
-U3=$(curl -sS https://raw.githubusercontent.com/yasrilpujianto-ship-it/ip/main/ip | grep $MYIP | awk '{print $3}')
-U4=$(curl -sS https://raw.githubusercontent.com/yasrilpujianto-ship-it/ip/main/ip | grep $MYIP | awk '{print $4}')
-U5=$(curl -sS https://raw.githubusercontent.com/yasrilpujianto-ship-it/ip/main/ip | grep $MYIP | awk '{print $5}')
-U6=$(curl -sS https://raw.githubusercontent.com/yasrilpujianto-ship-it/ip/main/ip | grep $MYIP | awk '{print $6}')
+U2=$(curl -sS https://raw.githubusercontent.com/acilshops/ip/main/ip | grep $MYIP | awk '{print $2}')
+U3=$(curl -sS https://raw.githubusercontent.com/acilshops/ip/main/ip | grep $MYIP | awk '{print $3}')
+U4=$(curl -sS https://raw.githubusercontent.com/acilshops/ip/main/ip | grep $MYIP | awk '{print $4}')
+U5=$(curl -sS https://raw.githubusercontent.com/acilshops/ip/main/ip | grep $MYIP | awk '{print $5}')
+U6=$(curl -sS https://raw.githubusercontent.com/acilshops/ip/main/ip | grep $MYIP | awk '{print $6}')
 
 echo "### $client $exp $daftar" >> /etc/regip/ip
 exp=$(date -d "$hari days" +"%Y-%m-%d")
@@ -308,10 +308,10 @@ author=$(cat /etc/profil)
 IPVPS=$(curl -s ipinfo.io/ip )
 ISP=$(cat /etc/xray/isp)
 CITY=$(cat /etc/xray/city)
-nama2=$(curl -sS https://raw.githubusercontent.com/yasrilpujianto-ship-it/ip/main/ip | grep $MYIP | awk '{print $2}')
-Exp2=$(curl -sS https://raw.githubusercontent.com/yasrilpujianto-ship-it/ip/main/ip | grep $MYIP | awk '{print $3}')
-job2=$(curl -sS https://raw.githubusercontent.com/yasrilpujianto-ship-it/ip/main/ip | grep $MYIP | awk '{print $7}')
-ip=$(curl -sS https://raw.githubusercontent.com/yasrilpujianto-ship-it/ip/main/ip | grep $MYIP | awk '{print $6}')
+nama2=$(curl -sS https://raw.githubusercontent.com/acilshops/ip/main/ip | grep $MYIP | awk '{print $2}')
+Exp2=$(curl -sS https://raw.githubusercontent.com/acilshops/ip/main/ip | grep $MYIP | awk '{print $3}')
+job2=$(curl -sS https://raw.githubusercontent.com/acilshops/ip/main/ip | grep $MYIP | awk '{print $7}')
+ip=$(curl -sS https://raw.githubusercontent.com/acilshops/ip/main/ip | grep $MYIP | awk '{print $6}')
 sisaip=$(cat /etc/regip/ip | wc -l) 
 totalip=$(expr "$ip" - "$sisaip")
 if [ "$job2" = "VIP" ]; then
@@ -340,13 +340,13 @@ m-ipku.sh
 }
 function genkey(){
 clear
-nama2=$(curl -sS https://raw.githubusercontent.com/yasrilpujianto-ship-it/ip/main/ip | grep $MYIP | awk '{print $2}')
+nama2=$(curl -sS https://raw.githubusercontent.com/acilshops/ip/main/ip | grep $MYIP | awk '{print $2}')
 author=$(cat /etc/profil)
 TIMES="10"
 CHATID=$(cat /etc/per/id)
 KEY=$(cat /etc/per/token)
 URL="https://api.telegram.org/bot$KEY/sendMessage"
-superadmin=$(curl -sS https://raw.githubusercontent.com/yasrilpujianto-ship-it/ip/main/ip | grep $MYIP | awk '{print $7}')
+superadmin=$(curl -sS https://raw.githubusercontent.com/acilshops/ip/main/ip | grep $MYIP | awk '{print $7}')
 
 echo -e "$COLOR1╭═══════════════════════════════════════════════════╮${NC}"
 echo -e "$COLOR1 ${NC} ${COLBG1}               ${WH} GENERATE KEY IPVPS            ${NC} $COLOR1 $NC"
@@ -395,11 +395,11 @@ fi
 key=$(openssl rand -hex 5)
 
 MYIP=$(curl -sS ipv4.icanhazip.com)
-U2=$(curl -sS https://raw.githubusercontent.com/yasrilpujianto-ship-it/ip/main/ip | grep $MYIP | awk '{print $2}')
-U3=$(curl -sS https://raw.githubusercontent.com/yasrilpujianto-ship-it/ip/main/ip | grep $MYIP | awk '{print $3}')
-U4=$(curl -sS https://raw.githubusercontent.com/yasrilpujianto-ship-it/ip/main/ip | grep $MYIP | awk '{print $4}')
-U5=$(curl -sS https://raw.githubusercontent.com/yasrilpujianto-ship-it/ip/main/ip | grep $MYIP | awk '{print $5}')
-U6=$(curl -sS https://raw.githubusercontent.com/yasrilpujianto-ship-it/ip/main/ip | grep $MYIP | awk '{print $6}')
+U2=$(curl -sS https://raw.githubusercontent.com/acilshops/ip/main/ip | grep $MYIP | awk '{print $2}')
+U3=$(curl -sS https://raw.githubusercontent.com/acilshops/ip/main/ip | grep $MYIP | awk '{print $3}')
+U4=$(curl -sS https://raw.githubusercontent.com/acilshops/ip/main/ip | grep $MYIP | awk '{print $4}')
+U5=$(curl -sS https://raw.githubusercontent.com/acilshops/ip/main/ip | grep $MYIP | awk '{print $5}')
+U6=$(curl -sS https://raw.githubusercontent.com/acilshops/ip/main/ip | grep $MYIP | awk '{print $6}')
 
 exp=$(date -d "$hari days" +"%Y-%m-%d")
 hariini=$(date -d "0 days" +"%Y-%m-%d")
@@ -505,8 +505,8 @@ m-ipku.sh
 function delipvps(){
 clear
 MYIP=$(curl -sS ipv4.icanhazip.com)
-listuser=$(curl -sS https://raw.githubusercontent.com/yasrilpujianto-ship-it/ip/main/ip | grep $MYIP | awk '{print $2}')
-superadmin=$(curl -sS https://raw.githubusercontent.com/yasrilpujianto-ship-it/ip/main/ip | grep $MYIP | awk '{print $7}')
+listuser=$(curl -sS https://raw.githubusercontent.com/acilshops/ip/main/ip | grep $MYIP | awk '{print $2}')
+superadmin=$(curl -sS https://raw.githubusercontent.com/acilshops/ip/main/ip | grep $MYIP | awk '{print $7}')
 uu=$(curl -sS https://pastebin.com/raw/BZ9Fcnqf)
 
 author=$(cat /etc/profil)
@@ -637,8 +637,8 @@ m-ipku.sh
 function tambahip(){
 clear
 MYIP=$(curl -sS ipv4.icanhazip.com)
-listuser=$(curl -sS https://raw.githubusercontent.com/yasrilpujianto-ship-it/ip/main/ip | grep $MYIP | awk '{print $2}')
-superadmin=$(curl -sS https://raw.githubusercontent.com/yasrilpujianto-ship-it/ip/main/ip | grep $MYIP | awk '{print $7}')
+listuser=$(curl -sS https://raw.githubusercontent.com/acilshops/ip/main/ip | grep $MYIP | awk '{print $2}')
+superadmin=$(curl -sS https://raw.githubusercontent.com/acilshops/ip/main/ip | grep $MYIP | awk '{print $7}')
 uu=$(curl -sS https://pastebin.com/raw/BZ9Fcnqf)
 
 author=$(cat /etc/profil)
@@ -762,8 +762,8 @@ m-ipku.sh
 function gantinama(){
 clear
 MYIP=$(curl -sS ipv4.icanhazip.com)
-listuser=$(curl -sS https://raw.githubusercontent.com/yasrilpujianto-ship-it/ip/main/ip | grep $MYIP | awk '{print $2}')
-superadmin=$(curl -sS https://raw.githubusercontent.com/yasrilpujianto-ship-it/ip/main/ip | grep $MYIP | awk '{print $7}')
+listuser=$(curl -sS https://raw.githubusercontent.com/acilshops/ip/main/ip | grep $MYIP | awk '{print $2}')
+superadmin=$(curl -sS https://raw.githubusercontent.com/acilshops/ip/main/ip | grep $MYIP | awk '{print $7}')
 uu=$(curl -sS https://pastebin.com/raw/BZ9Fcnqf)
 
 author=$(cat /etc/profil)
@@ -896,8 +896,8 @@ m-ipku.sh
 function gantiip(){
 clear
 MYIP=$(curl -sS ipv4.icanhazip.com)
-listuser=$(curl -sS https://raw.githubusercontent.com/yasrilpujianto-ship-it/ip/main/ip | grep $MYIP | awk '{print $2}')
-superadmin=$(curl -sS https://raw.githubusercontent.com/yasrilpujianto-ship-it/ip/main/ip | grep $MYIP | awk '{print $7}')
+listuser=$(curl -sS https://raw.githubusercontent.com/acilshops/ip/main/ip | grep $MYIP | awk '{print $2}')
+superadmin=$(curl -sS https://raw.githubusercontent.com/acilshops/ip/main/ip | grep $MYIP | awk '{print $7}')
 uu=$(curl -sS https://pastebin.com/raw/BZ9Fcnqf)
 
 author=$(cat /etc/profil)
@@ -978,11 +978,11 @@ name1=$(grep -E "^### " "client" | cut -d ' ' -f 2 | sed -n "$CLIENT_NUMBER"p) #
 exp=$(grep -E "^### " "client" | cut -d ' ' -f 3 | sed -n "$CLIENT_NUMBER"p) #exp
 ivps1=$(grep -E "^### " "client" | cut -d ' ' -f 4 | sed -n "$CLIENT_NUMBER"p) #ip
 fi
-U2=$(curl -sS https://raw.githubusercontent.com/yasrilpujianto-ship-it/ip/main/ip | grep $MYIP | awk '{print $2}')
-U3=$(curl -sS https://raw.githubusercontent.com/yasrilpujianto-ship-it/ip/main/ip | grep $MYIP | awk '{print $3}')
-U4=$(curl -sS https://raw.githubusercontent.com/yasrilpujianto-ship-it/ip/main/ip | grep $MYIP | awk '{print $4}')
-U5=$(curl -sS https://raw.githubusercontent.com/yasrilpujianto-ship-it/ip/main/ip | grep $MYIP | awk '{print $5}')
-U6=$(curl -sS https://raw.githubusercontent.com/yasrilpujianto-ship-it/ip/main/ip | grep $MYIP | awk '{print $6}')
+U2=$(curl -sS https://raw.githubusercontent.com/acilshops/ip/main/ip | grep $MYIP | awk '{print $2}')
+U3=$(curl -sS https://raw.githubusercontent.com/acilshops/ip/main/ip | grep $MYIP | awk '{print $3}')
+U4=$(curl -sS https://raw.githubusercontent.com/acilshops/ip/main/ip | grep $MYIP | awk '{print $4}')
+U5=$(curl -sS https://raw.githubusercontent.com/acilshops/ip/main/ip | grep $MYIP | awk '{print $5}')
+U6=$(curl -sS https://raw.githubusercontent.com/acilshops/ip/main/ip | grep $MYIP | awk '{print $6}')
 ws=1
 
 regip2=$(expr "$U6" - "$ws")
@@ -1039,8 +1039,8 @@ m-ipku.sh
 function renewipvps(){
 clear
 MYIP=$(curl -sS ipv4.icanhazip.com)
-listuser=$(curl -sS https://raw.githubusercontent.com/yasrilpujianto-ship-it/ip/main/ip | grep $MYIP | awk '{print $2}')
-superadmin=$(curl -sS https://raw.githubusercontent.com/yasrilpujianto-ship-it/ip/main/ip | grep $MYIP | awk '{print $7}')
+listuser=$(curl -sS https://raw.githubusercontent.com/acilshops/ip/main/ip | grep $MYIP | awk '{print $2}')
+superadmin=$(curl -sS https://raw.githubusercontent.com/acilshops/ip/main/ip | grep $MYIP | awk '{print $7}')
 uu=$(curl -sS https://pastebin.com/raw/BZ9Fcnqf)
 
 author=$(cat /etc/profil)
@@ -1107,13 +1107,13 @@ exp=$(curl -sS https://raw.githubusercontent.com/${USERGIT}/izin_jual/main/ip | 
 ivps1=$(curl -sS https://raw.githubusercontent.com/${USERGIT}/izin_jual/main/ip | grep $iprenew | awk '{print $4}') #ip
 trial=$(curl -sS https://raw.githubusercontent.com/${USERGIT}/izin_jual/main/ip | grep $iprenew | awk '{print $5}') #ip 
 MYIP=$(curl -sS ipv4.icanhazip.com)
-UU2=$(curl -sS https://raw.githubusercontent.com/yasrilpujianto-ship-it/ip/main/ip | grep $MYIP | awk '{print $2}')
+UU2=$(curl -sS https://raw.githubusercontent.com/acilshops/ip/main/ip | grep $MYIP | awk '{print $2}')
 
-U2=$(curl -sS https://raw.githubusercontent.com/yasrilpujianto-ship-it/ip/main/ip | grep $MYIPhttps://raw.githubusercontent.com/yasrilpujianto-ship-it/ip/main/ip | awk '{print $2}')
-U3=$(curl -sS https://raw.githubusercontent.com/yasrilpujianto-ship-it/ip/main/ip | grep $MYIP | awk '{print $3}')
-U4=$(curl -sS https://raw.githubusercontent.com/yasrilpujianto-ship-it/ip/main/ip | grep $MYIP | awk '{print $4}')
-U5=$(curl -sS https://raw.githubusercontent.com/yasrilpujianto-ship-it/ip/main/ip | grep $MYIP | awk '{print $5}')
-U6=$(curl -sS https://raw.githubusercontent.com/yasrilpujianto-ship-it/ip/main/ip | grep $MYIP | awk '{print $6}')
+U2=$(curl -sS https://raw.githubusercontent.com/acilshops/ip/main/ip | grep $MYIPhttps://raw.githubusercontent.com/acilshops/ip/main/ip | awk '{print $2}')
+U3=$(curl -sS https://raw.githubusercontent.com/acilshops/ip/main/ip | grep $MYIP | awk '{print $3}')
+U4=$(curl -sS https://raw.githubusercontent.com/acilshops/ip/main/ip | grep $MYIP | awk '{print $4}')
+U5=$(curl -sS https://raw.githubusercontent.com/acilshops/ip/main/ip | grep $MYIP | awk '{print $5}')
+U6=$(curl -sS https://raw.githubusercontent.com/acilshops/ip/main/ip | grep $MYIP | awk '{print $6}')
 
 
 now=$(date +%Y-%m-%d)
@@ -1175,8 +1175,8 @@ m-ipku.sh
 function useripvps(){
 clear
 MYIP=$(curl -sS ipv4.icanhazip.com)
-listuser=$(curl -sS https://raw.githubusercontent.com/yasrilpujianto-ship-it/ip/main/ip | grep $MYIP | awk '{print $2}')
-superadmin=$(curl -sS https://raw.githubusercontent.com/yasrilpujianto-ship-it/ip/main/ip | grep $MYIP | awk '{print $7}')
+listuser=$(curl -sS https://raw.githubusercontent.com/acilshops/ip/main/ip | grep $MYIP | awk '{print $2}')
+superadmin=$(curl -sS https://raw.githubusercontent.com/acilshops/ip/main/ip | grep $MYIP | awk '{print $7}')
 uu=$(curl -sS https://pastebin.com/raw/BZ9Fcnqf)
 author=$(cat /etc/profil)
 cd
@@ -1210,8 +1210,8 @@ echo -e ""
 read -n 1 -s -r -p "   Press any key to back on menu"
 m-ipku.sh
 }
-Isadmin=$(curl -sS https://raw.githubusercontent.com/yasrilpujianto-ship-it/ip/main/ip | grep $MYIP | awk '{print $5}')
-ip=$(curl -sS https://raw.githubusercontent.com/yasrilpujianto-ship-it/ip/main/ip | grep $MYIP | awk '{print $6}')
+Isadmin=$(curl -sS https://raw.githubusercontent.com/acilshops/ip/main/ip | grep $MYIP | awk '{print $5}')
+ip=$(curl -sS https://raw.githubusercontent.com/acilshops/ip/main/ip | grep $MYIP | awk '{print $6}')
 sisaip=$(cat /etc/regip/ip | wc -l) 
 ss=0
 if [ "$Isadmin" = "OFF" ]; then

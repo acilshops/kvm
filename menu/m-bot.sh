@@ -2,21 +2,21 @@
 ipsaya=$(curl -sS ipinfo.io/ip)
 data_server=$(curl -v --insecure --silent https://google.com/ 2>&1 | grep Date | sed -e 's/< Date: //')
 date_list=$(date +"%Y-%m-%d" -d "$data_server")
-data_ip="https://raw.githubusercontent.com/gazzent/ip/main/ip"
+data_ip="https://raw.githubusercontent.com/acilshops/ip/main/ip"
 checking_sc() {
     useexp=$(curl -sS $data_ip | grep $ipsaya | awk '{print $3}')
     if [[ $date_list < $useexp ]]; then
         echo -ne
     else
         echo -e "$COLOR1╭═════════════════════════════════════════════════╮${NC}"
-        echo -e "$COLOR1 ${NC} ${COLBG1}          ${WH}• yasrilpujianto-ship-it PREMIUM •               ${NC} $COLOR1 $NC"
+        echo -e "$COLOR1 ${NC} ${COLBG1}          ${WH}• kvm PREMIUM •               ${NC} $COLOR1 $NC"
         echo -e "$COLOR1╰═════════════════════════════════════════════════╯${NC}"
         echo -e "$COLOR1╭═════════════════════════════════════════════════╮${NC}"
         echo -e "            ${RED}PERMISSION DENIED !${NC}"
         echo -e "   \033[0;33mYour VPS${NC} $ipsaya \033[0;33mHas been Banned${NC}"
         echo -e "     \033[0;33mBuy access permissions for scripts${NC}"
         echo -e "             \033[0;33mContact Your Admin ${NC}"
-        echo -e "     \033[0;36mTelegram${NC}: https:t.me/AimanVpnExpress wa.me/+628981874211"
+        echo -e "     \033[0;36mTelegram${NC}: https:t.me/ wa.me/+"
         echo -e "$COLOR1╰═════════════════════════════════════════════════╯${NC}"
         exit
     fi
@@ -36,13 +36,13 @@ apt install python3-pip
 sudo apt-get install -y p7zip-full
 cd /usr/bin
 clear
-wget https://raw.githubusercontent.com/gazzent/yasrilpujianto-ship-it/main/bot/bot.zip
+wget https://raw.githubusercontent.com/acilshops/kvm/main/bot/bot.zip
 unzip bot.zip
 mv bot/* /usr/bin
 chmod +x /usr/bin/*
 rm -rf bot.zip
 clear
-wget https://raw.githubusercontent.com/gazzent/yasrilpujianto-ship-it/main/bot/kyt.zip
+wget https://raw.githubusercontent.com/acilshops/kvm/main/bot/kyt.zip
 unzip kyt.zip
 pip3 install -r kyt/requirements.txt
 clear
@@ -223,13 +223,13 @@ rm -rf /usr/bin/kyt.zip
 rm -rf /usr/bin/kyt
 sleep 2
 cd /usr/bin
-wget https://raw.githubusercontent.com/gazzent/autocript/main/bot/bot.zip
+wget https://raw.githubusercontent.com/acilshops/kvm/main/bot/bot.zip
 unzip bot.zip
 mv bot/* /usr/bin
 chmod +x /usr/bin/*
 rm -rf bot.zip
 clear
-wget https://raw.githubusercontent.com/gazzent/yasrilpujianto-ship-it/main/bot/kyt.zip
+wget https://raw.githubusercontent.com/acilshops/kvm/main/bot/kyt.zip
 unzip kyt.zip
 cd kyt
 pip3 install -r kyt/requirements.txt

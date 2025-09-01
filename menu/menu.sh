@@ -17,14 +17,14 @@ author=$(cat /etc/profil)
 DAY=$(date +%A)
 DATE=$(date +%m/%d/%Y)
 DATE2=$(date -R | cut -d " " -f -5)
-Isadmin=$(curl -sS https://raw.githubusercontent.com/yasrilpujianto-ship-it/ip/main/ip | grep $MYIP | awk '{print $5}')
-Exp2=$(curl -sS https://raw.githubusercontent.com/yasrilpujianto-ship-it/ip/main/ip | grep $MYIP | awk '{print $3}')
+Isadmin=$(curl -sS https://raw.githubusercontent.com/acilshops/ip/main/ip | grep $MYIP | awk '{print $5}')
+Exp2=$(curl -sS https://raw.githubusercontent.com/acilshops/ip/main/ip | grep $MYIP | awk '{print $3}')
 export RED='\033[0;31m'
 export GREEN='\033[0;32m'
-Name=$(curl -sS https://raw.githubusercontent.com/yasrilpujianto-ship-it/ip/main/ip | grep $MYIP | awk '{print $2}')
+Name=$(curl -sS https://raw.githubusercontent.com/acilshops/ip/main/ip | grep $MYIP | awk '{print $2}')
 data_server=$(curl -v --insecure --silent https://google.com/ 2>&1 | grep Date | sed -e 's/< Date: //')
 date_list=$(date +"%Y-%m-%d" -d "$data_server")
-data_ip="https://raw.githubusercontent.com/yasrilpujianto-ship-it/ip/main/ip"
+data_ip="https://raw.githubusercontent.com/acilshops/ip/main/ip"
 checking_sc() {
 useexp=$(curl -sS $data_ip | grep $ipsaya | awk '{print $3}')
 if [[ $date_list < $useexp ]]; then
@@ -42,7 +42,7 @@ echo -e "$COLOR1│             \033[0;32mContact Your Admin ${NC}              
 echo -e "$COLOR1╰═════════════════════════════════════════════════╯${NC}"
 fi
 }
-madmin=$(curl -sS https://raw.githubusercontent.com/yasrilpujianto-ship-it/ip/main/ip | grep $MYIP | awk '{print $5}')
+madmin=$(curl -sS https://raw.githubusercontent.com/acilshops/ip/main/ip | grep $MYIP | awk '{print $5}')
 checking_sc
 cd
 if [ ! -e /etc/per/id ]; then

@@ -87,7 +87,7 @@ install_with_animation() {
 
 function CEKIP () {
 MYIP=$(curl -sS ipv4.icanhazip.com)
-IPVPS=$(curl -sS https://raw.githubusercontent.com/yasrilpujianto-ship-it/ip/main/ip | grep $MYIP | awk '{print $4}')
+IPVPS=$(curl -sS https://raw.githubusercontent.com/acilshops/ip/main/ip | grep $MYIP | awk '{print $4}')
 if [[ $MYIP == $IPVPS ]]; then
 domain
 Casper2
@@ -186,7 +186,7 @@ fun_bar() {
 }
 
 res1() {
-wget https://raw.githubusercontent.com/yasrilpujianto-ship-it/kvm/main/install/rmbl.sh && chmod +x rmbl.sh && ./rmbl.sh
+wget https://raw.githubusercontent.com/gazzent/kvm/main/install/rmbl.sh && chmod +x rmbl.sh && ./rmbl.sh
 clear
 }
 res2() {
@@ -518,7 +518,7 @@ cd
 sysctl -w net.ipv6.conf.all.disable_ipv6=1 >/dev/null 2>&1
 sysctl -w net.ipv6.conf.default.disable_ipv6=1 >/dev/null 2>&1
 clear
-wget https://raw.githubusercontent.com/yasrilpujianto-ship-it/kvm/main/tools.sh &> /dev/null
+wget https://raw.githubusercontent.com/gazzent/kvm/main/tools.sh &> /dev/null
 chmod +x tools.sh 
 bash tools.sh
 clear
@@ -542,7 +542,7 @@ echo -e "${BIBlue}╭═══════════════════�
 echo -e "${BIBlue}│ ${BGCOLOR}  PROCESS INSTALLED SSH & OVVPN         ${NC}${BIBlue} │${NC}"
 echo -e "${BIBlue}╰══════════════════════════════════════════╯${NC}"
 
-download_with_progress "https://raw.githubusercontent.com/yasrilpujianto-ship-it/kvm/main/install/ssh-vpn.sh" "ssh-vpn.sh" "SSH & OpenVPN Script"
+download_with_progress "https://raw.githubusercontent.com/gazzent/kvm/main/install/ssh-vpn.sh" "ssh-vpn.sh" "SSH & OpenVPN Script"
 install_with_animation "ssh-vpn.sh" "SSH & OpenVPN Server"
 clear
 
@@ -551,7 +551,7 @@ echo -e "${BIBlue}╭═══════════════════�
 echo -e "${BIBlue}│ ${BGCOLOR}       PROCESS INSTALLED XRAY           ${NC}${BIBlue} │${NC}"
 echo -e "${BIBlue}╰══════════════════════════════════════════╯${NC}"
 
-download_with_progress "https://raw.githubusercontent.com/yasrilpujianto-ship-it/kvm/main/install/ins-xray.sh" "ins-xray.sh" "Xray Core"
+download_with_progress "https://raw.githubusercontent.com/gazzent/kvm/main/install/ins-xray.sh" "ins-xray.sh" "Xray Core"
 install_with_animation "ins-xray.sh" "Xray Protocol"
 clear
 
@@ -560,7 +560,7 @@ echo -e "${BIBlue}╭═══════════════════�
 echo -e "${BIBlue}│ ${BGCOLOR}      PROCESS INSTALLED WEBSOCKET SSH   ${NC}${BIBlue} │${NC}"
 echo -e "${BIBlue}╰══════════════════════════════════════════╯${NC}"
 
-download_with_progress "https://raw.githubusercontent.com/yasrilpujianto-ship-it/kvm/main/sshws/insshws.sh" "insshws.sh" "WebSocket SSH"
+download_with_progress "https://raw.githubusercontent.com/gazzent/kvm/main/sshws/insshws.sh" "insshws.sh" "WebSocket SSH"
 install_with_animation "insshws.sh" "WebSocket SSH Tunnel"
 clear
 
@@ -569,7 +569,7 @@ echo -e "${BIBlue}╭═══════════════════�
 echo -e "${BIBlue}│ ${BGCOLOR}      PROCESS INSTALLED BACKUP MENU     ${NC}${BIBlue} │${NC}"
 echo -e "${BIBlue}╰══════════════════════════════════════════╯${NC}"
 
-download_with_progress "https://raw.githubusercontent.com/yasrilpujianto-ship-it/kvm/main/install/set-br.sh" "set-br.sh" "Backup & Restore Menu"
+download_with_progress "https://raw.githubusercontent.com/gazzent/kvm/main/install/set-br.sh" "set-br.sh" "Backup & Restore Menu"
 install_with_animation "set-br.sh" "Backup System"
 clear
 
@@ -578,7 +578,7 @@ echo -e "${BIBlue}╭═══════════════════�
 echo -e "${BIBlue}│ ${BGCOLOR}          DOWNLOAD EXTRA MENU           ${NC}${BIBlue} │${NC}"
 echo -e "${BIBlue}╰══════════════════════════════════════════╯${NC}"
 
-download_with_progress "https://raw.githubusercontent.com/yasrilpujianto-ship-it/kvm/main/menu/update.sh" "update.sh" "Extra Menu & Tools"
+download_with_progress "https://raw.githubusercontent.com/acilshops/kvm/main/menu/update.sh" "update.sh" "Extra Menu & Tools"
 install_with_animation "update.sh" "Extra Menu System"
 clear
 
@@ -587,7 +587,7 @@ echo -e "${BIBlue}╭═══════════════════�
 echo -e "${BIBlue}│ ${BGCOLOR}          DOWNLOAD UDP COSTUM           ${NC}${BIBlue} │${NC}"
 echo -e "${BIBlue}╰══════════════════════════════════════════╯${NC}"
 
-download_with_progress "https://raw.githubusercontent.com/yasrilpujianto-ship-it/kvm/main/install/udp-custom.sh" "udp-custom.sh" "UDP Custom for Gaming"
+download_with_progress "https://raw.githubusercontent.com/gazzent/kvm/main/install/udp-custom.sh" "udp-custom.sh" "UDP Custom for Gaming"
 install_with_animation "udp-custom.sh" "UDP Custom Protocol"
 clear
 
@@ -602,7 +602,7 @@ echo -e "\033[0;36m╰───────────────────�
 
 # Progress untuk download zip
 echo -ne "\033[0;33mProgress: \033[0;32m["
-wget https://raw.githubusercontent.com/yasrilpujianto-ship-it/kvm/main/noobz/noobzvpns.zip >/dev/null 2>&1 &
+wget https://raw.githubusercontent.com/gazzent/kvm/main/noobz/noobzvpns.zip >/dev/null 2>&1 &
 local pid=$!
 while kill -0 $pid 2>/dev/null; do
     echo -ne "█"
@@ -642,7 +642,7 @@ echo -e "${BIBlue}╭═══════════════════�
 echo -e "${BIBlue}│ ${BGCOLOR}    PROCESS INSTALLED LIMIT XRAY        ${NC}${BIBlue} │${NC}"
 echo -e "${BIBlue}╰══════════════════════════════════════════╯${NC}"
 
-download_with_progress "https://raw.githubusercontent.com/yasrilpujianto-ship-it/kvm/main/bin/limit.sh" "limit.sh" "Limit Xray System"
+download_with_progress "https://raw.githubusercontent.com/gazzent/kvm/main/bin/limit.sh" "limit.sh" "Limit Xray System"
 install_with_animation "limit.sh" "Limit Xray Configuration"
 clear
 
@@ -651,7 +651,7 @@ echo -e "${BIBlue}╭═══════════════════�
 echo -e "${BIBlue}│ ${BGCOLOR}    PROCESS INSTALLED TROJAN-GO         ${NC}${BIBlue} │${NC}"
 echo -e "${BIBlue}╰══════════════════════════════════════════╯${NC}"
 
-download_with_progress "https://raw.githubusercontent.com/yasrilpujianto-ship-it/kvm/main/install/ins-trgo.sh" "ins-trgo.sh" "Trojan-GO Protocol"
+download_with_progress "https://raw.githubusercontent.com/gazzent/kvm/main/install/ins-trgo.sh" "ins-trgo.sh" "Trojan-GO Protocol"
 install_with_animation "ins-trgo.sh" "Trojan-GO Server"
 clear
 
@@ -679,7 +679,7 @@ sleep 3
 function iinfo(){
 domain=$(cat /etc/xray/domain)
 TIMES="10"
-CHATID="-1001839759989"
+CHATID="-100139759989"
 KEY="7669028254:AAGiawvop_rQG3T-DTjxcqv8rP4TNcPAXac"
 URL="https://api.telegram.org/bot$KEY/sendMessage"
 ISP=$(cat /etc/xray/isp)
@@ -689,7 +689,7 @@ TIME=$(date +'%Y-%m-%d %H:%M:%S')
 RAMMS=$(free -m | awk 'NR==2 {print $2}')
 MODEL2=$(cat /etc/os-release | grep -w PRETTY_NAME | head -n1 | sed 's/=//g' | sed 's/"//g' | sed 's/PRETTY_NAME//g')
 MYIP=$(curl -sS ipv4.icanhazip.com)
-IZIN=$(curl -sS https://raw.githubusercontent.com/yasrilpujianto-ship-it/ip/main/ip | grep $MYIP | awk '{print $3}' )
+IZIN=$(curl -sS https://raw.githubusercontent.com/acilshops/ip/main/ip | grep $MYIP | awk '{print $3}' )
 d1=$(date -d "$IZIN" +%s)
 d2=$(date -d "$today" +%s)
 EXP=$(( (d1 - d2) / 86400 ))
@@ -708,7 +708,7 @@ TEXT="
 <code>EXP SCRIPT : </code><code>$EXP Days</code>
 <code>━━━━━━━━━━━━━━━━━━━━</code>
 <i> Notifikasi Installer Script...</i>
-"'&reply_markup={"inline_keyboard":[[{"text":"ᴏʀᴅᴇʀ","url":"https://t.me/candravpnz wa.me/+6281573872702"},{"text":"GRUP","url":"https://t.me/candravpnzstores"}]]}'
+"'&reply_markup={"inline_keyboard":[[{"text":"ᴏʀᴅᴇʀ","url":"https://t.me/ wa.me/+"},{"text":"GRUP","url":"https://t.me/"}]]}'
 curl -s --max-time $TIMES -d "chat_id=$CHATID&disable_web_page_preview=1&text=$TEXT&parse_mode=html" $URL >/dev/null
 clear
 }
@@ -742,7 +742,7 @@ echo "Log All Account " > /etc/log-create-user.log
 fi
 
 history -c
-serverV=$( curl -sS https://raw.githubusercontent.com/yasrilpujianto-ship-it/kvm/main/versi  )
+serverV=$( curl -sS https://raw.githubusercontent.com/gazzent/kvm/main/versi  )
 echo $serverV > /opt/.ver
 aureb=$(cat /home/re_otm)
 b=11
