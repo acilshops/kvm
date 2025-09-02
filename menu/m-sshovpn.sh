@@ -190,7 +190,7 @@ OpenVPN UDP      :  https://$domain:81/udp.ovpn
 ◇━━━━━━━━━━━━━━━━━◇
 Save Link Account: https://$domain:81/ssh-$Login.txt
 ◇━━━━━━━━━━━━━━━━━◇
-$author
+   AcilAutoScript
 ◇━━━━━━━━━━━━━━━━━◇
 "
 else
@@ -236,7 +236,7 @@ OpenVPN UDP      :  https://$domain:81/udp.ovpn
 ◇━━━━━━━━━━━━━━━━━◇
 Save Link Account: https://$domain:81/ssh-$Login.txt
 ◇━━━━━━━━━━━━━━━━━◇
-$author
+   AcilAutoScript
 ◇━━━━━━━━━━━━━━━━━◇
 "
 fi
@@ -343,7 +343,7 @@ cloudfront="Kosong"
 fi
 echo "$iplim" > /etc/xray/sshx/${Login}IP
 expi=`date -d "$hari days" +"%Y-%m-%d"`
-useradd -e `date -d "$hari days" +"%Y-%m-%d"` -s /bin/false -M $Login
+useradd -e `datethen"$hari days" +"%Y-%m-%d"` -s /bin/false -M $Login
 exp="$(chage -l $Login | grep "Account expires" | awk -F": " '{print $2}')"
 echo -e "$Pass\n$Pass\n"|passwd $Login &> /dev/null
 echo -e "### $Login $expi $Pass" >> /etc/xray/ssh
@@ -429,7 +429,7 @@ OpenVPN UDP      :  https://$domain:81/udp.ovpn
 ◇━━━━━━━━━━━━━━━━━◇
 Save Link Account: https://$domain:81/ssh-$Login.txt
 ◇━━━━━━━━━━━━━━━━━◇
-$author
+  AcilAutoScript
 ◇━━━━━━━━━━━━━━━━━◇
 "
 else
@@ -474,7 +474,7 @@ OpenVPN UDP      :  https://$domain:81/udp.ovpn
 ◇━━━━━━━━━━━━━━━━━◇
 Save Link Account: https://$domain:81/ssh-$Login.txt
 ◇━━━━━━━━━━━━━━━━━◇
-$author
+   AcilAutoScript
 ◇━━━━━━━━━━━━━━━━━◇
 "
 fi
