@@ -190,7 +190,7 @@ OpenVPN UDP      :  https://$domain:81/udp.ovpn
 ◇━━━━━━━━━━━━━━━━━◇
 Save Link Account: https://$domain:81/ssh-$Login.txt
 ◇━━━━━━━━━━━━━━━━━◇
-$author
+$AcilAutoScript
 ◇━━━━━━━━━━━━━━━━━◇
 "
 else
@@ -236,7 +236,7 @@ OpenVPN UDP      :  https://$domain:81/udp.ovpn
 ◇━━━━━━━━━━━━━━━━━◇
 Save Link Account: https://$domain:81/ssh-$Login.txt
 ◇━━━━━━━━━━━━━━━━━◇
-$author
+$AcilAutoScript
 ◇━━━━━━━━━━━━━━━━━◇
 "
 fi
@@ -299,7 +299,7 @@ echo -e "$COLOR1 ◇━━━━ PAYLOAD ━━━━◇ ${NC}" | tee -a /etc/xr
 echo -e "$COLOR1${NC}${WH}GET / HTTP/1.1[crlf]Host: [host][crlf]Connection: Upgrade[crlf]User-Agent: [ua][crlf]Upgrade: ws[crlf][crlf]${NC}" | tee -a /etc/xray/sshx/akun/log-create-${Login}.log
 echo -e "$COLOR1 ◇━━━━━━━━━━━━━━━◇ ${NC}" | tee -a /etc/xray/sshx/akun/log-create-${Login}.log
 echo -e "$COLOR1${NC}Terimakasih Sudah Order Di " | tee -a /etc/xray/sshx/akun/log-create-${Login}.log
-echo -e "$COLOR1 ◇━━━${WH}• $author • $NC"━━━◇ | tee -a /etc/xray/sshx/akun/log-create-${Login}.log
+echo -e "$COLOR1 ◇━━━${WH}• $AcilAutoScript • $NC"━━━◇ | tee -a /etc/xray/sshx/akun/log-create-${Login}.log
 echo "" | tee -a /etc/xray/sshx/akun/log-create-${Login}.log
 read -n 1 -s -r -p "Press any key to back on menu"
 menu
@@ -429,7 +429,7 @@ OpenVPN UDP      :  https://$domain:81/udp.ovpn
 ◇━━━━━━━━━━━━━━━━━◇
 Save Link Account: https://$domain:81/ssh-$Login.txt
 ◇━━━━━━━━━━━━━━━━━◇
-$author
+$AcilAutoScript
 ◇━━━━━━━━━━━━━━━━━◇
 "
 else
@@ -474,7 +474,7 @@ OpenVPN UDP      :  https://$domain:81/udp.ovpn
 ◇━━━━━━━━━━━━━━━━━◇
 Save Link Account: https://$domain:81/ssh-$Login.txt
 ◇━━━━━━━━━━━━━━━━━◇
-$author
+$AcilAutoScript
 ◇━━━━━━━━━━━━━━━━━◇
 "
 fi
@@ -529,7 +529,7 @@ echo -e "$COLOR1 ◇━━━━━━━━━━━━━━━━━◇ ${NC}
 echo -e "$COLOR1 ${NC}  ${WH}Save Link Acount    : " | tee -a /etc/xray/sshx/akun/log-create-${Login}.log
 echo -e "$COLOR1 ${NC}  ${WH}https://$domain:81/ssh-$Login.txt${NC}$COLOR1 $NC" | tee -a /etc/xray/sshx/akun/log-create-${Login}.log
 echo -e "$COLOR1 ◇━━━━━━━━━━━━━━━━━◇ ${NC}" | tee -a /etc/xray/sshx/akun/log-create-${Login}.log
-echo -e "$COLOR1 ${NC}    ${WH}• $author •${NC}                 $COLOR1 $NC" | tee -a /etc/xray/sshx/akun/log-create-${Login}.log
+echo -e "$COLOR1 ${NC}    ${WH}• $AcilAutoScript •${NC}                 $COLOR1 $NC" | tee -a /etc/xray/sshx/akun/log-create-${Login}.log
 echo -e "$COLOR1 ◇━━━━━━━━━━━━━━━━━◇ ${NC}" | tee -a /etc/xray/sshx/akun/log-create-${Login}.log
 echo "" | tee -a /etc/xray/sshx/akun/log-create-${Login}.log
 read -n 1 -s -r -p "Press any key to back on menu"
@@ -1253,7 +1253,7 @@ echo -e " $COLOR1│ $NC  ${COLOR1}[${WH}00${COLOR1}]${NC} ${COLOR1}• ${WH}GO 
 echo -e " $COLOR1╰══════════════════════════════════════════════════════╯${NC}"
 echo -e " "
 echo -e " $COLOR1╭═════════════════════════ ${WH}BY${NC} ${COLOR1}═══════════════════════╮ ${NC}"
-echo -e "  $COLOR1${NC}              ${WH}   • $author •                 $COLOR1 $NC"
+echo -e "  $COLOR1${NC}              ${WH}   • $AcilAutoScript •                 $COLOR1 $NC"
 echo -e " $COLOR1╰════════════════════════════════════════════════════╯${NC}"
 echo -e ""
 echo -ne " ${WH} Select menu ${COLOR1}: ${WH}"; read opt
