@@ -38,7 +38,7 @@ echo -e "$COLOR1╭════════════════════�
 echo -e "$COLOR1│            ${RED}PERMISSION DENIED !${NC}                  $COLOR1│"
 echo -e "$COLOR1│   ${yl}Your VPS${NC} $ipsaya \033[0;36mHas been Banned ${NC}      $COLOR1│"
 echo -e "$COLOR1│     ${yl}Buy access permissions for scripts${NC}          $COLOR1│"
-echo -e "$COLOR1│             \033[0;32mContact Your Admin ${NC}                 $COLOR1│"
+echo -e "$COLOR1│             \033[0;32mContact t.me/AcilOffcial{NC}                 $COLOR1│"
 echo -e "$COLOR1╰═════════════════════════════════════════════════╯${NC}"
 fi
 }
@@ -308,7 +308,7 @@ clear
 clear && clear && clear
 clear;clear;clear
 echo -e " $COLOR1╭════════════════════════════════════════════════════════╮${NC}"
-echo -e " $COLOR1│ ${WH}              • AUTOSCRIPT BY ACIL-SHOP •             ${NC} $COLOR1│$NC"
+echo -e " $COLOR1│ ${WH}              • AcilShop| Autoscript Premium  •             ${NC} $COLOR1│$NC"
 echo -e " $COLOR1╰════════════════════════════════════════════════════════╯${NC}"
 echo -e " $COLOR1      ══════════════════════════════════════════════${NC}"
 echo -e " $COLOR1  $NC${WH}    • DATE & TIME  ${COLOR1}: ${WH}$DATE2 WIB${NC}"
@@ -318,14 +318,14 @@ echo -e " $COLOR1  $NC${WH}    • RAM          ${COLOR1}: ${WH}$tram MB / $uram
 #echo -e " $COLOR1  $NC${WH}  TIME        ${COLOR1}: ${WH}$TIMEZONE${NC}"
 echo -e " $COLOR1  $NC${WH}    • ISP          ${COLOR1}: ${WH}$ISP${NC}"
 echo -e " $COLOR1  $NC${WH}    • CPU          ${COLOR1}: ${WH}$cpu_usage${NC}"
-echo -e " $COLOR1  $NC${WH}    • CITY         ${COLOR1}: ${WH}$CITY${NC}"
+echo -e " $COLOR1  $NC${WH}    • REGION       ${COLOR1}: ${WH}$CITY${NC}"
 echo -e " $COLOR1  $NC${WH}    • IP VPS       ${COLOR1}: ${WH}$MYIP${NC}"
 echo -e " $COLOR1  $NC${WH}    • DOMAIN       ${COLOR1}: ${WH}$(cat /etc/xray/domain)"
-echo -e " $COLOR1  $NC${WH}    • VERSI AUTOSC ${COLOR1}: ${WH}V3.12"
+echo -e " $COLOR1  $NC${WH}    • VERSION.     ${COLOR1}: ${WH}V3.12"
 echo -e " $COLOR1  $NC${WH}    • MASA AKTIF   ${COLOR1}: ${WH}$certificate Hari / $Exp2 •$sts ${NC}$COLOR1" 
 echo -e " $COLOR1      ══════════════════════════════════════════════${NC}"
 echo -e " $COLOR1╭════════════════════════════════════════════════════════╮${NC}"
-echo -e " $COLOR1│ ${WH}               • USERNAME : $author • $NC"
+echo -e " $COLOR1│ ${WH}               • Client : $author • $NC"
 echo -e " $COLOR1╰════════════════════════════════════════════════════════╯${NC}"
 echo -e " ${COLOR1}  XRAY : ${status_xray}${COLOR1}   NGINX : ${status_nginx}${COLOR1}   DROPBEAR : ${status_beruangjatuh}${COLOR1}   UDP : ${status_udp}"
 echo -e ""
