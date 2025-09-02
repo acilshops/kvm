@@ -332,7 +332,7 @@ https://$domain:81/vmess-$user.txt
 ◇━━━━━━━━━━━━━━━━━◇
 Expired Until    : $exp
 ◇━━━━━━━━━━━━━━━━━◇
-$author
+   AcilAutoScript
 ◇━━━━━━━━━━━━━━━━━◇
 "
 else
@@ -370,10 +370,10 @@ Link GRPC    :
 Format OpenClash :
 https://$domain:81/vmess-$user.txt
 ◇━━━━━━━━━━━━━━━━━◇
-$author
+   AcilAutoScript
 ◇━━━━━━━━━━━━━━━━━◇
 "
-fi
+AcilAutoScript
 curl -s --max-time $TIMES -d "chat_id=$CHATID&disable_web_page_preview=1&text=$TEXT&parse_mode=html" $URL >/dev/null
 cd
 if [ ! -e /etc/tele ]; then
@@ -382,8 +382,7 @@ else
 echo "$TEXT" > /etc/notiftele
 bash /etc/tele
 fi
-user2=$(echo "$user" | cut -c 1-3)
-TIME2=$(date +'%Y-%m-%d %H:%M:%S')
+user2=$(echo "$user" | cut -c 1-ationTIME2=$(date +'%Y-%m-%d %H:%M:%S')
 TEXT2="
 <code>◇━━━━━━━━━━━━━━━━━━━◇</code>
 <b>   PEMBELIAN VMESS SUCCES </b>
@@ -434,7 +433,7 @@ echo -e "$COLOR1 ◇━━━━━━━━━━━━━━━━━◇ ${NC}
 echo -e "$COLOR1${NC}${WH}Format Openclash ${COLOR1}:" | tee -a /etc/vmess/akun/log-create-${user}.log
 echo -e "$COLOR1${NC}${WH}https://$domain:81/vmess-$user.txt${NC}" | tee -a /etc/vmess/akun/log-create-${user}.log
 echo -e "$COLOR1 ◇━━━━━━━━━━━━━━━━━◇ ${NC}" | tee -a /etc/vmess/akun/log-create-${user}.log
-echo -e "$COLOR1 ${NC} ${WH}    $author     " | tee -a /etc/vmess/akun/log-create-${user}.log
+echo -e "$COLOR1 ${NC} ${WH}    AcilAutoScript     " | tee -a /etc/vmess/akun/log-create-${user}.log
 echo -e "$COLOR1 ◇━━━━━━━━━━━━━━━━━◇ ${NC}" | tee -a /etc/vmess/akun/log-create-${user}.log
 echo "" | tee -a /etc/vmess/akun/log-create-${user}.log
 systemctl restart xray > /dev/null 2>&1
@@ -708,7 +707,7 @@ https://$domain:81/vmess-$user.txt
 ◇━━━━━━━━━━━━━━━━━◇
 Expired Until    : $timer Minutes
 ◇━━━━━━━━━━━━━━━━━◇
-$author
+   AcilAutoScript
 ◇━━━━━━━━━━━━━━━━━◇
 "
 curl -s --max-time $TIMES -d "chat_id=$CHATID&disable_web_page_preview=1&text=$TEXT&parse_mode=html" $URL >/dev/null
@@ -752,7 +751,7 @@ echo -e "$COLOR1 ◇━━━━━━━━━━━━━━━━━◇ ${NC}
 echo -e "$COLOR1 ${NC} ${WH}Format Openclash ${COLOR1}:" | tee -a /etc/vmess/akun/log-create-${user}.log
 echo -e "$COLOR1 ${NC} ${WH}https://$domain:81/vmess-$user.txt${NC}" | tee -a /etc/vmess/akun/log-create-${user}.log
 echo -e "$COLOR1 ◇━━━━━━━━━━━━━━━━━◇ ${NC}" | tee -a /etc/vmess/akun/log-create-${user}.log
-echo -e "$COLOR1 ${NC} ${WH}    $author     " | tee -a /etc/vmess/akun/log-create-${user}.log
+echo -e "$COLOR1 ${NC} ${WH}    AcilAutoScript     " | tee -a /etc/vmess/akun/log-create-${user}.log
 echo -e "$COLOR1 ◇━━━━━━━━━━━━━━━━━◇ ${NC}" | tee -a /etc/vmess/akun/log-create-${user}.log
 echo "" | tee -a /etc/vmess/akun/log-create-${user}.log
 systemctl restart xray > /dev/null 2>&1
@@ -1560,7 +1559,7 @@ echo -e " $COLOR1│ $NC ${WH}[${COLOR1}05${WH}]${NC} ${COLOR1}• ${WH}CEK USER
 echo -e " $COLOR1│ $NC ${WH}[${COLOR1}00${WH}]${NC} ${COLOR1}• ${WH}GO BACK${NC}          ${WH}[${COLOR1}11${WH}]${NC} ${COLOR1}• ${WH}RESTORE AKUN   ${NC}    $COLOR1│ $NC"
 echo -e " $COLOR1╰════════════════════════════════════════════════════╯${NC}"
 echo -e " $COLOR1╭═════════════════════════ ${WH}BY${NC} ${COLOR1}═══════════════════════╮ ${NC}"
-printf "                      ${COLOR1}%3s${NC} ${WH}%0s${NC} ${COLOR1}%3s${NC}\n" "• " "$author" " •"
+printf "                      ${COLOR1}%3s${NC} ${WH}%0s${NC} ${COLOR1}%3s${NC}\n" "• " "AcilAutoScript" " •"
 echo -e " $COLOR1╰════════════════════════════════════════════════════╯${NC}"
 echo -e ""
 echo -ne " ${WH}Select menu ${COLOR1}: ${WH}"; read opt
