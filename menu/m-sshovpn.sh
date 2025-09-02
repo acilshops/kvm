@@ -1253,7 +1253,7 @@ echo -e " $COLOR1│ $NC  ${COLOR1}[${WH}00${COLOR1}]${NC} ${COLOR1}• ${WH}GO 
 echo -e " $COLOR1╰══════════════════════════════════════════════════════╯${NC}"
 echo -e " "
 echo -e " $COLOR1╭═════════════════════════ ${WH}BY${NC} ${COLOR1}═══════════════════════╮ ${NC}"
-echo -e "  $COLOR1${NC}              ${WH}   • $author •                 $COLOR1 $NC"
+echo -e "  $COLOR1${NC}              ${WH}   • AcilAutoScript •                 $COLOR1 $NC"
 echo -e " $COLOR1╰════════════════════════════════════════════════════╯${NC}"
 echo -e ""
 echo -ne " ${WH} Select menu ${COLOR1}: ${WH}"; read opt
