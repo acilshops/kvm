@@ -361,7 +361,7 @@ echo -e "$COLOR1╰════════════════════�
 echo -e "$COLOR1 ${NC} "
 echo -e "$COLOR1╰═════════════════════════════════════════════════╯${NC}"
 echo -e "$COLOR1┌────────────────────── ${WH}BY${NC} ${COLOR1}───────────────────────┐${NC}"
-echo -e "$COLOR1 ${NC}                ${WH}• $author •${NC}                 $COLOR1 $NC"
+echo -e "$COLOR1 ${NC}                ${WH}• AcilAutoScript •${NC}                 $COLOR1 $NC"
 echo -e "$COLOR1╰═════════════════════════════════════════════════╯${NC}"
 echo "$COLOR1 ${NC} "
 echo "" | tee -a /etc/log-create-user.log
@@ -470,7 +470,7 @@ echo -e "$COLOR1 ${NC} ${WH}Expired On   ${COLOR1}: ${WH}$exp" | tee -a /etc/log
 echo -e "$COLOR1╰═════════════════════════════════════════════════╯${NC}" | tee -a /etc/log-create-user.log
 echo -e "$COLOR1 ${NC} "
 echo -e "$COLOR1┌────────────────────── ${WH}BY${NC} ${COLOR1}───────────────────────┐${NC}"
-echo -e "$COLOR1 ${NC}                ${WH}• $author •${NC}                 $COLOR1 $NC"
+echo -e "$COLOR1 ${NC}                ${WH}• AcilAutoScript •${NC}                 $COLOR1 $NC"
 echo -e "$COLOR1╰═════════════════════════════════════════════════╯${NC}"
 echo "$COLOR1 ${NC} "
 echo "" | tee -a /etc/log-create-user.log
@@ -656,7 +656,7 @@ done
 
 rm -rf /tmp/other.txt
 echo -e "$COLOR1┌────────────────────── ${WH}BY${NC} ${COLOR1}───────────────────────┐${NC}"
-echo -e "$COLOR1 ${NC}                ${WH}• $author •${NC}                 $COLOR1 $NC"
+echo -e "$COLOR1 ${NC}                ${WH}• AcilAutoScript •${NC}                 $COLOR1 $NC"
 echo -e "$COLOR1╰═════════════════════════════════════════════════╯${NC}"
 echo "$COLOR1 ${NC} "
 read -n 1 -s -r -p "   Press any key to back on m-ssws"
@@ -780,7 +780,7 @@ echo -e "$COLOR1 ${NC} "
 echo -e "$COLOR1╭═════════════════════════════════════════════════╮${NC}" | tee -a /etc/log-create-user.log
 echo -e "$COLOR1 ${NC} ${WH}Expired On   ${COLOR1}: ${WH}$exp" | tee -a /etc/log-create-user.log
 echo -e "$COLOR1┌────────────────────── ${WH}BY${NC} ${COLOR1}───────────────────────┐${NC}"
-echo -e "$COLOR1 ${NC}                ${WH}• $author •${NC}                 $COLOR1 $NC"
+echo -e "$COLOR1 ${NC}                ${WH}• AcilAutoScript •${NC}                 $COLOR1 $NC"
 echo -e "$COLOR1╰═════════════════════════════════════════════════╯${NC}"
 echo "$COLOR1 ${NC} "
 echo "" | tee -a /etc/log-create-user.log
@@ -799,7 +799,7 @@ echo -e " $COLOR1 $NC                                              ${NC} $COLOR1
 echo -e " $COLOR1 $NC   ${WH}[${COLOR1}00${WH}]${NC} ${COLOR1}• ${WH}GO BACK${NC}"
 echo -e " $COLOR1╰═════════════════════════════════════════════════╯${NC}"
 echo -e "$COLOR1┌────────────────────── ${WH}BY${NC} ${COLOR1}───────────────────────┐${NC}"
-echo -e "$COLOR1 ${NC}                ${WH}• $author •${NC}                 $COLOR1 $NC"
+echo -e "$COLOR1 ${NC}                ${WH}• AcilAutoScript •${NC}                 $COLOR1 $NC"
 echo -e "$COLOR1╰═════════════════════════════════════════════════╯${NC}"
 echo "$COLOR1 ${NC} "
 echo -ne " ${WH}Select menu ${COLOR1}: ${WH}"; read opt
