@@ -102,7 +102,7 @@ clear
 echo -e  "$COLOR1╭══════════════════════════════════════════╮${NC}"
 echo -e  "$COLOR1│             ${WH}TERIMA KASIH                 $COLOR1│${NC}"
 echo -e  "$COLOR1│        ${WH}SUDAH MENGGUNAKAN SCRIPT          $COLOR1│${NC}"
-echo -e  "$COLOR1│               ${WH}DARI SAYA                  $COLOR1│${NC}"
+echo -e  "$COLOR1│               ${WH}DARI ACILSHOP                  $COLOR1│${NC}"
 echo -e  "$COLOR1╰══════════════════════════════════════════╯${NC}"
 echo " "
 until [[ $dnss =~ ^[a-zA-Z0-9_.-]+$ ]]; do
