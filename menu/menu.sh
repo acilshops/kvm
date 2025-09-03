@@ -308,7 +308,7 @@ clear
 clear && clear && clear
 clear;clear;clear
 echo -e " $COLOR1╭════════════════════════════════════════════════════════╮${NC}"
-echo -e " $COLOR1│ ${WH}              • AcilShop| Autoscript Premium  •             ${NC} $COLOR1│$NC"
+echo -e " $COLOR1│ ${WH}              • AcilShop| Autoscript Premium •             ${NC} $COLOR1 $NC"
 echo -e " $COLOR1╰════════════════════════════════════════════════════════╯${NC}"
 echo -e " $COLOR1      ══════════════════════════════════════════════${NC}"
 echo -e " $COLOR1  $NC${WH}    • DATE & TIME  ${COLOR1}: ${WH}$DATE2 WIB${NC}"
