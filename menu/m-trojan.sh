@@ -213,7 +213,7 @@ https://$domain:81/trojan-$user.txt
 ◇━━━━━━━━━━━━━━━━━◇
 Expired Until    :  $exp
 ◇━━━━━━━━━━━━━━━━━◇
-   AcilAutoScript
+AcilAutoScript
 ◇━━━━━━━━━━━━━━━━━◇
 "
 fi
@@ -390,7 +390,7 @@ https://$domain:81/trojan-$user.txt
 ◇━━━━━━━━━━━━━━━━━◇
 Expired Until    :  $timer Minutes
 ◇━━━━━━━━━━━━━━━━━◇
-$author
+AcilAutoScript
 ◇━━━━━━━━━━━━━━━━━◇
 "
 curl -s --max-time $TIMES -d "chat_id=$CHATID&disable_web_page_preview=1&text=$TEXT&parse_mode=html" $URL >/dev/null
