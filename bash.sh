@@ -532,7 +532,7 @@ function Casper3(){
 echo -e "\033[1;96m"
 echo "╔══════════════════════════════════════════════════════════════╗"
 echo "║                        MEMULAI INSTALASI VPN                 ║"
-echo "║                     Script Premium by ACIL-SHOP              ║"
+echo "║                     AcilShop|Autoscript Premium              ║"
 echo "╚══════════════════════════════════════════════════════════════╝"
 echo -e "\033[0m"
 sleep 2
