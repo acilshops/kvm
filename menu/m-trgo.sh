@@ -331,15 +331,18 @@ echo -e "$COLOR1╭════════════════════�
 echo -e "$COLOR1│ ${NC}${COLBG1}              ${WH}• TROJAN-GO PANEL MENU •           ${NC}$COLOR1 │ $NC"
 echo -e "$COLOR1╰═══════════════════════════════════════════════════╯${NC}"
 echo -e "$COLOR1╭═══════════════════════════════════════════════════╮${NC}"
-echo -e "$COLOR1│ $NC  ${WH}[${COLOR1}01${WH}]${NC} ${COLOR1}• ${WH}ADD TRGO${NC}      ${WH}[${COLOR1}03${WH}]${NC} ${COLOR1}• ${WH}RENEW AKUN${NC}    $COLOR1 $NC"
-echo -e "$COLOR1│ $NC  ${WH}[${COLOR1}02${WH}]${NC} ${COLOR1}• ${WH}DELETE TRGO${NC}   ${WH}[${COLOR1}04${WH}]${NC} ${COLOR1}• ${WH}CHECK USER${NC}    $COLOR1 $NC"
-echo -e "$COLOR1│ $NC  ${WH}[${COLOR1}00${WH}]${NC} ${COLOR1}• ${WH}BACK ${NC}"
+
+printf "$COLOR1│ $NC  ${WH}[${COLOR1}%02d${WH}]${NC} ${COLOR1}• %-15s${NC} ${WH}[${COLOR1}%02d${WH}]${NC} ${COLOR1}• %-15s${NC} $COLOR1│$NC\n" 1 "ADD TRGO" 3 "RENEW AKUN"
+printf "$COLOR1│ $NC  ${WH}[${COLOR1}%02d${WH}]${NC} ${COLOR1}• %-15s${NC} ${WH}[${COLOR1}%02d${WH}]${NC} ${COLOR1}• %-15s${NC} $COLOR1│$NC\n" 2 "DELETE TRGO" 4 "CHECK USER"
+printf "$COLOR1│ $NC  ${WH}[${COLOR1}%02d${WH}]${NC} ${COLOR1}• %-15s${NC} %-23s$COLOR1│$NC\n" 0 "BACK" ""
+
 echo -e "$COLOR1╰═══════════════════════════════════════════════════╯${NC}"
 echo -e "$COLOR1╭═════════════════════ • ${WH}BY${NC}${COLOR1} • ══════════════════════╮${NC}"
 printf "                      ${COLOR1}%3s${NC} ${WH}%0s${NC} ${COLOR1}%3s${NC}\n" "• " "AcilAutoScript" " •"
 echo -e "$COLOR1╰═══════════════════════════════════════════════════╯${NC}"
 echo -e ""
 echo -ne " ${WH}Select menu ${COLOR1}: ${WH}"; read opt
+
 case $opt in
 01 | 1) clear ; addtrgo ;;
 02 | 2) clear ; deletetrgo ;;
