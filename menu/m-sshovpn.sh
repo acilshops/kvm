@@ -190,7 +190,7 @@ OpenVPN UDP      :  https://$domain:81/udp.ovpn
 ◇━━━━━━━━━━━━━━━━━◇
 Save Link Account: https://$domain:81/ssh-$Login.txt
 ◇━━━━━━━━━━━━━━━━━◇
-   AcilAutoScript
+@AcilOffcial
 ◇━━━━━━━━━━━━━━━━━◇
 "
 else
@@ -236,7 +236,7 @@ OpenVPN UDP      :  https://$domain:81/udp.ovpn
 ◇━━━━━━━━━━━━━━━━━◇
 Save Link Account: https://$domain:81/ssh-$Login.txt
 ◇━━━━━━━━━━━━━━━━━◇
-   AcilAutoScript
+@AcilOffcial
 ◇━━━━━━━━━━━━━━━━━◇
 "
 fi
@@ -299,7 +299,7 @@ echo -e "$COLOR1 ◇━━━━ PAYLOAD ━━━━◇ ${NC}" | tee -a /etc/xr
 echo -e "$COLOR1${NC}${WH}GET / HTTP/1.1[crlf]Host: [host][crlf]Connection: Upgrade[crlf]User-Agent: [ua][crlf]Upgrade: ws[crlf][crlf]${NC}" | tee -a /etc/xray/sshx/akun/log-create-${Login}.log
 echo -e "$COLOR1 ◇━━━━━━━━━━━━━━━◇ ${NC}" | tee -a /etc/xray/sshx/akun/log-create-${Login}.log
 echo -e "$COLOR1${NC}Terimakasih Sudah Order Di " | tee -a /etc/xray/sshx/akun/log-create-${Login}.log
-echo -e "$COLOR1 ◇━━━${WH}• AcilAutoScript • $NC"━━━◇ | tee -a /etc/xray/sshx/akun/log-create-${Login}.log
+echo -e "$COLOR1 ◇━━━${WH}• @AcilOffcial • $NC"━━━◇ | tee -a /etc/xray/sshx/akun/log-create-${Login}.log
 echo "" | tee -a /etc/xray/sshx/akun/log-create-${Login}.log
 read -n 1 -s -r -p "Press any key to back on menu"
 menu
@@ -429,7 +429,7 @@ OpenVPN UDP      :  https://$domain:81/udp.ovpn
 ◇━━━━━━━━━━━━━━━━━◇
 Save Link Account: https://$domain:81/ssh-$Login.txt
 ◇━━━━━━━━━━━━━━━━━◇
-   AcilAutoScript
+@AcilOffcial
 ◇━━━━━━━━━━━━━━━━━◇
 "
 else
@@ -474,7 +474,7 @@ OpenVPN UDP      :  https://$domain:81/udp.ovpn
 ◇━━━━━━━━━━━━━━━━━◇
 Save Link Account: https://$domain:81/ssh-$Login.txt
 ◇━━━━━━━━━━━━━━━━━◇
-   AcilAutoScript
+@AcilOffcial
 ◇━━━━━━━━━━━━━━━━━◇
 "
 fi
@@ -529,7 +529,7 @@ echo -e "$COLOR1 ◇━━━━━━━━━━━━━━━━━◇ ${NC}
 echo -e "$COLOR1 ${NC}  ${WH}Save Link Acount    : " | tee -a /etc/xray/sshx/akun/log-create-${Login}.log
 echo -e "$COLOR1 ${NC}  ${WH}https://$domain:81/ssh-$Login.txt${NC}$COLOR1 $NC" | tee -a /etc/xray/sshx/akun/log-create-${Login}.log
 echo -e "$COLOR1 ◇━━━━━━━━━━━━━━━━━◇ ${NC}" | tee -a /etc/xray/sshx/akun/log-create-${Login}.log
-echo -e "$COLOR1 ${NC}    ${WH}• $author •${NC}                 $COLOR1 $NC" | tee -a /etc/xray/sshx/akun/log-create-${Login}.log
+echo -e "$COLOR1 ${NC}    ${WH}• @AcilOffcial •${NC}                 $COLOR1 $NC" | tee -a /etc/xray/sshx/akun/log-create-${Login}.log
 echo -e "$COLOR1 ◇━━━━━━━━━━━━━━━━━◇ ${NC}" | tee -a /etc/xray/sshx/akun/log-create-${Login}.log
 echo "" | tee -a /etc/xray/sshx/akun/log-create-${Login}.log
 read -n 1 -s -r -p "Press any key to back on menu"
@@ -1154,7 +1154,7 @@ done
 echo " "
 echo -e "\e[33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
 echo -e "\e[33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
-echo -e "\e[44;91;1m        TANILINK TUNNELING          \e[0m"
+echo -e "\e[44;91;1m        AcilVpn TUNNELING          \e[0m"
 echo -e "\e[33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
 read -n 1 -s -r -p "Press any key to back on menu"
 menu
