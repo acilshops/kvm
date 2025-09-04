@@ -328,24 +328,26 @@ m-trgo
 
 clear
 # Warna
-NC="\e[0m"        # Reset
-WHITEBLUE="\e[1;97;104m"   # Putih + Background biru terang
+NC="\e[0m"          # Reset
+WHITE="\e[97m"      # Putih terang
+CYAN="\e[96m"       # Biru muda (cyan)
+BOLD="\e[1m"        # Tebal
 
-echo -e "${WHITEBLUE}╭═══════════════════════════════════════════════════╮${NC}"
-echo -e "${WHITEBLUE}│                   • TROJAN-GO PANEL MENU •        │${NC}"
-echo -e "${WHITEBLUE}╰═══════════════════════════════════════════════════╯${NC}"
-echo -e "${WHITEBLUE}╭═══════════════════════════════════════════════════╮${NC}"
+echo -e "${CYAN}╭═══════════════════════════════════════════════════╮${NC}"
+echo -e "${CYAN}│${NC}          ${WHITE}${BOLD}• TROJAN-GO PANEL MENU •${NC}          ${CYAN}│${NC}"
+echo -e "${CYAN}╰═══════════════════════════════════════════════════╯${NC}"
+echo -e "${CYAN}╭═══════════════════════════════════════════════════╮${NC}"
 
-printf "${WHITEBLUE}│  [01] • ADD TRGO        [03] • RENEW AKUN         │${NC}\n"
-printf "${WHITEBLUE}│  [02] • DELETE TRGO     [04] • CHECK USER         │${NC}\n"
-printf "${WHITEBLUE}│  [00] • BACK                                     │${NC}\n"
+printf "${CYAN}│${NC}  ${WHITE}[01]${NC} • ADD TRGO        ${WHITE}[03]${NC} • RENEW AKUN         ${CYAN}│${NC}\n"
+printf "${CYAN}│${NC}  ${WHITE}[02]${NC} • DELETE TRGO     ${WHITE}[04]${NC} • CHECK USER         ${CYAN}│${NC}\n"
+printf "${CYAN}│${NC}  ${WHITE}[00]${NC} • BACK                                     ${CYAN}│${NC}\n"
 
-echo -e "${WHITEBLUE}╰═══════════════════════════════════════════════════╯${NC}"
-echo -e "${WHITEBLUE}╭═════════════════════ • BY • ══════════════════════╮${NC}"
-printf "${WHITEBLUE}│                 • AcilAutoScript •                │${NC}\n"
-echo -e "${WHITEBLUE}╰═══════════════════════════════════════════════════╯${NC}"
+echo -e "${CYAN}╰═══════════════════════════════════════════════════╯${NC}"
+echo -e "${CYAN}╭═════════════════════ • ${WHITE}BY${NC}${CYAN} • ══════════════════════╮${NC}"
+printf "${CYAN}│${NC}              ${WHITE}• AcilAutoScript •${NC}              ${CYAN}│${NC}\n"
+echo -e "${CYAN}╰═══════════════════════════════════════════════════╯${NC}"
 
-echo -ne " ${WHITEBLUE}Select menu : ${NC}"; read opt
+echo -ne " ${WHITE}Select menu${NC} : "; read opt
 
 case $opt in
 01 | 1) clear ; addtrgo ;;
