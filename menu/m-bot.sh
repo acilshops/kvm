@@ -9,14 +9,14 @@ checking_sc() {
         echo -ne
     else
         echo -e "$COLOR1╭═════════════════════════════════════════════════╮${NC}"
-        echo -e "$COLOR1 ${NC} ${COLBG1}          ${WH}• kvm PREMIUM •               ${NC} $COLOR1 $NC"
+        echo -e "$COLOR1 ${NC} ${COLBG1}          ${WH}• Acilshop|Autoscript •        ${NC} $COLOR1 $NC"
         echo -e "$COLOR1╰═════════════════════════════════════════════════╯${NC}"
         echo -e "$COLOR1╭═════════════════════════════════════════════════╮${NC}"
         echo -e "            ${RED}PERMISSION DENIED !${NC}"
         echo -e "   \033[0;33mYour VPS${NC} $ipsaya \033[0;33mHas been Banned${NC}"
         echo -e "     \033[0;33mBuy access permissions for scripts${NC}"
         echo -e "             \033[0;33mContact Your Admin ${NC}"
-        echo -e "     \033[0;36mTelegram${NC}: https:t.me/ wa.me/+"
+        echo -e "     \033[0;36mTelegram${NC}: t.me/AcilOffcial wa.me/+6287733994799"
         echo -e "$COLOR1╰═════════════════════════════════════════════════╯${NC}"
         exit
     fi
