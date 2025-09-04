@@ -332,13 +332,17 @@ echo -e "$COLOR1│ ${NC}${COLBG1}              ${WH}• TROJAN-GO PANEL MENU �
 echo -e "$COLOR1╰═══════════════════════════════════════════════════╯${NC}"
 echo -e "$COLOR1╭═══════════════════════════════════════════════════╮${NC}"
 
-printf "$COLOR1│ $NC  ${WH}[${COLOR1}%02d${WH}]${NC} ${COLOR1}• %-15s${NC} ${WH}[${COLOR1}%02d${WH}]${NC} ${COLOR1}• %-15s${NC} $COLOR1│$NC\n" 1 "ADD TRGO" 3 "RENEW AKUN"
-printf "$COLOR1│ $NC  ${WH}[${COLOR1}%02d${WH}]${NC} ${COLOR1}• %-15s${NC} ${WH}[${COLOR1}%02d${WH}]${NC} ${COLOR1}• %-15s${NC} $COLOR1│$NC\n" 2 "DELETE TRGO" 4 "CHECK USER"
+printf "$COLOR1│ $NC  ${WH}[${COLOR1}%02d${WH}]${NC} ${COLOR1}• %-15s${NC} ${WH}[${COLOR1}%02d${WH}]${NC} ${COLOR1}• %-15s${NC} $COLOR1│$NC\n" "1" "ADD TRGO" "3" "RENEW AKUN"
+printf "$COLOR1│ $NC  ${WH}[${COLOR1}%02d${WH}]${NC} ${COLOR1}• %-15s${NC} ${WH}[${COLOR1}%02d${WH}]${NC} ${COLOR1}• %-15s${NC} $COLOR1│$NC\n" "2" "DELETE TRGO" "4" "CHECK USER"
 printf "$COLOR1│ $NC  ${WH}[${COLOR1}%02d${WH}]${NC} ${COLOR1}• %-15s${NC} %-23s$COLOR1│$NC\n" 0 "BACK" ""
 
 echo -e "$COLOR1╰═══════════════════════════════════════════════════╯${NC}"
 echo -e "$COLOR1╭═════════════════════ • ${WH}BY${NC}${COLOR1} • ══════════════════════╮${NC}"
-printf "                      ${COLOR1}%3s${NC} ${WH}%0s${NC} ${COLOR1}%3s${NC}\n" "• " "AcilAutoScript" " •"
+
+# Rata tengah untuk "• AcilAutoScript •"
+center_text="• AcilAutoScript •"
+printf "$COLOR1│%*s%-*s$COLOR1│$NC\n" $(( (51-${#center_text})/2 )) "" $(( (51+${#center_text})/2 )) "$center_text"
+
 echo -e "$COLOR1╰═══════════════════════════════════════════════════╯${NC}"
 echo -e ""
 echo -ne " ${WH}Select menu ${COLOR1}: ${WH}"; read opt
