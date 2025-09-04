@@ -322,7 +322,7 @@ echo -e " $COLOR1  $NC${WH}    • REGION       ${COLOR1}: ${WH}$CITY${NC}"
 echo -e " $COLOR1  $NC${WH}    • IP VPS       ${COLOR1}: ${WH}$MYIP${NC}"
 echo -e " $COLOR1  $NC${WH}    • DOMAIN       ${COLOR1}: ${WH}$(cat /etc/xray/domain)"
 echo -e " $COLOR1  $NC${WH}    • VERSION.     ${COLOR1}: ${WH}V3.12"
-echo -e " $COLOR1  $NC${WH}    • MASA AKTIF   ${COLOR1}: ${WH}$certificate Hari / $Exp2 •$sts ${NC}$COLOR1" 
+# (pindahkan MASA AKTIF ke bawah, jadi baris ini dihapus)
 echo -e " $COLOR1      ══════════════════════════════════════════════${NC}"
 echo -e " $COLOR1╭════════════════════════════════════════════════════════╮${NC}"
 echo -e " $COLOR1│ ${WH}               • Client : $author • $NC"
@@ -345,22 +345,31 @@ echo -e " $COLOR1│$NC ${COLOR1}[${WH}9${COLOR1}]${NC}${COLOR1}• ${WH}RESTART
 echo -e " $COLOR1│$NC ${COLOR1}[${WH}10${COLOR1}]${NC}${COLOR1} ${WH}MENU SYSTEM          $COLOR1││$NC ${COLOR1}[${WH}14${COLOR1}]${NC}${COLOR1}• ${WH}MENU REBUILD        $COLOR1│$NC"   
 echo -e " $COLOR1│$NC ${COLOR1}[${WH}0${COLOR1}]${NC}${COLOR1}• ${WH}EXIT                 $COLOR1││$NC ${COLOR1}[${WH}15${COLOR1}]${NC}${COLOR1}• ${WH}UPDATE SCRIPT       $COLOR1│$NC"
 echo -e " $COLOR1╰═══════════════════════════╯╰═══════════════════════════╯${NC}"
+
+# === PANEL ADMIN (jika aktif) ===
 if [ "$Isadmin" = "ON" ]; then 
-echo -e "$COLOR1╭════════════════════ • ${WH}PANEL ADMIN VIP${NC}${COLOR1} • ════════════════╮${NC}"
-echo -e "$COLOR1│  ${WH}[${COLOR1}13${WH}]${NC} ${COLOR1}• ${WH}RESELLER IP ${WH}[${COLOR1}MENU${WH}] $COLOR1 $NC"
-ressee="m-ip2"
-bottt="m-bot"
-echo -e "$COLOR1╰═════════════════════════════════════════════════════════╯${NC}"
+  echo -e "$COLOR1╭════════════════════ • ${WH}PANEL ADMIN VIP${NC}${COLOR1} • ════════════════╮${NC}"
+  echo -e "$COLOR1│  ${WH}[${COLOR1}13${WH}]${NC} ${COLOR1}• ${WH}RESELLER IP ${WH}[${COLOR1}MENU${WH}] $COLOR1 $NC"
+  ressee="m-ip2"
+  bottt="m-bot"
+  echo -e "$COLOR1╰═════════════════════════════════════════════════════════╯${NC}"
 else
-ressee="menu"
-bottt="menu"
+  ressee="menu"
+  bottt="menu"
 fi
+
+# === PANEL MASA AKTIF (diletakkan paling bawah) ===
 DATE=$(date +'%Y-%m-%d')
 datediff() {
-d1=$(date -d "$1" +%s)
-d2=$(date -d "$2" +%s)
-echo -e "$COLOR1 $NC Expiry In   : $(( (d1 - d2) / 86400 )) Days"
+  d1=$(date -d "$1" +%s)
+  d2=$(date -d "$2" +%s)
+  echo -e "$COLOR1 $NC Expiry In   : $(( (d1 - d2) / 86400 )) Days"
 }
+
+echo -e " $COLOR1╭════════════════════════════════════════════════════╮${NC}"
+echo -e " $COLOR1│ ${WH}• MASA AKTIF${NC} $COLOR1: ${WH}$certificate Hari${NC} ${COLOR1}/ ${WH}$Exp2${NC} ${COLOR1}•${NC}${WH}$sts${NC}"
+echo -e " $COLOR1│ ${WH}• SISA WAKTU${NC} $COLOR1: ${NC}$(datediff "$Exp2" "$DATE")"
+echo -e " $COLOR1╰════════════════════════════════════════════════════╯${NC}"
 function new(){
 cat> /etc/cron.d/autocpu << END
 SHELL=/bin/sh
