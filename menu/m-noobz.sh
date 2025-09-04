@@ -422,9 +422,18 @@ echo -e "$COLOR1│ $NC  ${WH}[${COLOR1}02${WH}]${NC} ${COLOR1}• ${WH}SHOW AKU
 echo -e "$COLOR1│ $NC  ${WH}[${COLOR1}03${WH}]${NC} ${COLOR1}• ${WH}RENEW AKUN${NC}    ${WH}[${COLOR1}06${WH}]${NC} ${COLOR1}• ${WH}UNLOCKED USER${NC}    $COLOR1 $NC"
 echo -e "$COLOR1│ $NC  ${WH}[${COLOR1}00${WH}]${NC} ${COLOR1}• ${WH}GO BACK${NC}       ${WH}[${COLOR1}07${WH}]${NC} ${COLOR1}• ${WH}REMOVE ALL USER${NC}    $COLOR1 $NC"
 echo -e "$COLOR1╰═══════════════════════════════════════════════════╯${NC}"
-echo -e "$COLOR1╭═════════════════════ • ${WH}BY${NC}${COLOR1} • ══════════════════════╮${NC}"
-echo -e "$COLOR1${NC}          ${WH}   •   AcilAutoScript •                 $COLOR1 $NC"
-echo -e "$COLOR1╰═══════════════════════════════════════════════════╯${NC}"
+# Variabel teks
+footer_text="• AcilAutoScript •"
+box_width=51  # lebar box (jumlah karakter antara ╭ dan ╮)
+
+# Hitung padding kiri-kanan
+text_length=${#footer_text}
+padding=$(( (box_width - text_length) / 2 ))
+
+# Tampilkan box footer
+echo -e "${COLOR1}╭═════════════════════ • ${WH}BY${NC}${COLOR1} • ══════════════════════╮${NC}"
+printf "${COLOR1}│${NC}%*s${WH}%s${NC}%*s${COLOR1}│${NC}\n" $padding "" "$footer_text" $padding ""
+echo -e "${COLOR1}╰═══════════════════════════════════════════════════╯${NC}"
 echo -e ""
 echo -ne " ${WH}Select menu ${COLOR1}: ${WH}"; read opt
 case $opt in
