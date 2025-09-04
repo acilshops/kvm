@@ -14,14 +14,13 @@ fun_bar() {
     
     tput civis
     echo -ne "  \033[0;33m${PROCESS_NAME}.. \033[1;37m- \033[0;33m["
-    ...
-}
-
 clear
+# Banner tampil sebentar saja
 echo -e "\033[0;36m╭─────────────────────────────────────────╮\033[0m"
 echo -e "\033[0;36m│ \033[1;37mAcilShop | Autoscript Tunneling ...LOADING...\033[0;36m │\033[0m"
 echo -e "\033[0;36m╰─────────────────────────────────────────╯\033[0m"
-    
+sleep 1
+clear
     # Loading bar dengan animasi yang lebih menarik
     local progress=0
     while true; do
