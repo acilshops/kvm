@@ -9,7 +9,7 @@ red() { echo -e "\\033[31;1m${*}\\033[0m"; }
 
 
 echo "  The script will go through an installation process!"
-echo "          VPN KINGSTORE SCRIPT ...LOADING..."
+echo "          AcilAutoScript|Tunneling ...LOADING..."
 sleep 0.5
 apt update -y
 apt upgrade -y
