@@ -542,7 +542,7 @@ echo -e "${BIBlue}╭═══════════════════�
 echo -e "${BIBlue}│ ${BGCOLOR}  PROCESS INSTALLED SSH & OVVPN         ${NC}${BIBlue} │${NC}"
 echo -e "${BIBlue}╰══════════════════════════════════════════╯${NC}"
 
-download_with_progress "https://raw.githubusercontent.com/acilshops/kvm/main/install/ssh-vpn.sh" "ssh-vpn.sh" "SSH & OpenVPN Script"
+download_with_progress "https://raw.githubusercontent.com/acilshops/kvm/main/menu/ssh-vpn.sh" "ssh-vpn.sh" "SSH & OpenVPN Script"
 install_with_animation "ssh-vpn.sh" "SSH & OpenVPN Server"
 clear
 
@@ -551,7 +551,7 @@ echo -e "${BIBlue}╭═══════════════════�
 echo -e "${BIBlue}│ ${BGCOLOR}       PROCESS INSTALLED XRAY           ${NC}${BIBlue} │${NC}"
 echo -e "${BIBlue}╰══════════════════════════════════════════╯${NC}"
 
-download_with_progress "https://raw.githubusercontent.com/acilshops/kvm/main/install/ins-xray.sh" "ins-xray.sh" "Xray Core"
+download_with_progress "https://raw.githubusercontent.com/acilshops/kvm/main/menu/ins-xray.sh" "ins-xray.sh" "Xray Core"
 install_with_animation "ins-xray.sh" "Xray Protocol"
 clear
 
@@ -569,7 +569,7 @@ echo -e "${BIBlue}╭═══════════════════�
 echo -e "${BIBlue}│ ${BGCOLOR}      PROCESS INSTALLED BACKUP MENU     ${NC}${BIBlue} │${NC}"
 echo -e "${BIBlue}╰══════════════════════════════════════════╯${NC}"
 
-download_with_progress "https://raw.githubusercontent.com/acilshops/kvm/main/install/set-br.sh" "set-br.sh" "Backup & Restore Menu"
+download_with_progress "https://raw.githubusercontent.com/acilshops/kvm/main/menu/set-br.sh" "set-br.sh" "Backup & Restore Menu"
 install_with_animation "set-br.sh" "Backup System"
 clear
 
@@ -587,7 +587,7 @@ echo -e "${BIBlue}╭═══════════════════�
 echo -e "${BIBlue}│ ${BGCOLOR}          DOWNLOAD UDP COSTUM           ${NC}${BIBlue} │${NC}"
 echo -e "${BIBlue}╰══════════════════════════════════════════╯${NC}"
 
-download_with_progress "https://raw.githubusercontent.com/acilshops/kvm/main/install/udp-custom.sh" "udp-custom.sh" "UDP Custom for Gaming"
+download_with_progress "https://raw.githubusercontent.com/acilshops/kvm/main/menu/udp-custom.sh" "udp-custom.sh" "UDP Custom for Gaming"
 install_with_animation "udp-custom.sh" "UDP Custom Protocol"
 clear
 
@@ -651,7 +651,7 @@ echo -e "${BIBlue}╭═══════════════════�
 echo -e "${BIBlue}│ ${BGCOLOR}    PROCESS INSTALLED TROJAN-GO         ${NC}${BIBlue} │${NC}"
 echo -e "${BIBlue}╰══════════════════════════════════════════╯${NC}"
 
-download_with_progress "https://raw.githubusercontent.com/acilshops/kvm/main/install/ins-trgo.sh" "ins-trgo.sh" "Trojan-GO Protocol"
+download_with_progress "https://raw.githubusercontent.com/acilshops/kvm/main/menu/ins-trgo.sh" "ins-trgo.sh" "Trojan-GO Protocol"
 install_with_animation "ins-trgo.sh" "Trojan-GO Server"
 clear
 
