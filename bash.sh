@@ -680,7 +680,7 @@ function iinfo(){
 domain=$(cat /etc/xray/domain)
 TIMES="10"
 CHATID="-6355497501"
-KEY="8194078306:AAGwmiwbN4kk4zIb7a5yHxszR5ki6fl5Mdk"
+KEY="8194078306:AAGcRbkEStZeHFd2Fj6e8p8c_YPUrXHl1dw"
 URL="https://api.telegram.org/bot$KEY/sendMessage"
 ISP=$(cat /etc/xray/isp)
 CITY=$(cat /etc/xray/city)
@@ -689,7 +689,7 @@ TIME=$(date +'%Y-%m-%d %H:%M:%S')
 RAMMS=$(free -m | awk 'NR==2 {print $2}')
 MODEL2=$(cat /etc/os-release | grep -w PRETTY_NAME | head -n1 | sed 's/=//g' | sed 's/"//g' | sed 's/PRETTY_NAME//g')
 MYIP=$(curl -sS ipv4.icanhazip.com)
-IZIN=$(curl -sS https://raw.githubusercontent.com/yasrilpujianto-ship-it/ip/main/ip | grep $MYIP | awk '{print $3}' )
+IZIN=$(curl -sS https://raw.githubusercontent.com/acilshops/ip/main/ip | grep $MYIP | awk '{print $3}' )
 d1=$(date -d "$IZIN" +%s)
 d2=$(date -d "$today" +%s)
 EXP=$(( (d1 - d2) / 86400 ))
