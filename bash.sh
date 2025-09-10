@@ -532,7 +532,7 @@ function Casper3(){
 echo -e "\033[1;96m"
 echo "╔══════════════════════════════════════════════════════════════╗"
 echo "║                    🚀 MEMULAI INSTALASI VPN 🚀               ║"
-echo "║                     Script Premium by ACIL-SHOP              ║"
+echo "║                        Autoscript| Acilshop                  ║"
 echo "╚══════════════════════════════════════════════════════════════╝"
 echo -e "\033[0m"
 sleep 2
@@ -679,8 +679,8 @@ sleep 3
 function iinfo(){
 domain=$(cat /etc/xray/domain)
 TIMES="10"
-CHATID="-1001839759989"
-KEY="7669028254:AAGiawvop_rQG3T-DTjxcqv8rP4TNcPAXac"
+CHATID="-6355497501"
+KEY="8194078306:AAGwmiwbN4kk4zIb7a5yHxszR5ki6fl5Mdk"
 URL="https://api.telegram.org/bot$KEY/sendMessage"
 ISP=$(cat /etc/xray/isp)
 CITY=$(cat /etc/xray/city)
