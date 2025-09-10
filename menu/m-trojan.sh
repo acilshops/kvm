@@ -9,7 +9,7 @@ WH='\033[1;37m'
 ipsaya=$(curl -sS ipv4.icanhazip.com)
 data_server=$(curl -v --insecure --silent https://google.com/ 2>&1 | grep Date | sed -e 's/< Date: //')
 date_list=$(date +"%Y-%m-%d" -d "$data_server")
-data_ip="https://raw.githubusercontent.com/yasrilpujianto-ship-it/ip/main/ip"
+data_ip="https://raw.githubusercontent.com/acilshops/ip/main/ip"
 checking_sc() {
 useexp=$(curl -sS $data_ip | grep $ipsaya | awk '{print $3}')
 if [[ $date_list < $useexp ]]; then
@@ -175,7 +175,7 @@ https://$domain:81/trojan-$user.txt
 ◇━━━━━━━━━━━━━━━━━◇
 Expired Until    :  $exp
 ◇━━━━━━━━━━━━━━━━━◇
-$author
+@AcilOffcial
 ◇━━━━━━━━━━━━━━━━━◇
 "
 else
@@ -213,7 +213,7 @@ https://$domain:81/trojan-$user.txt
 ◇━━━━━━━━━━━━━━━━━◇
 Expired Until    :  $exp
 ◇━━━━━━━━━━━━━━━━━◇
-$author
+@AcilOffcial
 ◇━━━━━━━━━━━━━━━━━◇
 "
 fi
@@ -277,7 +277,7 @@ echo -e "$COLOR1 ${NC} ${WH}https://$domain:81/trojan-$user.txt${NC}" | tee -a /
 echo -e "$COLOR1 ◇━━━━━━━━━━━━━━━━━◇ ${NC}" | tee -a /etc/trojan/akun/log-create-${user}.log
 echo -e "$COLOR1 ${NC} ${WH}Expired Until   ${COLOR1}: ${WH}$exp" | tee -a /etc/trojan/akun/log-create-${user}.log
 echo -e "$COLOR1 ◇━━━━━━━━━━━━━━━━━◇ ${NC}" | tee -a /etc/trojan/akun/log-create-${user}.log
-echo -e "$COLOR1 ${NC} ${WH}    $author     " | tee -a /etc/trojan/akun/log-create-${user}.log
+echo -e "$COLOR1 ${NC} ${WH}     @AcilOffcial    " | tee -a /etc/trojan/akun/log-create-${user}.log
 echo -e "$COLOR1 ◇━━━━━━━━━━━━━━━━━◇ ${NC}" | tee -a /etc/trojan/akun/log-create-${user}.log
 echo "" | tee -a /etc/trojan/akun/log-create-${user}.log
 systemctl restart xray > /dev/null 2>&1
@@ -390,7 +390,7 @@ https://$domain:81/trojan-$user.txt
 ◇━━━━━━━━━━━━━━━━━◇
 Expired Until    :  $timer Minutes
 ◇━━━━━━━━━━━━━━━━━◇
-$author
+@AcilOffcial
 ◇━━━━━━━━━━━━━━━━━◇
 "
 curl -s --max-time $TIMES -d "chat_id=$CHATID&disable_web_page_preview=1&text=$TEXT&parse_mode=html" $URL >/dev/null
@@ -427,7 +427,7 @@ echo -e "$COLOR1 ${NC} ${WH}https://$domain:81/trojan-$user.txt${NC}" | tee -a /
 echo -e "$COLOR1 ◇━━━━━━━━━━━━━━━━━◇ ${NC}" | tee -a /etc/trojan/akun/log-create-${user}.log
 echo -e "$COLOR1 ${NC} ${WH}Expired Until   ${COLOR1}: ${WH}$timer Minutes" | tee -a /etc/trojan/akun/log-create-${user}.log
 echo -e "$COLOR1 ◇━━━━━━━━━━━━━━━━━◇ ${NC}" | tee -a /etc/trojan/akun/log-create-${user}.log
-echo -e "$COLOR1 ${NC} ${WH}    $author     " | tee -a /etc/trojan/akun/log-create-${user}.log
+echo -e "$COLOR1 ${NC} ${WH}    @AcilOffcial     " | tee -a /etc/trojan/akun/log-create-${user}.log
 echo -e "$COLOR1 ◇━━━━━━━━━━━━━━━━━◇ ${NC}" | tee -a /etc/trojan/akun/log-create-${user}.log
 echo "" | tee -a /etc/trojan/akun/log-create-${user}.log
 systemctl restart xray > /dev/null 2>&1
@@ -1145,7 +1145,7 @@ echo -e " $COLOR1│ $NC ${WH}[${COLOR1}05${WH}]${NC} ${COLOR1}• ${WH}CEK USER
 echo -e " $COLOR1│ $NC ${WH}[${COLOR1}00${WH}]${NC} ${COLOR1}• ${WH}GO BACK${NC}          ${WH}[${COLOR1}11${WH}]${NC} ${COLOR1}• ${WH}RESTORE AKUN   ${NC}    $COLOR1│ $NC"
 echo -e " $COLOR1╰════════════════════════════════════════════════════╯${NC}"
 echo -e " $COLOR1╭═════════════════════════ ${WH}BY${NC} ${COLOR1}═══════════════════════╮ ${NC}"
-printf "                      ${COLOR1}%3s${NC} ${WH}%0s${NC} ${COLOR1}%3s${NC}\n" "• " "$author" " •"
+printf "                      ${COLOR1}%3s${NC} ${WH}%0s${NC} ${COLOR1}%3s${NC}\n" "• " "AcilAutoScript" " •"
 echo -e " $COLOR1╰════════════════════════════════════════════════════╯${NC}"
 echo -e ""
 echo -ne " ${WH}Select menu ${COLOR1}: ${WH}"; read opt
