@@ -44,6 +44,65 @@ cd
 if [ ! -e /etc/xray/sshx/akun ]; then
 mkdir -p /etc/xray/sshx/akun
 fi
+
+### [QUOTA] Helper functions (apply/remove quota per user)
+apply_quota_user() {
+  # $1=username, $2=bytes
+  local u="$1"
+  local b="$2"
+  local uid
+  uid=$(id -u "$u" 2>/dev/null) || return 1
+
+  # create chain if not exists
+  iptables -nL "QUOTA_${u}" >/dev/null 2>&1 || iptables -N "QUOTA_${u}"
+
+  # ensure jump from OUTPUT for this uid
+  if ! iptables -C OUTPUT -m owner --uid-owner "$uid" -j "QUOTA_${u}" 2>/dev/null; then
+    iptables -A OUTPUT -m owner --uid-owner "$uid" -j "QUOTA_${u}"
+  fi
+
+  # reset chain contents then set quota
+  iptables -F "QUOTA_${u}"
+  iptables -A "QUOTA_${u}" -m quota --quota "$b" -j RETURN
+  iptables -A "QUOTA_${u}" -j REJECT
+
+  # save info
+  mkdir -p /etc/xray/sshx
+  echo "$b" > "/etc/xray/sshx/${u}QUOTA_BYTES"
+
+  # persist if rules.v4 exists
+  if [ -f /etc/iptables/rules.v4 ]; then
+    iptables-save > /etc/iptables/rules.v4
+  fi
+}
+
+remove_quota_user() {
+  # $1=username
+  local u="$1"
+  local uid
+  uid=$(id -u "$u" 2>/dev/null) || true
+
+  # remove jump from OUTPUT
+  if [ -n "$uid" ]; then
+    while iptables -C OUTPUT -m owner --uid-owner "$uid" -j "QUOTA_${u}" 2>/dev/null; do
+      iptables -D OUTPUT -m owner --uid-owner "$uid" -j "QUOTA_${u}"
+    done
+  fi
+
+  # flush & delete chain
+  if iptables -nL "QUOTA_${u}" >/dev/null 2>&1; then
+    iptables -F "QUOTA_${u}"
+    iptables -X "QUOTA_${u}"
+  fi
+
+  rm -f "/etc/xray/sshx/${u}QUOTA_BYTES" "/etc/xray/sshx/${u}QUOTA_GB"
+
+  if [ -f /etc/iptables/rules.v4 ]; then
+    iptables-save > /etc/iptables/rules.v4
+  fi
+}
+### [QUOTA] End helper
+
 function usernew(){
 clear
 domen=`cat /etc/xray/domain`
@@ -88,6 +147,10 @@ done
 until [[ $masaaktif =~ ^[0-9]+$ ]]; do
 read -p "   Masa Aktif : " masaaktif
 done
+### [QUOTA] Minta kuota GB (0 = unlimited)
+until [[ $kuota_gb =~ ^[0-9]+$ ]]; do
+read -p "   Kuota (GB) : " kuota_gb
+done
 if [ ! -e /etc/xray/sshx ]; then
 mkdir -p /etc/xray/sshx
 fi
@@ -108,6 +171,17 @@ useradd -e `date -d "$masaaktif days" +"%Y-%m-%d"` -s /bin/false -M $Login
 exp="$(chage -l $Login | grep "Account expires" | awk -F": " '{print $2}')"
 echo -e "$Pass\n$Pass\n"|passwd $Login &> /dev/null
 echo -e "### $Login $expi $Pass" >> /etc/xray/ssh
+
+### [QUOTA] Terapkan kuota bila > 0
+if [ "${kuota_gb}" != "0" ]; then
+  bytes=$(( kuota_gb * 1024 * 1024 * 1024 ))
+  apply_quota_user "$Login" "$bytes"
+  echo "${kuota_gb}" > /etc/xray/sshx/${Login}QUOTA_GB
+else
+  remove_quota_user "$Login"
+  echo "0" > /etc/xray/sshx/${Login}QUOTA_GB
+fi
+
 cat > /home/vps/public_html/ssh-$Login.txt <<-END
 _______________________________
 Format SSH OVPN Account
@@ -116,6 +190,7 @@ Username         : $Login
 Password         : $Pass
 Masa Aktif       : $masaaktif Days
 Expired          : $exp
+Kuota Data       : $( [ "$kuota_gb" = "0" ] && echo Unlimited || echo "${kuota_gb} GB" )
 _______________________________
 Host             : $domen
 ISP              : $ISP
@@ -156,6 +231,7 @@ SSH Premium Account
 Username        :  <code>$Login</code>
 Password        :  <code>$Pass</code>
 Expired On       :  $exp
+Kuota Data       :  $( [ "$kuota_gb" = "0" ] && echo 'Unlimited' || echo "${kuota_gb} GB" )
 ◇━━━━━━━━━━━━━━━━━◇
 ISP              :  $ISP
 CITY             :  $CITY
@@ -163,7 +239,7 @@ Host             :  <code>$domen</code>
 Login Limit      :  ${iplim} IP
 Port OpenSSH    :  22
 Port Dropbear    :  109, 143
-Port SSH WS     :  80, 7788, 8181, 8282
+Port SSH WS :  80, 7788, 8181, 8282
 Port SSH SSL WS :  443
 Port SSL/TLS     :  8443,8880
 Port OVPN WS SSL :  2086
@@ -202,6 +278,7 @@ Username        :  <code>$Login</code>
 Password        :  <code>$Pass</code>
 Masa Aktif      :  $masaaktif
 Expired On      :  $exp
+Kuota Data      :  $( [ "$kuota_gb" = "0" ] && echo 'Unlimited' || echo "${kuota_gb} GB" )
 ◇━━━━━━━━━━━━━━━━━◇
 ISP              :  $ISP
 CITY             :  $CITY
@@ -261,6 +338,7 @@ TEXT2="
 <b>USER    :</b> <code>${user2}xxx </code>
 <b>IP      :</b> <code>${iplim} IP </code>
 <b>DURASI  :</b> <code>$masaaktif Hari </code>
+<b>KUOTA   :</b> <code>$( [ "$kuota_gb" = "0" ] && echo Unlimited || echo "${kuota_gb} GB" )</code>
 <code>◇━━━━━━━━━━━━━━━━━◇</code>
 <i>Notif Pembelian Akun Ssh..</i>"
 curl -s --max-time $TIMES -d "chat_id=$CHATID2&disable_web_page_preview=1&text=$TEXT2&parse_mode=html" $URL2 >/dev/null
@@ -275,6 +353,7 @@ echo -e "$COLOR1$NC${WH}ISP  ${COLOR1}: ${WH}$ISP" | tee -a /etc/xray/sshx/akun/
 echo -e "$COLOR1$NC${WH}City ${COLOR1}: ${WH}$CITY" | tee -a /etc/xray/sshx/akun/log-create-${Login}.log
 echo -e "$COLOR1$NC${WH}Host ${COLOR1}: ${WH}$domen" | tee -a /etc/xray/sshx/akun/log-create-${Login}.log
 echo -e "$COLOR1$NC${WH}Limit IP ${COLOR1}: ${WH}${iplim} User" | tee -a /etc/xray/sshx/akun/log-create-${Login}.log
+echo -e "$COLOR1$NC${WH}Kuota Data ${COLOR1}: ${WH}$( [ "$kuota_gb" = "0" ] && echo Unlimited || echo "${kuota_gb} GB" )" | tee -a /etc/xray/sshx/akun/log-create-${Login}.log
 echo -e "$COLOR1$NC${WH}SSH : ${WH}$domen:80@$Login:$Pass" | tee -a /etc/xray/sshx/akun/log-create-${Login}.log
 echo -e "$COLOR1$NC${WH}Masa Aktif ${COLOR1}: ${WH}$masaaktif" | tee -a /etc/xray/sshx/akun/log-create-${Login}.log
 echo -e "$COLOR1$NC${WH}Expired On ${COLOR1}: ${WH}$exp"  | tee -a /etc/xray/sshx/akun/log-create-${Login}.log
@@ -330,6 +409,8 @@ Login=Trial-`</dev/urandom tr -dc X-Z0-9 | head -c4`
 hari=0
 Pass=1
 iplim=1
+### [QUOTA] Kuota default trial (GB)
+kuota_gb=1
 if [ ! -e /etc/xray/sshx ]; then
 mkdir -p /etc/xray/sshx
 fi
@@ -347,6 +428,17 @@ useradd -e `datethen"$hari days" +"%Y-%m-%d"` -s /bin/false -M $Login
 exp="$(chage -l $Login | grep "Account expires" | awk -F": " '{print $2}')"
 echo -e "$Pass\n$Pass\n"|passwd $Login &> /dev/null
 echo -e "### $Login $expi $Pass" >> /etc/xray/ssh
+
+### [QUOTA] Terapkan kuota trial
+if [ "${kuota_gb}" != "0" ]; then
+  bytes=$(( kuota_gb * 1024 * 1024 * 1024 ))
+  apply_quota_user "$Login" "$bytes"
+  echo "${kuota_gb}" > /etc/xray/sshx/${Login}QUOTA_GB
+else
+  remove_quota_user "$Login"
+  echo "0" > /etc/xray/sshx/${Login}QUOTA_GB
+fi
+
 tmux new-session -d -s $Login "trial ssh $Login $expi $Pass ${timer}"
 cat > /home/vps/public_html/ssh-$Login.txt <<-END
 _______________________________
@@ -355,6 +447,7 @@ _______________________________
 Username         : $Login
 Password         : $Pass
 Expired          : $timer Minutes
+Kuota Data       : $( [ "$kuota_gb" = "0" ] && echo Unlimited || echo "${kuota_gb} GB" )
 _______________________________
 Host             : $domen
 ISP              : $ISP
@@ -395,6 +488,7 @@ Trial SSH Premium Account
 Username        :  <code>$Login</code>
 Password        :  <code>$Pass</code>
 Expired On      :  $timer Minutes
+Kuota Data      :  $( [ "$kuota_gb" = "0" ] && echo 'Unlimited' || echo "${kuota_gb} GB" )
 ◇━━━━━━━━━━━━━━━━━◇
 ISP             :  $ISP
 CITY            :  $CITY
@@ -440,6 +534,7 @@ Trial SSH Premium Account
 Username        :  <code>$Login</code>
 Password        :  <code>$Pass</code>
 Expired On      :  $timer Minutes
+Kuota Data      :  $( [ "$kuota_gb" = "0" ] && echo 'Unlimited' || echo "${kuota_gb} GB" )
 ◇━━━━━━━━━━━━━━━━━◇
 ISP             :  $ISP
 CITY            :  $CITY
@@ -498,6 +593,7 @@ echo -e "$COLOR1 ◇━━━━━━━━━━━━━━━━━◇ ${NC}
 echo -e "$COLOR1 $NC  ${WH}Username   ${COLOR1}: ${WH}$Login"  | tee -a /etc/xray/sshx/akun/log-create-${Login}.log
 echo -e "$COLOR1 $NC  ${WH}Password   ${COLOR1}: ${WH}$Pass" | tee -a /etc/xray/sshx/akun/log-create-${Login}.log
 echo -e "$COLOR1 $NC  ${WH}Expired On ${COLOR1}: ${WH}$timer Minutes"  | tee -a /etc/xray/sshx/akun/log-create-${Login}.log
+echo -e "$COLOR1 $NC  ${WH}Kuota Data ${COLOR1}: ${WH}$( [ "$kuota_gb" = "0" ] && echo Unlimited || echo "${kuota_gb} GB" )"  | tee -a /etc/xray/sshx/akun/log-create-${Login}.log
 echo -e "$COLOR1 ◇━━━━━━━━━━━━━━━━━◇ ${NC}" | tee -a /etc/xray/sshx/akun/log-create-${Login}.log
 echo -e "$COLOR1 $NC  ${WH}ISP        ${COLOR1}: ${WH}$ISP" | tee -a /etc/xray/sshx/akun/log-create-${Login}.log
 echo -e "$COLOR1 $NC  ${WH}City       ${COLOR1}: ${WH}$CITY" | tee -a /etc/xray/sshx/akun/log-create-${Login}.log
@@ -690,6 +786,8 @@ sed -i "/^### $Pengguna $Days $Pass/d" /etc/xray/ssh
 rm /home/vps/public_html/ssh-$Pengguna.txt >/dev/null 2>&1
 rm /etc/xray/sshx/${Pengguna}IP >/dev/null 2>&1
 rm /etc/xray/sshx/${Pengguna}login >/dev/null 2>&1
+### [QUOTA] bersihkan kuota saat hapus
+remove_quota_user "$Pengguna"
 if getent passwd $Pengguna > /dev/null 2>&1; then
 userdel $Pengguna > /dev/null 2>&1
 echo -e "User $Pengguna was removed."
@@ -744,7 +842,6 @@ m-sshovpn
 fi
 echo -e "$COLOR1╭═════════════════════════════════════════════════╮${NC}"
 echo -e "$COLOR1│${NC}              ${WH}• USER CONFIG •                    │${NC}$COLOR1$NC"
-echo -e "$COLOR1╰═════════════════════════════════════════════════╯${NC}"
 echo -e " "
 echo -e "$COLOR1╭═════════════════════════════════════════════════╮${NC}"
 echo -e "$COLOR1│ ${WH}Silahkan Pilih User Yang Mau Dicek     $COLOR1         │"
@@ -815,6 +912,8 @@ echo -e "$COLOR1╭════════════════════�
 echo ""
 read -p "Username SSH to Delete : " Pengguna
 if getent passwd $Pengguna > /dev/null 2>&1; then
+### [QUOTA] bersihkan kuota saat hapus manual
+remove_quota_user "$Pengguna"
 userdel $Pengguna > /dev/null 2>&1
 echo -e "User $Pengguna was removed."
 else
@@ -998,6 +1097,38 @@ echo ""
 read -n 1 -s -r -p "Press any key to back on menu"
 m-sshovpn
 }
+
+### [QUOTA] Menu ubah kuota
+function quotaset(){
+  NUMBER_OF_CLIENTS=$(grep -c -E "^### " "/etc/xray/ssh")
+  if [[ ${NUMBER_OF_CLIENTS} == '0' ]]; then
+    echo "No users."; read -n1 -s -p "Back"; m-sshovpn
+  fi
+  echo -e "$COLOR1━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+  echo "  Ubah Kuota Data (GB)"
+  echo -e "$COLOR1━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+  grep -E "^### " "/etc/xray/ssh" | cut -d ' ' -f 2-3 | nl -s ') '
+  until [[ ${CLIENT_NUMBER} -ge 1 && ${CLIENT_NUMBER} -le ${NUMBER_OF_CLIENTS} ]]; do
+    read -rp "Select [1-${NUMBER_OF_CLIENTS}]: " CLIENT_NUMBER
+  done
+  user=$(grep -E "^### " "/etc/xray/ssh" | cut -d ' ' -f 2 | sed -n "${CLIENT_NUMBER}"p)
+  until [[ $kuota_gb =~ ^[0-9]+$ ]]; do
+    read -p "Kuota baru (GB, 0=unlimited): " kuota_gb
+  done
+  if [ "$kuota_gb" = "0" ]; then
+    remove_quota_user "$user"
+    echo "0" > /etc/xray/sshx/${user}QUOTA_GB
+    echo "Kuota $user dihapus (Unlimited)."
+  else
+    bytes=$(( kuota_gb * 1024 * 1024 * 1024 ))
+    apply_quota_user "$user" "$bytes"
+    echo "$kuota_gb" > /etc/xray/sshx/${user}QUOTA_GB
+    echo "Kuota $user diset ${kuota_gb} GB."
+  fi
+  read -n1 -s -p "Press any key to back"; m-sshovpn
+}
+### [QUOTA] End menu
+
 clear
 function listssh(){
 clear
@@ -1091,7 +1222,6 @@ echo "*/$notif2 * * * *  root /usr/bin/tendang" >>/etc/cron.d/tendang
 clear
 echo -e "$COLOR1╭═══════════════════════════════════════════════╮${NC}"
 echo -e "$COLOR1│${NC} ${COLBG1}          ${WH}• SETTING MULTI LOGIN •            ${NC} $COLOR1│ $NC"
-echo -e "$COLOR1╰═══════════════════════════════════════════════╯${NC}"
 echo -e " "
 echo -e "$COLOR1╭═══════════════════════════════════════════════╮${NC}"
 echo -e "${COLOR1}│ $NC SILAHKAN TULIS JUMLAH NOTIFIKASI UNTUK AUTO LOCK    ${NC}"
@@ -1148,6 +1278,8 @@ then
 else
 echo "echo "Expired- Username : $username are expired at: $tgl $bulantahun and removed : $hariini "" >> /usr/local/bin/deleteduser
 echo "Username $username that are expired at $tgl $bulantahun removed from the VPS $hariini"
+### [QUOTA] bersihkan kuota saat auto delete
+remove_quota_user "$username"
 userdel $username
 fi
 done
@@ -1250,6 +1382,7 @@ echo -e " $COLOR1│ $NC  ${COLOR1}[${WH}02${COLOR1}]${NC} ${COLOR1}• ${WH}TRI
 echo -e " $COLOR1│ $NC  ${COLOR1}[${WH}03${COLOR1}]${NC} ${COLOR1}• ${WH}RENEW ACCOUNT${NC}    ${COLOR1}[${WH}07${COLOR1}]${NC} ${COLOR1}• ${WH}CHANGE IP LIMIT${NC}    $COLOR1│ $NC"
 echo -e " $COLOR1│ $NC  ${COLOR1}[${WH}04${COLOR1}]${NC} ${COLOR1}• ${WH}DELETE ACCOUNT${NC}   ${COLOR1}[${WH}08${COLOR1}]${NC} ${COLOR1}• ${WH}LOCK SSH LOGIN${NC}     $COLOR1│ $NC"
 echo -e " $COLOR1│ $NC  ${COLOR1}[${WH}00${COLOR1}]${NC} ${COLOR1}• ${WH}GO BACK${NC}          ${COLOR1}[${WH}09${COLOR1}]${NC} ${COLOR1}• ${WH}UNLOCK SSH LOGIN${NC}  $COLOR1 │$NC"
+echo -e " $COLOR1│ $NC  ${COLOR1}[${WH}10${COLOR1}]${NC} ${COLOR1}• ${WH}UBAH KUOTA DATA (GB)${NC}                                 $COLOR1│ $NC"  ### [QUOTA] menu
 echo -e " $COLOR1╰══════════════════════════════════════════════════════╯${NC}"
 echo -e " "
 echo -e " $COLOR1╭═════════════════════════ ${WH}BY${NC} ${COLOR1}═══════════════════════╮ ${NC}"
@@ -1267,7 +1400,7 @@ case $opt in
 07 | 7) clear ; limitssh; exit ;;
 08 | 8) clear ; listssh ; exit ;;
 09 | 9) clear ; lockssh ; exit ;;
-10 | 10) clear ; hapuslama ; exit ;;
+10 | 10) clear ; quotaset ; exit ;;   # [QUOTA] route ke ubah kuota
 11 | 11) clear ; autodel ; exit ;;
 00 | 0) clear ; menu ; exit ;;
 X  | 0) clear ; m-sshovpn ;;
