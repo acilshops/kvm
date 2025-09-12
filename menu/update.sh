@@ -1,6 +1,7 @@
 #!/bin/bash
 dateFromServer=$(curl -v --insecure --silent https://google.com/ 2>&1 | grep Date | sed -e 's/< Date: //')
-biji=`date +"%Y-%m-%d" -d "$dateFromServer"`
+biji=$(date +"%Y-%m-%d" -d "$dateFromServer")
+
 ###########- COLOR CODE -##############
 echo -e " [INFO] Downloading File"
 wget -q -O /usr/bin/m-rebuild "https://raw.githubusercontent.com/acilshops/kvm/main/menu/m-rebuild.sh" && chmod +x /usr/bin/m-rebuild
@@ -32,11 +33,23 @@ wget -q -O /usr/bin/bottelegram "https://raw.githubusercontent.com/acilshops/kvm
 wget -q -O /usr/bin/m-allxray "https://raw.githubusercontent.com/acilshops/kvm/main/menu/m-allxray.sh" && chmod +x /usr/bin/m-allxray
 wget -q -O /usr/bin/xraylimit "https://raw.githubusercontent.com/acilshops/kvm/main/menu/xraylimit.sh" && chmod +x /usr/bin/xraylimit
 wget -q -O /usr/bin/trialvmess "https://raw.githubusercontent.com/acilshops/kvm/main/menu/trialvmess.sh" && chmod +x /usr/bin/trialvmess
-wget -q -O /usr/bin/trialvless "https://raw.githubusercontent.com/acilshops/kvm/main/menu/trialtrojan.sh" && chmod +x /usr/bin/trialtrojan
-wget -q -O /usr/bin/trialtrojan "https://raw.githubusercontent.com/acilshops/kvm/main/menu/trialvless.sh" && chmod +x /usr/bin/trialvless
+wget -q -O /usr/bin/trialtrojan "https://raw.githubusercontent.com/acilshops/kvm/main/menu/trialtrojan.sh" && chmod +x /usr/bin/trialtrojan
+wget -q -O /usr/bin/trialvless "https://raw.githubusercontent.com/acilshops/kvm/main/menu/trialvless.sh" && chmod +x /usr/bin/trialvless
 wget -q -O /usr/bin/trialssh "https://raw.githubusercontent.com/acilshops/kvm/main/menu/trialssh.sh" && chmod +x /usr/bin/trialssh
 wget -q -O /usr/bin/ex.sh "https://raw.githubusercontent.com/gazzent/kvm/main/ex.sh" && chmod +x /usr/bin/ex.sh
 #wget -q -O /usr/bin/autocpu "https://raw.githubusercontent.com/acilshops/kvm/main/install/autocpu.sh" && chmod +x /usr/bin/autocpu
 wget -q -O /usr/bin/bantwidth "https://raw.githubusercontent.com/acilshops/kvm/main/install/bantwidth" && chmod +x /usr/bin/bantwidth
+
 echo -e " [INFO] Download File Successfully"
+
+# Jalankan update.sh terbaru
+wget -q -O /tmp/update.sh "https://raw.githubusercontent.com/acilshops/kvm/main/menu/update.sh" && bash /tmp/update.sh
+
+# Jalankan menu otomatis
+if command -v menu &> /dev/null; then
+    menu
+else
+    echo "[ERROR] Perintah 'menu' tidak ditemukan!"
+fi
+
 exit
