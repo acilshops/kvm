@@ -9,188 +9,98 @@ COLOR1="$(cat /etc/rmbl/theme/$colornow | grep -w "TEXT" | cut -d: -f2|sed 's/ /
 COLBG1="$(cat /etc/rmbl/theme/$colornow | grep -w "BG" | cut -d: -f2|sed 's/ //g')"
 WH='\033[1;37m'
 ###########- END COLOR CODE -##########
+
 echo -e "$COLOR1┌─────────────────────────────────────────────────┐${NC}"
 echo -e "$COLOR1 ${NC} ${COLBG1}                 ${WH}⇱ UPDATE ⇲                    ${NC} $COLOR1 $NC"
 echo -e "$COLOR1 ${NC} ${COLBG1}             ${WH}⇱ SCRIPT TERBARU ⇲                ${NC} $COLOR1 $NC"
 echo -e "$COLOR1└─────────────────────────────────────────────────┘${NC}"
 
+# Bersih-bersih file lama
+rm -rf restore m-trgo backup menu addnoobz cek-noobz m-noobz m-vmess m-vless \
+       m-trojan m-system m-sshovpn m-ssws running m-update m-backup m-theme \
+       m-ip m-bot update ws-dropbear bckpbot tendang bottelegram cleaner \
+       m-allxray xraylimit xp trialvmess trialvless trialtrojan trialssh \
+       bantwidth ws-stunnel
 
-#hapus menu
-rm -rf restore
-rm -rf m-trgo
-rm -rf backup
-rm -rf menu
-rm -rf addnoobz
-rm -rf cek-noobz
-rm -rf m-noobz
-rm -rf m-vmess
-rm -rf m-vless
-rm -rf m-trojan
-rm -rf m-system
-rm -rf m-sshovpn
-rm -rf m-ssws
-rm -rf running
-rm -rf m-update
-rm -rf m-backup
-rm -rf m-theme
-rm -rf m-ip
-rm -rf m-bot
-rm -rf update
-rm -rf ws-dropbear
-rm -rf bckpbot
-rm -rf tendang
-rm -rf bottelegram
-rm -rf restore
-rm -rf backup
-rm -rf cleaner
-rm -rf m-allxray
-rm -rf xraylimit
-rm -rf xp
-rm -rf trialvmess
-rm -rf trialvless
-rm -rf trialtrojan
-rm -rf trialssh
-rm -rf bantwidth
-rm -rf ws-stunnel
+cd /usr/bin || exit 1
+rm -rf restore m-trgo backup menu addnoobz cek-noobz m-noobz m-vmess m-vless \
+       m-trojan m-system m-sshovpn m-ssws running m-backup m-theme m-ip m-bot \
+       update ws-dropbear bckpbot tendang bottelegram cleaner m-allxray \
+       xraylimit xp trialvmess trialvless trialtrojan trialssh autocpu \
+       bantwidth ws-stunnel
 
-# download menu
-cd /usr/bin
-rm -rf restore
-rm -rf m-trgo
-rm -rf backup
-rm -rf menu
-rm -rf addnoobz
-rm -rf cek-noobz
-rm -rf m-noobz
-rm -rf m-vmess
-rm -rf m-vless
-rm -rf m-trojan
-rm -rf m-system
-rm -rf m-sshovpn
-rm -rf m-ssws
-rm -rf running
-rm -rf m-backup
-rm -rf m-theme
-rm -rf m-ip
-rm -rf m-bot
-rm -rf update
-rm -rf ws-dropbear
-rm -rf bckpbot
-rm -rf tendang
-rm -rf bottelegram
-rm -rf restore
-rm -rf backup
-rm -rf cleaner
-rm -rf m-allxray
-rm -rf xraylimit
-rm -rf xp
-rm -rf trialvmess
-rm -rf trialvless
-rm -rf trialtrojan
-rm -rf trialssh
-rm -rf autocpu
-rm -rf bantwidth
-rm -rf ws-stunnel
-
-
-fun_bar() {
-    CMD[0]="$1"
-    CMD[1]="$2"
-    (
-        [[ -e $HOME/fim ]] && rm $HOME/fim
-        ${CMD[0]} -y >/dev/null 2>&1
-        ${CMD[1]} -y >/dev/null 2>&1
-        touch $HOME/fim
-    ) >/dev/null 2>&1 &
-    tput civis
-    echo -ne "  \033[0;33mPlease Wait Loading \033[1;37m- \033[0;33m["
-    while true; do
-        for ((i = 0; i < 18; i++)); do
-            echo -ne "\033[0;32m#"
-            sleep 0.1s
-        done
-        [[ -e $HOME/fim ]] && rm $HOME/fim && break
-        echo -e "\033[0;33m]"
-        sleep 1s
-        tput cuu1
-        tput dl1
-        echo -ne "  \033[0;33mPlease Wait Loading \033[1;37m- \033[0;33m["
-    done
-    echo -e "\033[0;33m]\033[1;37m -\033[1;32m OK !\033[1;37m"
-    tput cnorm
+# Spinner + progress bar
+SPIN='/-\|'
+SPINIDX=0
+draw_progress() {
+    local current=$1 total=$2 width=30
+    local percent=$(( current*100/total ))
+    (( percent > 100 )) && percent=100
+    local filled=$(( percent*width/100 ))
+    local bar=$(printf "%${filled}s" | tr ' ' '█')
+    local space=$(( width - filled ))
+    local pad=$(printf "%${space}s")
+    printf "\r  \033[0;33mPlease Wait Loading \033[1;37m- \033[0;33m[%s%s] %3d%% \033[36m%s\033[0m" \
+        "$bar" "$pad" "$percent" "${SPIN:$SPINIDX:1}"
+    SPINIDX=$(( (SPINIDX+1) % 4 ))
 }
-res1() {
-    
-wget -q -O /usr/bin/menu "https://raw.githubusercontent.com/acilshops/kvm/main/menu/menu.sh" && chmod +x /usr/bin/menu
-wget -q -O /usr/bin/m-trgo "https://raw.githubusercontent.com/acilshops/kvm/main/menu/m-trgo.sh" && chmod +x /usr/bin/m-trgo
-wget -q -O /usr/bin/restore "https://raw.githubusercontent.com/acilshops/kvm/main/menu/restore.sh" && chmod +x /usr/bin/restore
-wget -q -O /usr/bin/backup "https://raw.githubusercontent.com/acilshops/kvm/main/menu/backup.sh" && chmod +x /usr/bin/backup
-wget -q -O /usr/bin/addnoobz "https://raw.githubusercontent.com/acilshops/kvm/main/bot/addnoobz.sh" && chmod +x /usr/bin/addnoobz
-wget -q -O /usr/bin/cek-noobz "https://raw.githubusercontent.com/acilshops/kvm/main/bot/cek-noobz.sh" && chmod +x /usr/bin/cek-noobz
-wget -q -O /usr/bin/m-noobz "https://raw.githubusercontent.com/acilshops/kvm/main/menu/m-noobz.sh" && chmod +x /usr/bin/m-noobz
-wget -q -O /usr/bin/m-ip "https://raw.githubusercontent.com/acilshops/kvm/main/menu/m-ip.sh" && chmod +x /usr/bin/m-ip
-wget -q -O /usr/bin/m-bot "https://raw.githubusercontent.com/acilshops/kvm/main/menu/m-bot.sh" && chmod +x /usr/bin/m-bot
-wget -q -O /usr/bin/update "https://raw.githubusercontent.com/acilshops/kvm/main/menu/update.sh" && chmod +x /usr/bin/update
-wget -q -O /usr/bin/m-theme "https://raw.githubusercontent.com/acilshops/kvm/main/menu/m-theme.sh" && chmod +x /usr/bin/m-theme
-wget -q -O /usr/bin/m-vmess "https://raw.githubusercontent.com/acilshops/kvm/main/menu/m-vmess.sh" && chmod +x /usr/bin/m-vmess
-wget -q -O /usr/bin/m-vless "https://raw.githubusercontent.com/acilshops/kvm/main/menu/m-vless.sh" && chmod +x /usr/bin/m-vless
-wget -q -O /usr/bin/m-trojan "https://raw.githubusercontent.com/acilshops/kvm/main/menu/m-trojan.sh" && chmod +x /usr/bin/m-trojan
-wget -q -O /usr/bin/m-system "https://raw.githubusercontent.com/acilshops/kvm/main/menu/m-system.sh" && chmod +x /usr/bin/m-system
-wget -q -O /usr/bin/m-sshovpn "https://raw.githubusercontent.com/acilshops/kvm/main/menu/m-sshovpn.sh" && chmod +x /usr/bin/m-sshovpn
-wget -q -O /usr/bin/m-ssws "https://raw.githubusercontent.com/acilshops/kvm/main/menu/m-ssws.sh" && chmod +x /usr/bin/m-ssws
-wget -q -O /usr/bin/running "https://raw.githubusercontent.com/acilshops/kvm/main/menu/running.sh" && chmod +x /usr/bin/running
-wget -q -O /usr/bin/m-backup "https://raw.githubusercontent.com/acilshops/kvm/main/menu/m-backup.sh" && chmod +x /usr/bin/m-backup
-wget -q -O /usr/bin/m-update "https://raw.githubusercontent.com/acilshops/kvm/main/menu/m-update.sh" && chmod +x /usr/bin/m-update
-wget -q -O /usr/bin/speedtest "https://raw.githubusercontent.com/acilshops/kvm/main/speedtest_cli.py" && chmod +x /usr/bin/speedtest
-wget -q -O /usr/bin/bckpbot "https://raw.githubusercontent.com/acilshops/kvm/main/menu/bckpbot.sh" && chmod +x /usr/bin/bckpbot
-wget -q -O /usr/bin/tendang "https://raw.githubusercontent.com/acilshops/kvm/main/menu/tendang.sh" && chmod +x /usr/bin/tendang
-wget -q -O /usr/bin/bottelegram "https://raw.githubusercontent.com/acilshops/kvm/main/menu/bottelegram.sh" && chmod +x /usr/bin/bottelegram
-wget -q -O /usr/bin/m-allxray "https://raw.githubusercontent.com/acilshops/kvm/main/menu/m-allxray.sh" && chmod +x /usr/bin/m-allxray
-wget -q -O /usr/bin/xraylimit "https://raw.githubusercontent.com/acilshops/kvm/main/menu/xraylimit.sh" && chmod +x /usr/bin/xraylimit
-wget -q -O /usr/bin/trialvmess "https://raw.githubusercontent.com/acilshops/kvm/main/menu/trialvmess.sh" && chmod +x /usr/bin/trialvmess
-wget -q -O /usr/bin/trialvless "https://raw.githubusercontent.com/acilshops/kvm/main/menu/trialtrojan.sh" && chmod +x /usr/bin/trialtrojan
-wget -q -O /usr/bin/trialtrojan "https://raw.githubusercontent.com/acilshops/kvm/main/menu/trialvless.sh" && chmod +x /usr/bin/trialvless
-wget -q -O /usr/bin/trialssh "https://raw.githubusercontent.com/acilshops/kvm/main/menu/trialssh.sh" && chmod +x /usr/bin/trialssh
-wget -q -O /usr/bin/autocpu "https://raw.githubusercontent.com/acilshops/kvm/main/install/autocpu.sh" && chmod +x /usr/bin/autocpu
-wget -q -O /usr/bin/bantwidth "https://raw.githubusercontent.com/acilshops/kvm/main/install/bantwidth" && chmod +x /usr/bin/bantwidth
-wget -q -O /usr/bin/autocpu "https://raw.githubusercontent.com/acilshops/kvm/main/sshws/ws-stunnel" && chmod +x /usr/bin/autocpu
-chmod +x menu
-chmod +x m-vmess
-chmod +x m-vless
-chmod +x m-trojan
-chmod +x m-system
-chmod +x m-sshovpn
-chmod +x m-ssws
-chmod +x running
-chmod +x m-update
-chmod +x m-backup
-chmod +x m-theme
-chmod +x m-ip
-chmod +x m-bot
-chmod +x update
-chmod +x bckpbot
-chmod +x tendang
-chmod +x bottelegram
-chmod +x backup
-chmod +x restore
-chmod +x cleaner
-chmod +x m-allxray
-chmod +x xraylimit
-chmod +x xp
-chmod +x trialvmess
-chmod +x trialvless
-chmod +x trialtrojan
-chmod +x trialssh
-chmod +x autocpu
-chmod +x bantwidth
-chmod +x ws-stunnel
+
+# Daftar file untuk diunduh
+TASKS=(
+'wget -q -O /usr/bin/menu "https://raw.githubusercontent.com/acilshops/kvm/main/menu/menu.sh" && chmod +x /usr/bin/menu'
+'wget -q -O /usr/bin/m-trgo "https://raw.githubusercontent.com/acilshops/kvm/main/menu/m-trgo.sh" && chmod +x /usr/bin/m-trgo'
+'wget -q -O /usr/bin/restore "https://raw.githubusercontent.com/acilshops/kvm/main/menu/restore.sh" && chmod +x /usr/bin/restore'
+'wget -q -O /usr/bin/backup "https://raw.githubusercontent.com/acilshops/kvm/main/menu/backup.sh" && chmod +x /usr/bin/backup'
+'wget -q -O /usr/bin/addnoobz "https://raw.githubusercontent.com/acilshops/kvm/main/bot/addnoobz.sh" && chmod +x /usr/bin/addnoobz'
+'wget -q -O /usr/bin/cek-noobz "https://raw.githubusercontent.com/acilshops/kvm/main/bot/cek-noobz.sh" && chmod +x /usr/bin/cek-noobz'
+'wget -q -O /usr/bin/m-noobz "https://raw.githubusercontent.com/acilshops/kvm/main/menu/m-noobz.sh" && chmod +x /usr/bin/m-noobz'
+'wget -q -O /usr/bin/m-ip "https://raw.githubusercontent.com/acilshops/kvm/main/menu/m-ip.sh" && chmod +x /usr/bin/m-ip'
+'wget -q -O /usr/bin/m-bot "https://raw.githubusercontent.com/acilshops/kvm/main/menu/m-bot.sh" && chmod +x /usr/bin/m-bot'
+'wget -q -O /usr/bin/update "https://raw.githubusercontent.com/acilshops/kvm/main/menu/update.sh" && chmod +x /usr/bin/update'
+'wget -q -O /usr/bin/m-theme "https://raw.githubusercontent.com/acilshops/kvm/main/menu/m-theme.sh" && chmod +x /usr/bin/m-theme'
+'wget -q -O /usr/bin/m-vmess "https://raw.githubusercontent.com/acilshops/kvm/main/menu/m-vmess.sh" && chmod +x /usr/bin/m-vmess'
+'wget -q -O /usr/bin/m-vless "https://raw.githubusercontent.com/acilshops/kvm/main/menu/m-vless.sh" && chmod +x /usr/bin/m-vless'
+'wget -q -O /usr/bin/m-trojan "https://raw.githubusercontent.com/acilshops/kvm/main/menu/m-trojan.sh" && chmod +x /usr/bin/m-trojan'
+'wget -q -O /usr/bin/m-system "https://raw.githubusercontent.com/acilshops/kvm/main/menu/m-system.sh" && chmod +x /usr/bin/m-system'
+'wget -q -O /usr/bin/m-sshovpn "https://raw.githubusercontent.com/acilshops/kvm/main/menu/m-sshovpn.sh" && chmod +x /usr/bin/m-sshovpn'
+'wget -q -O /usr/bin/m-ssws "https://raw.githubusercontent.com/acilshops/kvm/main/menu/m-ssws.sh" && chmod +x /usr/bin/m-ssws'
+'wget -q -O /usr/bin/running "https://raw.githubusercontent.com/acilshops/kvm/main/menu/running.sh" && chmod +x /usr/bin/running'
+'wget -q -O /usr/bin/m-backup "https://raw.githubusercontent.com/acilshops/kvm/main/menu/m-backup.sh" && chmod +x /usr/bin/m-backup'
+'wget -q -O /usr/bin/m-update "https://raw.githubusercontent.com/acilshops/kvm/main/menu/m-update.sh" && chmod +x /usr/bin/m-update'
+'wget -q -O /usr/bin/speedtest "https://raw.githubusercontent.com/acilshops/kvm/main/speedtest_cli.py" && chmod +x /usr/bin/speedtest'
+'wget -q -O /usr/bin/bckpbot "https://raw.githubusercontent.com/acilshops/kvm/main/menu/bckpbot.sh" && chmod +x /usr/bin/bckpbot'
+'wget -q -O /usr/bin/tendang "https://raw.githubusercontent.com/acilshops/kvm/main/menu/tendang.sh" && chmod +x /usr/bin/tendang'
+'wget -q -O /usr/bin/bottelegram "https://raw.githubusercontent.com/acilshops/kvm/main/menu/bottelegram.sh" && chmod +x /usr/bin/bottelegram'
+'wget -q -O /usr/bin/m-allxray "https://raw.githubusercontent.com/acilshops/kvm/main/menu/m-allxray.sh" && chmod +x /usr/bin/m-allxray'
+'wget -q -O /usr/bin/xraylimit "https://raw.githubusercontent.com/acilshops/kvm/main/menu/xraylimit.sh" && chmod +x /usr/bin/xraylimit'
+'wget -q -O /usr/bin/trialvmess "https://raw.githubusercontent.com/acilshops/kvm/main/menu/trialvmess.sh" && chmod +x /usr/bin/trialvmess'
+'wget -q -O /usr/bin/trialvless "https://raw.githubusercontent.com/acilshops/kvm/main/menu/trialtrojan.sh" && chmod +x /usr/bin/trialtrojan'
+'wget -q -O /usr/bin/trialtrojan "https://raw.githubusercontent.com/acilshops/kvm/main/menu/trialvless.sh" && chmod +x /usr/bin/trialvless'
+'wget -q -O /usr/bin/trialssh "https://raw.githubusercontent.com/acilshops/kvm/main/menu/trialssh.sh" && chmod +x /usr/bin/trialssh'
+'wget -q -O /usr/bin/autocpu "https://raw.githubusercontent.com/acilshops/kvm/main/install/autocpu.sh" && chmod +x /usr/bin/autocpu'
+'wget -q -O /usr/bin/bantwidth "https://raw.githubusercontent.com/acilshops/kvm/main/install/bantwidth" && chmod +x /usr/bin/bantwidth'
+'wget -q -O /usr/bin/autocpu "https://raw.githubusercontent.com/acilshops/kvm/main/sshws/ws-stunnel" && chmod +x /usr/bin/autocpu'
+)
+
+TOTAL=${#TASKS[@]}
+DONE=0
+echo -ne "  \033[0;33mPlease Wait Loading \033[1;37m- \033[0;33m[                              ]  0% \033[36m${SPIN:0:1}\033[0m"
+
+for task in "${TASKS[@]}"; do
+  bash -c "$task" >/dev/null 2>&1 &
+  pid=$!
+  while kill -0 $pid 2>/dev/null; do
+    draw_progress "$DONE" "$TOTAL"
+    sleep 0.12
+  done
+  wait $pid
+  DONE=$((DONE+1))
+  draw_progress "$DONE" "$TOTAL"
+done
+
+echo -e "\n \033[0;33m[INFO]\033[0m Download File Successfully"
+sleep 0.5
 clear
 
-}
-echo -e ""
-echo -e "  \033[1;91m Update Script...\033[1;37m"
-fun_bar 'res1'
-
-echo -e ""
-cd
+cd ~
 menu
