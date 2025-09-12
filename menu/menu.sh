@@ -321,7 +321,7 @@ echo -e " $COLOR1  $NC${WH}    • CPU          ${COLOR1}: ${WH}$cpu_usage${NC}"
 echo -e " $COLOR1  $NC${WH}    • REGION       ${COLOR1}: ${WH}$CITY${NC}"
 echo -e " $COLOR1  $NC${WH}    • IP VPS       ${COLOR1}: ${WH}$MYIP${NC}"
 echo -e " $COLOR1  $NC${WH}    • DOMAIN       ${COLOR1}: ${WH}$(cat /etc/xray/domain)"
-echo -e " $COLOR1  $NC${WH}    • VERSION.     ${COLOR1}: ${WH}V3.12"
+echo -e " $COLOR1  $NC${WH}    • VERSION     ${COLOR1}: ${WH}V3.12"
 # (pindahkan MASA AKTIF ke bawah, jadi baris ini dihapus)
 echo -e " $COLOR1      ══════════════════════════════════════════════${NC}"
 echo -e " $COLOR1╭════════════════════════════════════════════════════════╮${NC}"
