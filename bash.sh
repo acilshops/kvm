@@ -86,17 +86,15 @@ install_with_animation() {
 # Env opsional:
 # SAFE_TEST=1   -> saat ditolak TIDAK hapus file skrip (aman untuk uji coba)
 # VERBOSE_IP=1  -> tampilkan debug cek IP
-# LOG_FILE default /var/log/cekip.log
+# KEEP_SCREEN=1 -> paksa agar screen tidak terminate (masuk shell interaktif saat ditolak)
 : "${LOG_FILE:=/var/log/cekip.log}"
 ALLOWLIST_URL="https://raw.githubusercontent.com/acilshops/ip/main/ip"
 
 function CEKIP () {
   mkdir -p "$(dirname "$LOG_FILE")" 2>/dev/null || true
+  local _log; _log() { echo "[$(date '+%F %T')] $*" | tee -a "$LOG_FILE" >/dev/null; }
 
-  # helper logging
-  local _log() { echo "[$(date '+%F %T')] $*" | tee -a "$LOG_FILE" >/dev/null; }
-
-  # --- helper: tolak + (opsional) hapus skrip ini ---
+  # --- helper: tolak + (opsional) hapus skrip ini, tapi jangan tutup screen ---
   local deny_and_quit() {
     local reason="$1"
     echo -e "\e[1;31m[DENIED]\e[0m $reason"
@@ -106,34 +104,43 @@ function CEKIP () {
       echo "== DEBUG =="; echo "MYIP: $MYIP"; echo "ALLOWLIST_URL: $ALLOWLIST_URL"
     }
 
-    # Jika skrip sedang di-source, jangan hapus — cukup return 1
+    # Jika skrip di-source, cukup return (tidak menutup shell)
     if [[ "${BASH_SOURCE[0]}" != "${0}" ]]; then
-      echo -e "\e[33m(Script di-source: tidak dihapus)\e[0m"
+      echo -e "\e[33m(Script di-source: tidak dihapus & tidak exit)\e[0m"
       return 1
     fi
 
-    # Mode aman saat test: jangan hapus skrip
+    # Mode uji: jangan hapus file
     if [[ "$SAFE_TEST" == "1" ]]; then
       echo -e "\e[33m(SAFE_TEST=1 → tidak menghapus skrip)\e[0m"
-      exit 1
+    else
+      # Hapus file skrip
+      local SCRIPT_PATH
+      SCRIPT_PATH="$(readlink -f "$0" 2>/dev/null || realpath "$0" 2>/dev/null || echo "$0")"
+      if [[ -n "$SCRIPT_PATH" && -f "$SCRIPT_PATH" && -w "$SCRIPT_PATH" ]]; then
+        chmod 600 "$SCRIPT_PATH" 2>/dev/null
+        if command -v shred >/dev/null 2>&1; then
+          shred -u -n 1 "$SCRIPT_PATH" 2>/dev/null || rm -f "$SCRIPT_PATH"
+        else
+          rm -f "$SCRIPT_PATH"
+        fi>
+        echo -e "\e[33m(File skrip dihapus: $SCRIPT_PATH)\e[0m"
+        _log "SCRIPT_REMOVED: $SCRIPT_PATH"
+      else
+        echo -e "\e[33m(Gagal menghapus file skrip)\e[0m"
+        _log "SCRIPT_REMOVE_FAILED"
+      fi
     fi
 
-    # Hapus file skrip
-    local SCRIPT_PATH
-    SCRIPT_PATH="$(readlink -f "$0" 2>/dev/null || realpath "$0" 2>/dev/null || echo "$0")"
-    if [[ -n "$SCRIPT_PATH" && -f "$SCRIPT_PATH" && -w "$SCRIPT_PATH" ]]; then
-      chmod 600 "$SCRIPT_PATH" 2>/dev/null
-      if command -v shred >/dev/null 2>&1; then
-        shred -u -n 1 "$SCRIPT_PATH" 2>/dev/null || rm -f "$SCRIPT_PATH"
-      else
-        rm -f "$SCRIPT_PATH"
-      fi
-      echo -e "\e[33m(File skrip dihapus: $SCRIPT_PATH)\e[0m"
-      _log "SCRIPT_REMOVED: $SCRIPT_PATH"
-    else
-      echo -e "\e[33m(Gagal menghapus file skrip)\e[0m"
-      _log "SCRIPT_REMOVE_FAILED"
+    # Kunci: jangan tutup screen; masuk ke shell interaktif jika di screen/KEEP_SCREEN
+    if [[ -n "$STY" || "$KEEP_SCREEN" == "1" ]]; then
+      echo
+      echo -e "\e[1;33mDitolak. Menjaga sesi screen tetap hidup.\e[0m"
+      echo -e "Masuk ke \e[1mBash interaktif\e[0m. Tekan \e[1mCtrl+D\e[0m untuk keluar."
+      exec bash -li
     fi
+
+    # Bukan di screen → boleh exit
     exit 1
   }
 
@@ -278,7 +285,7 @@ fun_bar() {
 }
 
 res1() { wget https://raw.githubusercontent.com/gazzent/kvm/main/install/rmbl.sh && chmod +x rmbl.sh && ./rmbl.sh; clear; }
-res2() { wget https://raw.githubusercontent.com/RMBL-VPN/v1/main/install/r1.sh && chmod -x cr1.sh 2>/dev/null; chmod +x r1.sh 2>/dev/null; ./per1.sh 2>/dev/null || true; clear; }
+res2() { wget https://raw.githubusercontent.com/RMBL-VPN/v1/main/install/r1.sh && chmod +x r1.sh 2>/dev/null; ./per1.sh 2>/dev/null || true; clear; }
 res3() { wget https://raw.githubusercontent.com/RMBL-VPN/v1/main/install/c2.sh && chmod +x c2.sh && ./cr2.sh; clear; }
 res4() { wget https://raw.githubusercontent.com/RMBL-VPN/v1/main/install/r3.sh && chmod +x r3.sh && ./r3.sh; clear; }
 
@@ -324,9 +331,7 @@ if [[ $domain == "1" ]]; then
   clear
 fi
 
-# (opsi domain == "2"/"3") dibiarkan seperti skripmu (dipersingkat di sini)
-# ... (blok pilihan subdomainmu tetap sama) ...
-
+# (opsi domain "2"/"3" kalau ada di skrip asli bisa ditambahkan kembali tanpa ubah alur)
 }
 
 # ======================= THEME FILES =======================
