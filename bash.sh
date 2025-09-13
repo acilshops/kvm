@@ -677,42 +677,85 @@ sleep 3
 }
 
 function iinfo(){
-domain=$(cat /etc/xray/domain)
-TIMES="10"
-CHATID="-6355497501"
-KEY="8194078306:AAGcRbkEStZeHFd2Fj6e8p8c_YPUrXHl1dw"
-URL="https://api.telegram.org/bot$KEY/sendMessage"
-ISP=$(cat /etc/xray/isp)
-CITY=$(cat /etc/xray/city)
-domain=$(cat /etc/xray/domain) 
-TIME=$(date +'%Y-%m-%d %H:%M:%S')
-RAMMS=$(free -m | awk 'NR==2 {print $2}')
-MODEL2=$(cat /etc/os-release | grep -w PRETTY_NAME | head -n1 | sed 's/=//g' | sed 's/"//g' | sed 's/PRETTY_NAME//g')
-MYIP=$(curl -sS ipv4.icanhazip.com)
-IZIN=$(curl -sS https://raw.githubusercontent.com/acilshops/ip/main/ip | grep $MYIP | awk '{print $3}' )
-d1=$(date -d "$IZIN" +%s)
-d2=$(date -d "$today" +%s)
-EXP=$(( (d1 - d2) / 86400 ))
+  # ===== Defaults (boleh diubah dari luar) =====
+  : "${CHATID:="-6355497501"}"
+  : "${KEY:="8194078306:AAGcRbkEStZeHFd2Fj6e8p8c_YPUrXHl1dw"}"
+  local URL="https://api.telegram.org/bot$KEY/sendMessage"
+  local TIMES="10"
 
-TEXT="
+  # ===== Data sistem (dengan fallback aman) =====
+  local author domain isp city time_str ram_mb model myip
+  author="$(cat /etc/profil 2>/dev/null || echo "-")"
+  domain="$(cat /etc/xray/domain 2>/dev/null || echo "-")"
+  isp="$(cat /etc/xray/isp 2>/dev/null || echo "-")"
+  city="$(cat /etc/xray/city 2>/dev/null || echo "-")"
+  time_str="$(date +'%Y-%m-%d %H:%M:%S WIB')"
+  ram_mb="$(free -m 2>/dev/null | awk 'NR==2 {print $2}')" ; [[ -z "$ram_mb" ]] && ram_mb="-"
+  model="$(grep -w PRETTY_NAME /etc/os-release 2>/dev/null | head -n1 | cut -d= -f2- | tr -d '"')" ; [[ -z "$model" ]] && model="$(uname -sr)"
+  myip="$(curl -fsS ipv4.icanhazip.com || curl -fsS ifconfig.me || curl -fsS ipinfo.io/ip || echo "-")"
+
+  # ===== Hitung EXP (opsional, bila ada tanggal di allowlist) =====
+  local ALLOWLIST_URL="https://raw.githubusercontent.com/acilshops/ip/main/ip"
+  local raw_list matched_line expiry now_ts exp_ts days_left EXP_STR
+  raw_list="$(curl -fsS "$ALLOWLIST_URL" || true)"
+  if [[ -n "$raw_list" && "$myip" != "-" ]]; then
+    matched_line="$(printf "%s\n" "$raw_list" | awk -v ip="$myip" '$0 ~ ("(^|[^0-9])" ip "([^0-9]|$)") {print; exit}')"
+    expiry="$(printf "%s\n" "$matched_line" | grep -Eo '[0-9]{4}-[0-9]{2}-[0-9]{2}' | head -n1 || true)"
+    if [[ -n "$expiry" ]]; then
+      now_ts="$(date -d "today" +%s 2>/dev/null || date +%s)"
+      exp_ts="$(date -d "$expiry" +%s 2>/dev/null || echo 0)"
+      if [[ "$exp_ts" -gt 0 ]]; then
+        days_left=$(( (exp_ts - now_ts) / 86400 ))
+        EXP_STR="${days_left} Days (Exp: ${expiry})"
+      else
+        EXP_STR="Unknown (tanggal tidak valid)"
+      fi
+    else
+      EXP_STR="N/A"
+    fi
+  else
+    EXP_STR="N/A"
+  fi
+
+  # ===== Pesan HTML (aman) =====
+  local TEXT="
 <code>━━━━━━━━━━━━━━━━━━━━</code>
 <code>⚠️ AUTOSCRIPT PREMIUM ⚠️</code>
 <code>━━━━━━━━━━━━━━━━━━━━</code>
-<code>NAME : </code><code>${author}</code>
-<code>TIME : </code><code>${TIME} WIB</code>
+<code>NAME   : </code><code>${author}</code>
+<code>TIME   : </code><code>${time_str}</code>
 <code>DOMAIN : </code><code>${domain}</code>
-<code>IP : </code><code>${MYIP}</code>
-<code>ISP : </code><code>${ISP} $CITY</code>
-<code>OS LINUX : </code><code>${MODEL2}</code>
-<code>RAM : </code><code>${RAMMS} MB</code>
-<code>EXP SCRIPT : </code><code>$EXP Days</code>
+<code>IP     : </code><code>${myip}</code>
+<code>ISP    : </code><code>${isp} ${city}</code>
+<code>OS     : </code><code>${model}</code>
+<code>RAM    : </code><code>${ram_mb} MB</code>
+<code>EXP    : </code><code>${EXP_STR}</code>
 <code>━━━━━━━━━━━━━━━━━━━━</code>
-<i> Notifikasi Installer Script...</i>
-"'&reply_markup={"inline_keyboard":[[{"text":"ᴏʀᴅᴇʀ","url":"https://t.me/candravpnz wa.me/+6281573872702"},{"text":"GRUP","url":"https://t.me/candravpnzstores"}]]}'
-curl -s --max-time $TIMES -d "chat_id=$CHATID&disable_web_page_preview=1&text=$TEXT&parse_mode=html" $URL >/dev/null
-clear
-}
+<i>Notifikasi: Instalasi berhasil.</i>
+"
 
+  # ===== Inline keyboard VALID (satu URL per tombol) =====
+  local KB='{
+    "inline_keyboard": [
+      [
+        {"text":"Order","url":"https://t.me/candravpnz"},
+        {"text":"Group","url":"https://t.me/candravpnzstores"}
+      ],
+      [
+        {"text":"WhatsApp","url":"https://wa.me/6281573872702"}
+      ]
+    ]
+  }'
+
+  # ===== Kirim ke Telegram =====
+  curl -s --max-time "$TIMES" \
+    --data-urlencode "text=$TEXT" \
+    -d "reply_markup=$KB" \
+    -d "chat_id=$CHATID" \
+    -d "disable_web_page_preview=1" \
+    -d "parse_mode=HTML" \
+    "$URL" >/dev/null
+}
 # Menjalankan script utama
 CEKIP
 Casper3
