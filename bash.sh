@@ -86,18 +86,62 @@ install_with_animation() {
 }
 
 function CEKIP () {
-MYIP=$(curl -sS ipv4.icanhazip.com)
-IPVPS=$(curl -sS https://raw.githubusercontent.com/acilshops/ip/main/ip | grep $MYIP | awk '{print $4}')
-if [[ $MYIP == $IPVPS ]]; then
-domain
-Casper2
-#botwa
-else
-  #key2
+  # ====== Konfigurasi ======
+  local ALLOWLIST_URL="https://raw.githubusercontent.com/acilshops/ip/main/ip"
+
+  # ====== Ambil IP publik dengan fallback ======
+  local MYIP
+  MYIP="$(curl -fsS ipv4.icanhazip.com || curl -fsS ifconfig.me || curl -fsS ipinfo.io/ip || true)"
+  if [[ -z "$MYIP" ]]; then
+    echo -e "\e[1;31m[DENIED]\e[0m Tidak bisa mendapatkan IP publik VPS."
+    echo -e "Instalasi \e[1;31mDIBATALKAN\e[0m. Pastikan server bisa akses internet."
+    exit 1
+  fi
+
+  # ====== Ambil daftar allowlist dari GitHub ======
+  local raw_list
+  raw_list="$(curl -fsS "$ALLOWLIST_URL" || true)"
+  if [[ -z "$raw_list" ]]; then
+    echo -e "\e[1;31m[DENIED]\e[0m Gagal mengunduh allowlist dari GitHub."
+    echo -e "Instalasi \e[1;31mDIBATALKAN\e[0m. Coba lagi beberapa saat."
+    exit 1
+  fi
+
+  # ====== Cek apakah IP ada di allowlist (pencocokan presisi, bukan substring) ======
+  local matched_line
+  matched_line="$(printf "%s\n" "$raw_list" | awk -v ip="$MYIP" '$0 ~ ("(^|[^0-9])" ip "([^0-9]|$)") {print; exit}')"
+
+  if [[ -z "$matched_line" ]]; then
+    echo -e "\e[1;31m[DENIED]\e[0m IP VPS \e[1;37m$MYIP\e[0m tidak terdaftar di allowlist."
+    echo -e "Instalasi \e[1;31mDIBATALKAN\e[0m. Hubungi admin untuk mendaftarkan IP Anda."
+    exit 1
+  fi
+
+  # ====== (Opsional) Cek masa berlaku bila baris mengandung YYYY-MM-DD ======
+  local expiry now_ts exp_ts days_left
+  expiry="$(printf "%s\n" "$matched_line" | grep -Eo '[0-9]{4}-[0-9]{2}-[0-9]{2}' | head -n1 || true)"
+  if [[ -n "$expiry" ]]; then
+    now_ts="$(date -d "today" +%s 2>/dev/null || date +%s)"
+    exp_ts="$(date -d "$expiry" +%s 2>/dev/null || echo 0)"
+    if [[ "$exp_ts" -gt 0 ]]; then
+      days_left=$(( (exp_ts - now_ts) / 86400 ))
+      if (( days_left < 0 )); then
+        echo -e "\e[1;31m[DENIED]\e[0m IP ditemukan, namun izin sudah \e[1;31mKADALUARSA\e[0m (exp: \e[1;37m$expiry\e[0m)."
+        echo -e "Instalasi \e[1;31mDIBATALKAN\e[0m."
+        exit 1
+      fi
+      echo -e "\e[1;32m[OK]\e[0m IP diizinkan. Kadaluarsa: \e[1;37m$expiry\e[0m (sisa \e[1;37m${days_left}\e[0m hari)."
+    else
+      echo -e "\e[1;33m[PERINGATAN]\e[0m Format tanggal pada allowlist tidak valid. Melewati cek kadaluarsa."
+    fi
+  else
+    echo -e "\e[1;32m[OK]\e[0m IP diizinkan (tanpa tanggal kadaluarsa)."
+  fi
+
+  # ====== Lanjutkan alur asli kamu TANPA DIUBAH ======
   domain
   Casper2
   #botwa
-fi
 }
 
 clear
