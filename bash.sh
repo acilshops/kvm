@@ -85,20 +85,77 @@ install_with_animation() {
     wait $pid
 }
 
-function CEKIP () {
-MYIP=$(curl -sS ipv4.icanhazip.com)
-IPVPS=$(curl -sS https://raw.githubusercontent.com/acilshops/ip/main/ip | grep $MYIP | awk '{print $4}')
-if [[ $MYIP == $IPVPS ]]; then
-domain
-Casper2
-#botwa
-else
-  #key2
-  domain
-  Casper2
-  #botwa
-fi
+# ====== CEK IP ALLOWLIST + NOTIF TELEGRAM (GANTI FUNGSI LAMA) ======
+ALLOWLIST_URL="https://raw.githubusercontent.com/acilshops/ip/main/ip"
+
+# Default token/ChatID untuk notifikasi penolakan (pakai yang sama seperti iinfo)
+: "${CHATID:="-6355497501"}"
+: "${KEY:="8194078306:AAGcRbkEStZeHFd2Fj6e8p8c_YPUrXHl1dw"}"
+URL="https://api.telegram.org/bot$KEY/sendMessage"
+TIMES="10"
+
+tg_notify_denied() {
+  local reason="$1"
+  local host="$(hostname)"
+  local when="$(date '+%Y-%m-%d %H:%M:%S %Z')"
+  local profiler="(tidak ada)"
+  [[ -f /etc/profil ]] && profiler="$(cat /etc/profil 2>/dev/null || echo '(tidak ada)')"
+
+  local msg="🚫 DENIED INSTALL
+IP: $MYIP
+HOST: $host
+USER: $profiler
+TIME: $when
+REASON: $reason"
+
+  curl -s --max-time "$TIMES" \
+    --data-urlencode "text=$msg" \
+    -d "chat_id=$CHATID&disable_web_page_preview=1&parse_mode=HTML" \
+    "$URL" >/dev/null 2>&1
 }
+
+deny_and_exit() {
+  local reason="$1"
+  echo -e "\e[1;31m[DENIED]\e[0m $reason"
+  echo -e "Instalasi \e[1;31mDIBATALKAN\e[0m. Silakan hubungi admin untuk mendaftarkan IP Anda."
+  tg_notify_denied "$reason"
+  exit 1
+}
+
+function CEKIP () {
+  # Ambil IP publik
+  MYIP="$(curl -fsS ipv4.icanhazip.com || curl -fsS ifconfig.me || curl -fsS ipinfo.io/ip || true)"
+  [[ -z "$MYIP" ]] && deny_and_exit "Tidak bisa mendapatkan IP publik VPS."
+
+  # Ambil allowlist
+  raw_list="$(curl -fsS "$ALLOWLIST_URL" || true)"
+  [[ -z "$raw_list" ]] && deny_and_exit "Gagal mengunduh allowlist dari GitHub."
+
+  # Cari baris yang memuat IP persis (bukan substring)
+  matched_line="$(printf "%s\n" "$raw_list" | awk -v ip="$MYIP" '
+    $0 ~ ("(^|[^0-9])" ip "([^0-9]|$)") {print; exit}
+  ')"
+  [[ -z "$matched_line" ]] && deny_and_exit "IP VPS $MYIP tidak terdaftar di allowlist."
+
+  # Cek tanggal kadaluarsa (opsional, format YYYY-MM-DD)
+  expiry="$(printf "%s\n" "$matched_line" | grep -Eo '[0-9]{4}-[0-9]{2}-[0-9]{2}' | head -n1 || true)"
+  if [[ -n "$expiry" ]]; then
+    now_ts="$(date -d "today" +%s 2>/dev/null || date +%s)"
+    exp_ts="$(date -d "$expiry" +%s 2>/dev/null || echo 0)"
+    if [[ "$exp_ts" -eq 0 ]]; then
+      echo -e "\e[1;33m[PERINGATAN]\e[0m Format tanggal di allowlist tidak valid. Lewati cek masa aktif."
+    else
+      days_left=$(( (exp_ts - now_ts) / 86400 ))
+      if (( days_left < 0 )); then
+        deny_and_exit "IP ditemukan, tetapi masa izin ($expiry) sudah KADALUARSA."
+      fi
+      echo -e "\e[1;32m[OK]\e[0m IP diizinkan. Kadaluarsa: \e[1;37m$expiry\e[0m (sisa \e[1;37m${days_left}\e[0m hari)."
+    fi
+  else
+    echo -e "\e[1;32m[OK]\e[0m IP diizinkan (tanpa tanggal kadaluarsa)."
+  fi
+}
+# ====== END CEK IP ALLOWLIST ======
 
 clear
 red='\e[1;31m'
@@ -719,7 +776,7 @@ Casper3
 
 # Setup profile
 cat> /root/.profile << END
-if [ "$BASH" ]; then
+if [ "\$BASH" ]; then
 if [ -f ~/.bashrc ]; then
 . ~/.bashrc
 fi
