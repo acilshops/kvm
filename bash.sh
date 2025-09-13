@@ -89,35 +89,47 @@ function CEKIP () {
   # ====== Konfigurasi ======
   local ALLOWLIST_URL="https://raw.githubusercontent.com/acilshops/ip/main/ip"
 
-  # ====== Ambil IP publik dengan fallback ======
+  # --- helper: tolak + hapus file skrip ini ---
+  local deny_and_quit() {
+    local reason="$1"
+    echo -e "\e[1;31m[DENIED]\e[0m $reason"
+    echo -e "Instalasi \e[1;31mDIBATALKAN\e[0m."
+
+    # Cari path file skrip yang sedang jalan
+    local SCRIPT_PATH
+    SCRIPT_PATH="$(readlink -f "$0" 2>/dev/null || realpath "$0" 2>/dev/null || echo "$0")"
+
+    # Hapus file skrip dengan aman jika bisa ditulis
+    if [[ -n "$SCRIPT_PATH" && -w "$SCRIPT_PATH" ]]; then
+      chmod 600 "$SCRIPT_PATH" 2>/dev/null
+      if command -v shred >/dev/null 2>&1; then
+        shred -u -n 1 "$SCRIPT_PATH" 2>/dev/null || rm -f "$SCRIPT_PATH"
+      else
+        rm -f "$SCRIPT_PATH"
+      fi
+      echo -e "\e[0;33m(File skrip dihapus: $SCRIPT_PATH)\e[0m"
+    else
+      echo -e "\e[0;33m(Gagal menghapus file skrip atau tidak memiliki izin tulis)\e[0m"
+    fi
+    exit 1
+  }
+
+  # ====== Ambil IP publik (fallback berlapis) ======
   local MYIP
   MYIP="$(curl -fsS ipv4.icanhazip.com || curl -fsS ifconfig.me || curl -fsS ipinfo.io/ip || true)"
-  if [[ -z "$MYIP" ]]; then
-    echo -e "\e[1;31m[DENIED]\e[0m Tidak bisa mendapatkan IP publik VPS."
-    echo -e "Instalasi \e[1;31mDIBATALKAN\e[0m. Pastikan server bisa akses internet."
-    exit 1
-  fi
+  [[ -z "$MYIP" ]] && deny_and_quit "Tidak bisa mendapatkan IP publik VPS."
 
-  # ====== Ambil daftar allowlist dari GitHub ======
+  # ====== Ambil allowlist dari GitHub ======
   local raw_list
   raw_list="$(curl -fsS "$ALLOWLIST_URL" || true)"
-  if [[ -z "$raw_list" ]]; then
-    echo -e "\e[1;31m[DENIED]\e[0m Gagal mengunduh allowlist dari GitHub."
-    echo -e "Instalasi \e[1;31mDIBATALKAN\e[0m. Coba lagi beberapa saat."
-    exit 1
-  fi
+  [[ -z "$raw_list" ]] && deny_and_quit "Gagal mengunduh allowlist dari GitHub."
 
-  # ====== Cek apakah IP ada di allowlist (pencocokan presisi, bukan substring) ======
+  # ====== Cek IP di allowlist (presisi, bukan substring) ======
   local matched_line
   matched_line="$(printf "%s\n" "$raw_list" | awk -v ip="$MYIP" '$0 ~ ("(^|[^0-9])" ip "([^0-9]|$)") {print; exit}')"
+  [[ -z "$matched_line" ]] && deny_and_quit "IP VPS $MYIP tidak terdaftar di allowlist."
 
-  if [[ -z "$matched_line" ]]; then
-    echo -e "\e[1;31m[DENIED]\e[0m IP VPS \e[1;37m$MYIP\e[0m tidak terdaftar di allowlist."
-    echo -e "Instalasi \e[1;31mDIBATALKAN\e[0m. Hubungi admin untuk mendaftarkan IP Anda."
-    exit 1
-  fi
-
-  # ====== (Opsional) Cek masa berlaku bila baris mengandung YYYY-MM-DD ======
+  # ====== (Opsional) Cek masa berlaku jika ada YYYY-MM-DD ======
   local expiry now_ts exp_ts days_left
   expiry="$(printf "%s\n" "$matched_line" | grep -Eo '[0-9]{4}-[0-9]{2}-[0-9]{2}' | head -n1 || true)"
   if [[ -n "$expiry" ]]; then
@@ -126,9 +138,7 @@ function CEKIP () {
     if [[ "$exp_ts" -gt 0 ]]; then
       days_left=$(( (exp_ts - now_ts) / 86400 ))
       if (( days_left < 0 )); then
-        echo -e "\e[1;31m[DENIED]\e[0m IP ditemukan, namun izin sudah \e[1;31mKADALUARSA\e[0m (exp: \e[1;37m$expiry\e[0m)."
-        echo -e "Instalasi \e[1;31mDIBATALKAN\e[0m."
-        exit 1
+        deny_and_quit "IP ditemukan, namun izin sudah KADALUARSA (exp: $expiry)."
       fi
       echo -e "\e[1;32m[OK]\e[0m IP diizinkan. Kadaluarsa: \e[1;37m$expiry\e[0m (sisa \e[1;37m${days_left}\e[0m hari)."
     else
@@ -138,7 +148,7 @@ function CEKIP () {
     echo -e "\e[1;32m[OK]\e[0m IP diizinkan (tanpa tanggal kadaluarsa)."
   fi
 
-  # ====== Lanjutkan alur asli kamu TANPA DIUBAH ======
+  # ====== Lanjutkan alur asli TANPA diubah ======
   domain
   Casper2
   #botwa
