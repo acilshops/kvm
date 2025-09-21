@@ -21,6 +21,11 @@ Isadmin=$(curl -sS https://raw.githubusercontent.com/acilshops/ip/main/ip | grep
 Exp2=$(curl -sS https://raw.githubusercontent.com/acilshops/ip/main/ip | grep $MYIP | awk '{print $3}')
 export RED='\033[0;31m'
 export GREEN='\033[0;32m'
+
+# === TAMBAHAN WARNA & FORMAT TANGGAL (untuk Menu 1 & sinkron Menu 2) ===
+export DBLUE='\033[0;34m'                 # biru tua untuk kata "menu"
+DATEWIB=$(date +"%a, %d %b %Y %T WIB")    # contoh: Sun, 21 Sep 2025 20:11:30 WIB
+
 Name=$(curl -sS https://raw.githubusercontent.com/acilshops/ip/main/ip | grep $MYIP | awk '{print $2}')
 data_server=$(curl -v --insecure --silent https://google.com/ 2>&1 | grep Date | sed -e 's/< Date: //')
 date_list=$(date +"%Y-%m-%d" -d "$data_server")
@@ -304,6 +309,60 @@ m-bot2
 fi
 menu
 }
+
+# ========== MENU 1 (INFO SAJA) DENGAN LOGO & CLIENT BOX GABUNGAN ==========
+render_menu1() {
+  clear
+
+  # === LOGO ASCII ===
+  echo -e "\e[1;36m"
+  echo "_______      _____________    __               "
+  echo "___    |________(_)__  /_ |  / /______________ "
+  echo "__  /| |  ___/_  /__  /__ | / /___  __ \_  __ \\"
+  echo "_  ___ / /__ _  / _  / __ |/ / __  /_/ /  / / /"
+  echo "/_/  |_\___/ /_/  /_/  _____/  _  .___//_/ /_/ "
+  echo "                               /_/             "
+  echo -e "\e[0m"
+  echo
+
+  # === HEADER INFO ===
+  echo -e " $COLOR1╭════════════════════════════════════════════════════════╮${NC}"
+  echo -e " $COLOR1│${NC}            ${WH}• AcilShop| Autoscript Premium •${NC}"
+  echo -e " $COLOR1╰════════════════════════════════════════════════════════╯${NC}"
+  echo -e "       ${COLOR1}══════════════════════════════════════════════${NC}"
+  echo -e "       ${WH}• DATE & TIME  ${COLOR1}:${NC} ${WH}${DATEWIB}${NC}"
+  echo -e "       ${WH}• OS           ${COLOR1}:${NC} ${WH}${MODEL2}${NC}"
+  echo -e "       ${WH}• RAM          ${COLOR1}:${NC} ${WH}${tram} / ${uram}${NC}"
+  echo -e "       ${WH}• ISP          ${COLOR1}:${NC} ${WH}${ISP}${NC}"
+  echo -e "       ${WH}• CPU          ${COLOR1}:${NC} ${WH}${cpu_usage}${NC}"
+  echo -e "       ${WH}• REGION       ${COLOR1}:${NC} ${WH}${CITY}${NC}"
+  echo -e "       ${WH}• IP VPS       ${COLOR1}:${NC} ${WH}${MYIP}${NC}"
+  echo -e "       ${WH}• DOMAIN       ${COLOR1}:${NC} ${WH}$(cat /etc/xray/domain)${NC}"
+  echo -e "       ${WH}• VERSION      ${COLOR1}:${NC} ${WH}V3.12${NC}"
+  echo -e "       ${COLOR1}══════════════════════════════════════════════${NC}"
+
+  # === CLIENT BOX (gabungan Client, Mastif, Development) ===
+  echo -e " $COLOR1╭════════════════════════════════════════════════════════╮${NC}"
+  echo -e " $COLOR1│${NC}  ${WH}• Client      :${NC} ${author}"
+  echo -e " $COLOR1│${NC}  ${WH}• Mastif      :${NC} ${certificate} Hari / ${Exp2} ${sts}"
+  echo -e " $COLOR1│${NC}  ${WH}• Development :${NC} AcilShop"
+  echo -e " $COLOR1╰════════════════════════════════════════════════════════╯${NC}"
+
+  # === STATUS SERVICE (1 baris) ===
+  echo -e "   ${WH}XRAY : ${NC}${status_xray}   ${WH}NGINX : ${NC}${status_nginx}   ${WH}DROPBEAR : ${NC}${status_beruangjatuh}   ${WH}UDP : ${NC}${status_udp}"
+  echo
+
+  # === ARAHAN KE MENU UTAMA ===
+  echo -e " ${WH}Use to ${DBLUE}menu${NC}"
+  echo
+}
+
+# === TRIGGER: kalau dipanggil sebagai 'menu1' atau dengan arg '--info', tampilkan Menu 1 ===
+if [[ "$0" =~ menu1$ ]] || [[ "$1" == "--info" ]]; then
+  render_menu1
+  exit 0
+fi
+
 clear
 clear && clear && clear
 clear;clear;clear
@@ -311,7 +370,8 @@ echo -e " $COLOR1╭════════════════════
 echo -e " $COLOR1│ ${WH}           • AcilShop| Autoscript Premium •             ${NC} $COLOR1 $NC"
 echo -e " $COLOR1╰════════════════════════════════════════════════════════╯${NC}"
 echo -e " $COLOR1      ══════════════════════════════════════════════${NC}"
-echo -e " $COLOR1  $NC${WH}    • DATE & TIME  ${COLOR1}: ${WH}$DATE2 WIB${NC}"
+# === sinkron: gunakan DATEWIB ===
+echo -e " $COLOR1  $NC${WH}    • DATE & TIME  ${COLOR1}: ${WH}${DATEWIB}${NC}"
 echo -e " $COLOR1  $NC${WH}    • OS           ${COLOR1}: ${WH}$MODEL2${NC}"
 echo -e " $COLOR1  $NC${WH}    • RAM          ${COLOR1}: ${WH}$tram MB / $uram MB ${NC}"
 #echo -e " $COLOR1  $NC${WH}  UPTIME      ${COLOR1}: ${WH}$uphours $upminutes $uptimecek"
@@ -324,9 +384,14 @@ echo -e " $COLOR1  $NC${WH}    • DOMAIN       ${COLOR1}: ${WH}$(cat /etc/xray/
 echo -e " $COLOR1  $NC${WH}    • VERSION      ${COLOR1}: ${WH}V3.12"
 # (pindahkan MASA AKTIF ke bawah, jadi baris ini dihapus)
 echo -e " $COLOR1      ══════════════════════════════════════════════${NC}"
+
+# === sinkron: CLIENT BOX gabungan (Client, Mastif, Development) ===
 echo -e " $COLOR1╭════════════════════════════════════════════════════════╮${NC}"
-echo -e " $COLOR1│ ${WH}               • Client : $author • $NC"
+echo -e " $COLOR1│${NC}  ${WH}• Client      :${NC} ${author}"
+echo -e " $COLOR1│${NC}  ${WH}• Mastif      :${NC} ${certificate} Hari / ${Exp2} ${sts}"
+echo -e " $COLOR1│${NC}  ${WH}• Development :${NC} AcilShop"
 echo -e " $COLOR1╰════════════════════════════════════════════════════════╯${NC}"
+
 echo -e " ${COLOR1}  XRAY : ${status_xray}${COLOR1}   NGINX : ${status_nginx}${COLOR1}   DROPBEAR : ${status_beruangjatuh}${COLOR1}   UDP : ${status_udp}"
 echo -e ""
 echo -e " $COLOR1╭════════════════╮╭══════╮╭═════════════╮╭═══════════════╮${NC}"
