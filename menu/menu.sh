@@ -239,9 +239,9 @@ echo "AngIMAN" > /etc/github/username
 m-ip
 fi
 }
-uphours=`uptime -p | awk '{print $2,$3}' | cut -d , -f1`
-upminutes=`uptime -p | awk '{print $4,$5}' | cut -d , -f1`
-uptimecek=`uptime -p | awk '{print $6,$7}' | cut -d , -f1`
+uphours=`uptime -p | awk '{print $2,$3}' | cut -d , -f1}`
+upminutes=`uptime -p | awk '{print $4,$5}' | cut -d , -f1}`
+uptimecek=`uptime -p | awk '{print $6,$7}' | cut -d , -f1}`
 cekup=`uptime -p | grep -ow "day"`
 if [ "$Isadmin" = "ON" ]; then
 uis="${COLOR1}Premium ADMIN VIP$NC"
@@ -357,8 +357,10 @@ render_menu1() {
   echo
 }
 
-# === TRIGGER: kalau dipanggil sebagai 'menu1' atau dengan arg '--info', tampilkan Menu 1 ===
-if [[ "$0" =~ menu1$ ]] || [[ "$1" == "--info" ]]; then
+# === MODE DEFAULT: tampilkan MENU 1 kecuali diminta MENU 2 ===
+# - Jika dipanggil sebagai 'menu' (basename=menu) ATAU dengan argumen '--main' -> tampilkan Menu 2.
+# - Selain itu: tampilkan Menu 1.
+if [[ "$(basename "$0")" != "menu" ]] && [[ "$1" != "--main" ]]; then
   render_menu1
   exit 0
 fi
@@ -385,11 +387,9 @@ echo -e " $COLOR1  $NC${WH}    • VERSION      ${COLOR1}: ${WH}V3.12"
 # (pindahkan MASA AKTIF ke bawah, jadi baris ini dihapus)
 echo -e " $COLOR1      ══════════════════════════════════════════════${NC}"
 
-# === sinkron: CLIENT BOX gabungan (Client, Mastif, Development) ===
+# === Menu 2: KEMBALI KE HEADER CLIENT SEDERHANA (tanpa Mastif/Development) ===
 echo -e " $COLOR1╭════════════════════════════════════════════════════════╮${NC}"
-echo -e " $COLOR1│${NC}  ${WH}• Client      :${NC} ${author}"
-echo -e " $COLOR1│${NC}  ${WH}• Mastif      :${NC} ${certificate} Hari / ${Exp2} ${sts}"
-echo -e " $COLOR1│${NC}  ${WH}• Development :${NC} AcilShop"
+echo -e " $COLOR1│ ${WH}               • Client : $author • $NC"
 echo -e " $COLOR1╰════════════════════════════════════════════════════════╯${NC}"
 
 echo -e " ${COLOR1}  XRAY : ${status_xray}${COLOR1}   NGINX : ${status_nginx}${COLOR1}   DROPBEAR : ${status_beruangjatuh}${COLOR1}   UDP : ${status_udp}"
