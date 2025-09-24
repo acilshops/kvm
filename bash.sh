@@ -531,8 +531,8 @@ apt install python -y >/dev/null 2>&1
 function Casper3(){
 echo -e "\033[1;96m"
 echo "╔══════════════════════════════════════════════════════════════╗"
-echo "║                    🚀 MEMULAI INSTALASI VPN 🚀               ║"
-echo "║                        Autoscript| Acilshop                  ║"
+echo "║                        MEMULAI INSTALASI VPN                 ║"
+echo "║                     AcilShop|Autoscript Premium              ║"
 echo "╚══════════════════════════════════════════════════════════════╝"
 echo -e "\033[0m"
 sleep 2
@@ -642,7 +642,7 @@ echo -e "${BIBlue}╭═══════════════════�
 echo -e "${BIBlue}│ ${BGCOLOR}    PROCESS INSTALLED LIMIT XRAY        ${NC}${BIBlue} │${NC}"
 echo -e "${BIBlue}╰══════════════════════════════════════════╯${NC}"
 
-download_with_progress "https://raw.githubusercontent.com/acilshops/kvm/main/bin/limit.sh" "limit.sh" "Limit Xray System"
+download_with_progress "https://raw.githubusercontent.com/gazzent/kvm/main/bin/limit.sh" "limit.sh" "Limit Xray System"
 install_with_animation "limit.sh" "Limit Xray Configuration"
 clear
 
@@ -679,7 +679,7 @@ sleep 3
 function iinfo(){
 domain=$(cat /etc/xray/domain)
 TIMES="10"
-CHATID="-6355497501"
+CHATID="6355497501"
 KEY="8194078306:AAGcRbkEStZeHFd2Fj6e8p8c_YPUrXHl1dw"
 URL="https://api.telegram.org/bot$KEY/sendMessage"
 ISP=$(cat /etc/xray/isp)
@@ -708,7 +708,7 @@ TEXT="
 <code>EXP SCRIPT : </code><code>$EXP Days</code>
 <code>━━━━━━━━━━━━━━━━━━━━</code>
 <i> Notifikasi Installer Script...</i>
-"'&reply_markup={"inline_keyboard":[[{"text":"ᴏʀᴅᴇʀ","url":"https://t.me/candravpnz wa.me/+6281573872702"},{"text":"GRUP","url":"https://t.me/candravpnzstores"}]]}'
+"'&reply_markup={"inline_keyboard":[[{"text":"ᴏʀᴅᴇʀ","url":"https://t.me/ wa.me/+"},{"text":"GRUP","url":"https://t.me/"}]]}'
 curl -s --max-time $TIMES -d "chat_id=$CHATID&disable_web_page_preview=1&text=$TEXT&parse_mode=html" $URL >/dev/null
 clear
 }
@@ -742,7 +742,7 @@ echo "Log All Account " > /etc/log-create-user.log
 fi
 
 history -c
-serverV=$( curl -sS https://raw.githubusercontent.com/acilshops/kvm/main/versi  )
+serverV=$( curl -sS https://raw.githubusercontent.com/gazzent/kvm/main/versi  )
 echo $serverV > /opt/.ver
 aureb=$(cat /home/re_otm)
 b=11
