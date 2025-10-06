@@ -1058,83 +1058,99 @@ fi
 }
 function cek-vmess(){
 clear
-xrayy=$(cat /var/log/xray/access.log | wc -l)
-# perbaikan: butuh $ di variabel xrayy
-if [[ $xrayy -le 5 ]]; then
-systemctl restart xray
+
+# hitung baris log xray, restart jika terlalu sedikit
+xrayy=$(cat /var/log/xray/access.log 2>/dev/null | wc -l)
+if [[ ${xrayy:-0} -le 5 ]]; then
+  systemctl restart xray
 fi
-xraylimit
+
+# xraylimit kadang error kalau stat user belum ada -> bungkam agar tidak merusak output
+xraylimit >/dev/null 2>&1 || true
+
 echo -e "$COLOR1╭═════════════════════════════════════════════════╮${NC}"
 echo -e "$COLOR1│${NC} ${COLBG1}            ${WH}• VMESS USER ONLINE •              ${NC} $COLOR1│ $NC"
 echo -e "$COLOR1╰═════════════════════════════════════════════════╯${NC}"
 echo -e "$COLOR1╭═══════════════════════════════════════════════════╮${NC}"
 
-# ambil daftar user dari tag #vmg (kolom 2 = username; kolom 3 = expiry jika tersedia)
-vm=($(cat /etc/xray/config.json | grep "^#vmg" | awk '{print $2}' | sort -u))
+# daftar user dari tag #vmg kolom-2
+vm=($(grep -w "^#vmg" /etc/xray/config.json 2>/dev/null | awk '{print $2}' | sort -u))
 
-# var bantu untuk deteksi ada/tidaknya user online
+# buffer & flag user online
+: > /tmp/vm
 splvm=""
 
-# buffer IP online
-echo -n >/tmp/vm
-
 for db1 in ${vm[@]}; do
-logvm=$(cat /var/log/xray/access.log | grep -w "email: ${db1}" | tail -n 100)
-while read a; do
-if [[ -n ${a} ]]; then
-set -- ${a}
-ina="${7}"
-inu="${2}"
-anu="${3}"
-enu=$(echo "${anu}" | sed 's/tcp://g' | sed '/^$/d' | cut -d. -f1,2,3)
-now=$(tim2sec ${timenow})
-client=$(tim2sec ${inu})
-nowt=$(((${now} - ${client})))
-if [[ ${nowt} -lt 40 ]]; then
-cat /tmp/vm | grep -w "${ina}" | grep -w "${enu}" >/dev/null
-if [[ $? -eq 1 ]]; then
-echo "${ina} ${inu} WIB : ${enu}" >>/tmp/vm
-splvm=$(cat /tmp/vm)
-fi
-fi
-fi
-done <<<"${logvm}"
+  logvm=$(grep -w "email: ${db1}" /var/log/xray/access.log 2>/dev/null | tail -n 100)
+  while IFS= read -r a; do
+    if [[ -n ${a} ]]; then
+      set -- ${a}
+      ina="${7}"
+      inu="${2}"
+      anu="${3}"
+      enu=$(echo "${anu}" | sed 's/tcp://g' | sed '/^$/d' | cut -d. -f1,2,3)
+      now=$(tim2sec ${timenow})
+      client=$(tim2sec ${inu})
+      nowt=$(( now - client ))
+      if [[ ${nowt} -lt 40 ]]; then
+        grep -w "${ina}" /tmp/vm | grep -w "${enu}" >/dev/null 2>&1
+        if [[ $? -eq 1 ]]; then
+          echo "${ina} ${inu} WIB : ${enu}" >>/tmp/vm
+          splvm="1"
+        fi
+      fi
+    fi
+  done <<<"${logvm}"
 done
 
-if [[ ${splvm} != "" ]]; then
-for vmuser in ${vm[@]}; do
-vmhas=$(cat /tmp/vm | grep -w "${vmuser}" | wc -l)
-tess=0
-if [[ ${vmhas} -gt $tess ]]; then
-# === pemakaian kuota ===
-# file usage & limit (dari sistem kamu)
-byt="0"; lim="0"
-[ -f /etc/limit/vmess/${vmuser} ] && byt=$(cat /etc/limit/vmess/${vmuser} 2>/dev/null || echo 0)
-[ -f /etc/vmess/${vmuser} ] && lim=$(cat /etc/vmess/${vmuser} 2>/dev/null || echo 0)
-gb=$(convert ${byt})
-lim2=$(convert ${lim})
+if [[ -n "${splvm}" ]]; then
+  for vmuser in ${vm[@]}; do
+    # jumlah IP yang tercatat aktif
+    vmhas=$(grep -w "${vmuser}" /tmp/vm 2>/dev/null | wc -l)
+    vmhas=${vmhas:-0}
+    tess=0
+    if [[ ${vmhas} -gt $tess ]]; then
+      # === pemakaian kuota ===
+      # Sanitize: kalau file tidak ada / non-angka -> 0
+      local byt lim gb lim2 pct exp
+      if [[ -f /etc/limit/vmess/${vmuser} ]]; then
+        byt=$(awk '($1 ~ /^[0-9]+$/){print $1; next} {print 0}' /etc/limit/vmess/${vmuser} 2>/dev/null)
+      else
+        byt=0
+      fi
+      if [[ -f /etc/vmess/${vmuser} ]]; then
+        lim=$(awk '($1 ~ /^[0-9]+$/){print $1; next} {print 0}' /etc/vmess/${vmuser} 2>/dev/null)
+      else
+        lim=0
+      fi
 
-# === tanggal expiry ===
-# ambil dari baris komentar "#vmg <user> <exp>" di config.json (kolom 3)
-exp=$(grep -w "^#vmg" /etc/xray/config.json | awk -v u="${vmuser}" '$2==u{print $3}' | head -n1)
-[ -z "$exp" ] && exp="-"
+      # tampilkan human-readable via fungsi convert milikmu
+      gb=$(convert ${byt})
+      lim2=$(convert ${lim})
 
-# (opsional) persen penggunaan, aman bila limit 0
-pct="-"
-if [[ "$lim" =~ ^[0-9]+$ ]] && [[ "$lim" -gt 0 ]]; then
-  pct=$(( 100 * ${byt} / ${lim} ))
-  pct="${pct}%"
-fi
+      # === tanggal expire ===
+      # Ambil dari "#vmg <user> <exp>" (kolom-3). Jika tidak ada -> "-"
+      exp=$(grep -w "^#vmg" /etc/xray/config.json 2>/dev/null | awk -v u="${vmuser}" '$2==u{print $3}' | head -n1)
+      [[ -z "$exp" ]] && exp="-"
 
-echo -e "$COLOR1${NC} USERNAME : \033[0;33m$vmuser"
-echo -e "$COLOR1${NC} IP LOGIN : \033[0;33m$vmhas"
-echo -e "$COLOR1${NC} USAGE    : \033[0;33m$gb"
-echo -e "$COLOR1${NC} LIMIT    : \033[0;33m$lim2"
-echo -e "$COLOR1${NC} EXPIRED  : \033[0;33m$exp"
-echo -e "$COLOR1${NC} PERCENT  : \033[0;33m${pct}"
-echo -e ""
-fi
-done
+      # === persen penggunaan (aman bila limit 0 / kosong) ===
+      pct=$(awk -v b="${byt}" -v l="${lim}" 'BEGIN{
+        if (l+0 > 0 && b ~ /^[0-9]+$/ && l ~ /^[0-9]+$/) {
+          printf("%d%%", int(100*b/l))
+        } else {
+          printf("0%%")
+        }
+      }')
+
+      echo -e "$COLOR1${NC} USERNAME : \033[0;33m$vmuser"
+      echo -e "$COLOR1${NC} IP LOGIN : \033[0;33m$vmhas"
+      echo -e "$COLOR1${NC} USAGE    : \033[0;33m$gb"
+      echo -e "$COLOR1${NC} LIMIT    : \033[0;33m$lim2"
+      echo -e "$COLOR1${NC} EXPIRED  : \033[0;33m$exp"
+      echo -e "$COLOR1${NC} PERCENT  : \033[0;33m${pct}"
+      echo -e ""
+    fi
+  done
 fi
 
 echo -e "$COLOR1╰═════════════════════════════════════════════════╯${NC}"
