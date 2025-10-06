@@ -937,9 +937,18 @@ echo -e "$COLOR1│${NC} ${COLBG1}             ${WH}• SSH ACTIVE USERS •    
 echo -e "$COLOR1╰═════════════════════════════════════════════════╯${NC}"
 rm -rf /tmp/ssh2
 sleep 3
+
+# fungsi bantu: konversi bytes -> human readable
+hr_size(){ awk 'function human(x){ s="B KMGTPE"; i=1; while (x>=1024 && i<7){x/=1024; i++} return sprintf("%.2f %s", x, substr(s,i*2-1,1)) } {print human($1)}'; }
+
+# ====== LOG AUTH
 if [ -e "/var/log/auth.log" ]; then
 LOG="/var/log/auth.log";
+elif [ -e "/var/log/secure" ]; then
+LOG="/var/log/secure";
 fi
+
+# ====== DAFTAR USER (punya /home)
 cat /etc/passwd | grep "/home/" | cut -d":" -f1 > /etc/user.txt
 username1=( `cat "/etc/user.txt" `);
 i="0";
@@ -949,15 +958,17 @@ username[$i]=`echo $user | sed 's/'\''//g'`;
 jumlah[$i]=0;
 i=$i+1;
 done
-cat $LOG | grep -i dropbear | grep -i "Password auth succeeded" > /tmp/log-db.txt
+
+# ====== DROPBEAR
+cat $LOG | grep -i dropbear | grep -i "Password auth succeeded" > /tmp/log-db.txt 2>/dev/null
 proc=( `ps aux | grep -i dropbear | awk '{print $2}'`);
 for PID in "${proc[@]}"
 do
 cat /tmp/log-db.txt | grep "dropbear\[$PID\]" > /tmp/log-db-pid.txt
 NUM=`cat /tmp/log-db-pid.txt | wc -l`;
-USER=`cat /tmp/log-db-pid.txt | awk '{print $10}' | sed 's/'\''//g'`;
-IP=`cat /tmp/log-db-pid.txt | awk '{print $12}'`;
-if [ $NUM -eq 1 ]; then
+USER=`cat /tmp/log-db-pid.txt | awk '{for(i=1;i<=NF;i++){if($i=="for"){print $(i+1);break}}}' | sed 's/'\''//g'`;
+IP=`cat /tmp/log-db-pid.txt | awk '{for(i=1;i<=NF;i++){if($i=="from"){print $(i+1);break}}}'`;
+if [ "$NUM" -eq 1 ] && [ -n "$USER" ] && [ -n "$IP" ]; then
 TIME=$(date +'%H:%M:%S')
 echo "$USER $TIME : $IP" >>/tmp/ssh2
 i=0;
@@ -971,15 +982,17 @@ i=$i+1;
 done
 fi
 done
-cat $LOG | grep -i sshd | grep -i "Accepted password for" > /tmp/log-db.txt
+
+# ====== SSHD
+cat $LOG | grep -i sshd | grep -i "Accepted password for" > /tmp/log-db.txt 2>/dev/null
 data=( `ps aux | grep "\[priv\]" | sort -k 72 | awk '{print $2}'`);
 for PID in "${data[@]}"
 do
 cat /tmp/log-db.txt | grep "sshd\[$PID\]" > /tmp/log-db-pid.txt;
 NUM=`cat /tmp/log-db-pid.txt | wc -l`;
-USER=`cat /tmp/log-db-pid.txt | awk '{print $9}'`;
-IP=`cat /tmp/log-db-pid.txt | awk '{print $11}'`;
-if [ $NUM -eq 1 ]; then
+USER=`cat /tmp/log-db-pid.txt | awk '{for(i=1;i<=NF;i++){if($i=="for"){print $(i+1);break}}}'`;
+IP=`cat /tmp/log-db-pid.txt | awk '{for(i=1;i<=NF;i++){if($i=="from"){print $(i+1);break}}}'`;
+if [ "$NUM" -eq 1 ] && [ -n "$USER" ] && [ -n "$IP" ]; then
 TIME=$(date +'%H:%M:%S')
 echo "$USER $TIME : $IP" >>/tmp/ssh2
 i=0;
@@ -993,27 +1006,62 @@ i=$i+1;
 done
 fi
 done
+
+# ====== HITUNG TOTAL KUOTA OPENVPN (TCP+UDP) PER NAME
+# Format status: CLIENT_LIST,name,realaddr,virtaddr,bytesIn,bytesOut,since,username
+rm -f /tmp/vpn-quota.txt
+touch /tmp/vpn-quota.txt
+if [ -f "/etc/openvpn/server/openvpn-tcp.log" ]; then
+  awk -F',' '$1=="CLIENT_LIST"{sum[$2]+=($5+$6)} END{for(n in sum) printf "%s %s\n", n, sum[n]}' /etc/openvpn/server/openvpn-tcp.log >> /tmp/vpn-quota.txt
+fi
+if [ -f "/etc/openvpn/server/openvpn-udp.log" ]; then
+  awk -F',' '$1=="CLIENT_LIST"{sum[$2]+=($5+$6)} END{for(n in sum) printf "%s %s\n", n, sum[n]}' /etc/openvpn/server/openvpn-udp.log >> /tmp/vpn-quota.txt
+fi
+# Gabungkan jika ada duplikat nama
+if [ -s /tmp/vpn-quota.txt ]; then
+  awk '{tot[$1]+=$2} END{for(n in tot) print n, tot[n]}' /tmp/vpn-quota.txt > /tmp/vpn-quota.sum && mv /tmp/vpn-quota.sum /tmp/vpn-quota.txt
+fi
+
+# ====== OUTPUT PER USER (TETAP DENGAN STRUKTURMU)
 j="0";
 for i in ${!username[*]}
 do
 limitip="0"
 if [[ ${jumlah[$i]} -gt $limitip ]]; then
 sship=$(cat /tmp/ssh2  | grep -w "${username[$i]}" | wc -l)
+
+# ambil tanggal expired akun linux
+EXPRAW=$(chage -l "${username[$i]}" 2>/dev/null | awk -F': ' '/Account expires/{print $2}')
+[ -z "$EXPRAW" ] && EXPRAW="unknown"
+
+# ambil total kuota OpenVPN (bytes) untuk nama yang sama dengan username
+BYTES=$(awk -v u="${username[$i]}" '$1==u{print $2}' /tmp/vpn-quota.txt | awk '{s+=$1} END{print s+0}')
+if [ -z "$BYTES" ]; then
+  HSIZE="-"
+else
+  HSIZE=$(echo "$BYTES" | hr_size)
+fi
+
 echo -e "$COLOR1${NC} USERNAME : \033[0;33m${username[$i]}";
 echo -e "$COLOR1${NC} IP LOGIN : \033[0;33m$sship";
+echo -e "$COLOR1${NC} EXPIRED : \033[0;33m$EXPRAW";
+echo -e "$COLOR1${NC} QUOTA   : \033[0;33m$HSIZE (OpenVPN)";
 echo -e ""
 fi
 done
+
+# ====== BAGIAN OPENVPN (dipertahankan seperti aslinya, hanya isi lebih informatif)
 if [ -f "/etc/openvpn/server/openvpn-tcp.log" ]; then
 echo " "
-cat /etc/openvpn/server/openvpn-tcp.log | grep -w "^CLIENT_LIST" | cut -d ',' -f 2,3,8 | sed -e 's/,/      /g' > /tmp/vpn-login-tcp.txt
+cat /etc/openvpn/server/openvpn-tcp.log | grep -w "^CLIENT_LIST" | awk -F',' '{printf "%s      %s      %s\n",$2,$3,$8}' > /tmp/vpn-login-tcp.txt
 cat /tmp/vpn-login-tcp.txt
 fi
 if [ -f "/etc/openvpn/server/openvpn-udp.log" ]; then
 echo " "
-cat /etc/openvpn/server/openvpn-udp.log | grep -w "^CLIENT_LIST" | cut -d ',' -f 2,3,8 | sed -e 's/,/      /g' > /tmp/vpn-login-udp.txt
+cat /etc/openvpn/server/openvpn-udp.log | grep -w "^CLIENT_LIST" | awk -F',' '{printf "%s      %s      %s\n",$2,$3,$8}' > /tmp/vpn-login-udp.txt
 cat /tmp/vpn-login-udp.txt
 fi
+
 echo -e "$COLOR1╰═════════════════════════════════════════════════╯${NC}"
 echo ""
 read -n 1 -s -r -p "Press any key to back on menu"
