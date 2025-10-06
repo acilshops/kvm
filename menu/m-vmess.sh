@@ -1059,7 +1059,8 @@ fi
 function cek-vmess(){
 clear
 xrayy=$(cat /var/log/xray/access.log | wc -l)
-if [[ xrayy -le 5 ]]; then
+# perbaikan: butuh $ di variabel xrayy
+if [[ $xrayy -le 5 ]]; then
 systemctl restart xray
 fi
 xraylimit
@@ -1067,8 +1068,16 @@ echo -e "$COLOR1╭════════════════════�
 echo -e "$COLOR1│${NC} ${COLBG1}            ${WH}• VMESS USER ONLINE •              ${NC} $COLOR1│ $NC"
 echo -e "$COLOR1╰═════════════════════════════════════════════════╯${NC}"
 echo -e "$COLOR1╭═══════════════════════════════════════════════════╮${NC}"
+
+# ambil daftar user dari tag #vmg (kolom 2 = username; kolom 3 = expiry jika tersedia)
 vm=($(cat /etc/xray/config.json | grep "^#vmg" | awk '{print $2}' | sort -u))
+
+# var bantu untuk deteksi ada/tidaknya user online
+splvm=""
+
+# buffer IP online
 echo -n >/tmp/vm
+
 for db1 in ${vm[@]}; do
 logvm=$(cat /var/log/xray/access.log | grep -w "email: ${db1}" | tail -n 100)
 while read a; do
@@ -1091,23 +1100,43 @@ fi
 fi
 done <<<"${logvm}"
 done
+
 if [[ ${splvm} != "" ]]; then
 for vmuser in ${vm[@]}; do
 vmhas=$(cat /tmp/vm | grep -w "${vmuser}" | wc -l)
 tess=0
 if [[ ${vmhas} -gt $tess ]]; then
-byt=$(cat /etc/limit/vmess/${vmuser})
+# === pemakaian kuota ===
+# file usage & limit (dari sistem kamu)
+byt="0"; lim="0"
+[ -f /etc/limit/vmess/${vmuser} ] && byt=$(cat /etc/limit/vmess/${vmuser} 2>/dev/null || echo 0)
+[ -f /etc/vmess/${vmuser} ] && lim=$(cat /etc/vmess/${vmuser} 2>/dev/null || echo 0)
 gb=$(convert ${byt})
-lim=$(cat /etc/vmess/${vmuser})
 lim2=$(convert ${lim})
+
+# === tanggal expiry ===
+# ambil dari baris komentar "#vmg <user> <exp>" di config.json (kolom 3)
+exp=$(grep -w "^#vmg" /etc/xray/config.json | awk -v u="${vmuser}" '$2==u{print $3}' | head -n1)
+[ -z "$exp" ] && exp="-"
+
+# (opsional) persen penggunaan, aman bila limit 0
+pct="-"
+if [[ "$lim" =~ ^[0-9]+$ ]] && [[ "$lim" -gt 0 ]]; then
+  pct=$(( 100 * ${byt} / ${lim} ))
+  pct="${pct}%"
+fi
+
 echo -e "$COLOR1${NC} USERNAME : \033[0;33m$vmuser"
 echo -e "$COLOR1${NC} IP LOGIN : \033[0;33m$vmhas"
 echo -e "$COLOR1${NC} USAGE    : \033[0;33m$gb"
 echo -e "$COLOR1${NC} LIMIT    : \033[0;33m$lim2"
+echo -e "$COLOR1${NC} EXPIRED  : \033[0;33m$exp"
+echo -e "$COLOR1${NC} PERCENT  : \033[0;33m${pct}"
 echo -e ""
 fi
 done
 fi
+
 echo -e "$COLOR1╰═════════════════════════════════════════════════╯${NC}"
 echo ""
 read -n 1 -s -r -p "   Press any key to back on menu"
