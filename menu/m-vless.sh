@@ -796,56 +796,101 @@ fi
 }
 function cek-vless(){
 clear
-xrayy=$(cat /var/log/xray/access.log | wc -l)
-if [[ xrayy -le 5 ]]; then
-systemctl restart xray
+xrayy=$(cat /var/log/xray/access.log 2>/dev/null | wc -l)
+if [[ ${xrayy:-0} -le 5 ]]; then
+  systemctl restart xray
 fi
-xraylimit
+# bungkam possible rpc errors agar output bersih
+xraylimit >/dev/null 2>&1 || true
+
 echo -e "$COLOR1╭═════════════════════════════════════════════════╮${NC}"
 echo -e "$COLOR1│${NC} ${COLBG1}            ${WH}• VLESS USER ONLINE •              ${NC} $COLOR1│ $NC"
 echo -e "$COLOR1╰═════════════════════════════════════════════════╯${NC}"
 echo -e "$COLOR1╭═════════════════════════════════════════════════╮${NC}"
-vm=($(cat /etc/xray/config.json | grep "^#vlg" | awk '{print $2}' | sort -u))
-echo -n >/tmp/vm
+
+# daftar user dari tag #vlg kolom-2
+vm=($(grep -w "^#vlg" /etc/xray/config.json 2>/dev/null | awk '{print $2}' | sort -u))
+
+# buffer online IPs & flag
+: > /tmp/vm
+splvm=""
+
+# kumpulkan IP yang aktif (mirip vmess)
 for db1 in ${vm[@]}; do
-logvm=$(cat /var/log/xray/access.log | grep -w "email: ${db1}" | tail -n 100)
-while read a; do
-if [[ -n ${a} ]]; then
-set -- ${a}
-ina="${7}"
-inu="${2}"
-anu="${3}"
-enu=$(echo "${anu}" | sed 's/tcp://g' | sed '/^$/d' | cut -d. -f1,2,3)
-now=$(tim2sec ${timenow})
-client=$(tim2sec ${inu})
-nowt=$(((${now} - ${client})))
-if [[ ${nowt} -lt 40 ]]; then
-cat /tmp/vm | grep -w "${ina}" | grep -w "${enu}" >/dev/null
-if [[ $? -eq 1 ]]; then
-echo "${ina} ${inu} WIB : ${enu}" >>/tmp/vm
-splvm=$(cat /tmp/vm)
-fi
-fi
-fi
-done <<<"${logvm}"
+  logvm=$(grep -w "email: ${db1}" /var/log/xray/access.log 2>/dev/null | tail -n 100)
+  while IFS= read -r a; do
+    if [[ -n ${a} ]]; then
+      set -- ${a}
+      ina="${7}"
+      inu="${2}"
+      anu="${3}"
+      enu=$(echo "${anu}" | sed 's/tcp://g' | sed '/^$/d' | cut -d. -f1,2,3)
+      now=$(tim2sec ${timenow})
+      client=$(tim2sec ${inu})
+      nowt=$(( now - client ))
+      if [[ ${nowt} -lt 40 ]]; then
+        grep -w "${ina}" /tmp/vm | grep -w "${enu}" >/dev/null 2>&1
+        if [[ $? -eq 1 ]]; then
+          echo "${ina} ${inu} WIB : ${enu}" >>/tmp/vm
+          splvm="1"
+        fi
+      fi
+    fi
+  done <<<"${logvm}"
 done
-if [[ ${splvm} != "" ]]; then
-for vmuser in ${vm[@]}; do
-vmhas=$(cat /tmp/vm | grep -w "${vmuser}" | wc -l)
-tess=0
-if [[ ${vmhas} -gt $tess ]]; then
-byt=$(cat /etc/limit/vless/${vmuser})
-gb=$(convert ${byt})
-lim=$(cat /etc/vless/${vmuser})
-lim2=$(convert ${lim})
-echo -e "$COLOR1${NC} USERNAME : \033[0;33m$vmuser"
-echo -e "$COLOR1${NC} IP LOGIN : \033[0;33m$vmhas"
-echo -e "$COLOR1${NC} USAGE : \033[0;33m$gb"
-echo -e "$COLOR1${NC} LIMIT : \033[0;33m$lim2"
-echo -e ""
+
+# ====== MODE TABEL MENYAMPING ======
+: > /tmp/vless-table.txt
+# Header: USERNAME | IPs | USAGE | LIMIT | EXPIRED | %
+printf "%-18s %-5s %-12s %-12s %-12s %-5s\n" "USERNAME" "IPs" "USAGE" "LIMIT" "EXPIRED" "%" >> /tmp/vless-table.txt
+printf "%-18s %-5s %-12s %-12s %-12s %-5s\n" "------------------" "-----" "------------" "------------" "------------" "-----" >> /tmp/vless-table.txt
+
+if [[ -n "${splvm}" ]]; then
+  for vmuser in ${vm[@]}; do
+    vmhas=$(grep -w "${vmuser}" /tmp/vm 2>/dev/null | wc -l)
+    vmhas=${vmhas:-0}
+    tess=0
+    if [[ ${vmhas} -gt $tess ]]; then
+      # sanitize angka (usage & limit) agar aman
+      if [[ -f /etc/limit/vless/${vmuser} ]]; then
+        byt=$(awk '($1 ~ /^[0-9]+$/){print $1; next} {print 0}' /etc/limit/vless/${vmuser} 2>/dev/null)
+      else
+        byt=0
+      fi
+      if [[ -f /etc/vless/${vmuser} ]]; then
+        lim=$(awk '($1 ~ /^[0-9]+$/){print $1; next} {print 0}' /etc/vless/${vmuser} 2>/dev/null)
+      else
+        lim=0
+      fi
+
+      # human-readable (pakai fungsi convert milikmu)
+      gb=$(convert ${byt})
+      lim2=$(convert ${lim})
+
+      # expired dari komentar "#vlg <user> <exp>"
+      exp=$(grep -w "^#vlg" /etc/xray/config.json 2>/dev/null | awk -v u="${vmuser}" '$2==u{print $3}' | head -n1)
+      [[ -z "$exp" ]] && exp="-"
+
+      # persen aman (tanpa division error)
+      pct=$(awk -v b="${byt}" -v l="${lim}" 'BEGIN{
+        if (l+0 > 0 && b ~ /^[0-9]+$/ && l ~ /^[0-9]+$/) { printf("%d", int(100*b/l)) }
+        else { printf("0") }
+      }')
+
+      # batasi tampilan username biar tabel gak melebar
+      uname="$vmuser"
+      if [[ ${#uname} -gt 18 ]]; then
+        uname="${uname:0:15}..."
+      fi
+
+      printf "%-18s %-5s %-12s %-12s %-12s %-5s\n" "$uname" "$vmhas" "$gb" "$lim2" "$exp" "${pct}%" >> /tmp/vless-table.txt
+    fi
+  done
 fi
-done
-fi
+
+# tampilkan tabel
+cat /tmp/vless-table.txt
+
 echo -e "$COLOR1╰═════════════════════════════════════════════════╯${NC}"
 echo ""
 read -n 1 -s -r -p "   Press any key to back on menu"
