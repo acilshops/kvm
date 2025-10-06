@@ -731,56 +731,101 @@ fi
 }
 function cek-tr(){
 clear
-xrayy=$(cat /var/log/xray/access.log | wc -l)
-if [[ xrayy -le 5 ]]; then
-systemctl restart xray
+xrayy=$(cat /var/log/xray/access.log 2>/dev/null | wc -l)
+if [[ ${xrayy:-0} -le 5 ]]; then
+  systemctl restart xray
 fi
-xraylimit
+# hindari spam error ketika stats user belum ada
+xraylimit >/dev/null 2>&1 || true
+
 echo -e "$COLOR1╭═════════════════════════════════════════════════╮${NC}"
 echo -e "$COLOR1│${NC}${COLBG1}             ${WH}• TROJAN USER ONLINE •              ${NC}$COLOR1│ $NC"
 echo -e "$COLOR1╰═════════════════════════════════════════════════╯${NC}"
 echo -e "$COLOR1╭═════════════════════════════════════════════════╮${NC}"
-vm=($(cat /etc/xray/config.json | grep "^#trg" | awk '{print $2}' | sort -u))
-echo -n >/tmp/vm
+
+# daftar user dari tag #trg kolom-2
+vm=($(grep -w "^#trg" /etc/xray/config.json 2>/dev/null | awk '{print $2}' | sort -u))
+
+# buffer online & flag
+: > /tmp/vm
+splvm=""
+
+# kumpulkan IP aktif dari access.log
 for db1 in ${vm[@]}; do
-logvm=$(cat /var/log/xray/access.log | grep -w "email: ${db1}" | tail -n 100)
-while read a; do
-if [[ -n ${a} ]]; then
-set -- ${a}
-ina="${7}"
-inu="${2}"
-anu="${3}"
-enu=$(echo "${anu}" | sed 's/tcp://g' | sed '/^$/d' | cut -d. -f1,2,3)
-now=$(tim2sec ${timenow})
-client=$(tim2sec ${inu})
-nowt=$(((${now} - ${client})))
-if [[ ${nowt} -lt 40 ]]; then
-cat /tmp/vm | grep -w "${ina}" | grep -w "${enu}" >/dev/null
-if [[ $? -eq 1 ]]; then
-echo "${ina} ${inu} WIB : ${enu}" >>/tmp/vm
-splvm=$(cat /tmp/vm)
-fi
-fi
-fi
-done <<<"${logvm}"
+  logvm=$(grep -w "email: ${db1}" /var/log/xray/access.log 2>/dev/null | tail -n 100)
+  while IFS= read -r a; do
+    if [[ -n ${a} ]]; then
+      set -- ${a}
+      ina="${7}"
+      inu="${2}"
+      anu="${3}"
+      enu=$(echo "${anu}" | sed 's/tcp://g' | sed '/^$/d' | cut -d. -f1,2,3)
+      now=$(tim2sec ${timenow})
+      client=$(tim2sec ${inu})
+      nowt=$(( now - client ))
+      if [[ ${nowt} -lt 40 ]]; then
+        grep -w "${ina}" /tmp/vm | grep -w "${enu}" >/dev/null 2>&1
+        if [[ $? -eq 1 ]]; then
+          echo "${ina} ${inu} WIB : ${enu}" >>/tmp/vm
+          splvm="1"
+        fi
+      fi
+    fi
+  done <<<"${logvm}"
 done
-if [[ ${splvm} != "" ]]; then
-for vmuser in ${vm[@]}; do
-vmhas=$(cat /tmp/vm | grep -w "${vmuser}" | wc -l)
-tess=0
-if [[ ${vmhas} -gt $tess ]]; then
-byt=$(cat /etc/limit/trojan/${vmuser})
-gb=$(convert ${byt})
-lim=$(cat /etc/trojan/${vmuser})
-lim2=$(convert ${lim})
-echo -e "$COLOR1${NC} USERNAME : \033[0;33m$vmuser"
-echo -e "$COLOR1${NC} IP LOGIN : \033[0;33m$vmhas"
-echo -e "$COLOR1${NC} USAGE : \033[0;33m$gb"
-echo -e "$COLOR1${NC} LIMIT : \033[0;33m$lim2"
-echo -e ""
+
+# ====== TABEL MENYAMPING ======
+: > /tmp/trojan-table.txt
+# header: USERNAME | IPs | USAGE | LIMIT | EXPIRED | %
+printf "%-18s %-5s %-12s %-12s %-12s %-5s\n" "USERNAME" "IPs" "USAGE" "LIMIT" "EXPIRED" "%" >> /tmp/trojan-table.txt
+printf "%-18s %-5s %-12s %-12s %-12s %-5s\n" "------------------" "-----" "------------" "------------" "------------" "-----" >> /tmp/trojan-table.txt
+
+if [[ -n "${splvm}" ]]; then
+  for vmuser in ${vm[@]}; do
+    vmhas=$(grep -w "${vmuser}" /tmp/vm 2>/dev/null | wc -l)
+    vmhas=${vmhas:-0}
+    tess=0
+    if [[ ${vmhas} -gt $tess ]]; then
+      # sanitize angka (usage & limit)
+      if [[ -f /etc/limit/trojan/${vmuser} ]]; then
+        byt=$(awk '($1 ~ /^[0-9]+$/){print $1; next} {print 0}' /etc/limit/trojan/${vmuser} 2>/dev/null)
+      else
+        byt=0
+      fi
+      if [[ -f /etc/trojan/${vmuser} ]]; then
+        lim=$(awk '($1 ~ /^[0-9]+$/){print $1; next} {print 0}' /etc/trojan/${vmuser} 2>/dev/null)
+      else
+        lim=0
+      fi
+
+      # human readable via fungsi convert milikmu
+      gb=$(convert ${byt})
+      lim2=$(convert ${lim})
+
+      # expired dari baris komentar "#trg <user> <exp>"
+      exp=$(grep -w "^#trg" /etc/xray/config.json 2>/dev/null | awk -v u="${vmuser}" '$2==u{print $3}' | head -n1)
+      [[ -z "$exp" ]] && exp="-"
+
+      # persen aman walau limit 0
+      pct=$(awk -v b="${byt}" -v l="${lim}" 'BEGIN{
+        if (l+0 > 0 && b ~ /^[0-9]+$/ && l ~ /^[0-9]+$/) { printf("%d", int(100*b/l)) }
+        else { printf("0") }
+      }')
+
+      # batasi panjang username agar tabel rapi
+      uname="$vmuser"
+      if [[ ${#uname} -gt 18 ]]; then
+        uname="${uname:0:15}..."
+      fi
+
+      printf "%-18s %-5s %-12s %-12s %-12s %-5s\n" "$uname" "$vmhas" "$gb" "$lim2" "$exp" "${pct}%" >> /tmp/trojan-table.txt
+    fi
+  done
 fi
-done
-fi
+
+# tampilkan tabel
+cat /tmp/trojan-table.txt
+
 echo -e "$COLOR1╰═════════════════════════════════════════════════╯${NC}"
 echo ""
 read -n 1 -s -r -p "   Press any key to back on menu"
