@@ -1059,13 +1059,10 @@ fi
 function cek-vmess(){
 clear
 
-# hitung baris log xray, restart jika terlalu sedikit
 xrayy=$(cat /var/log/xray/access.log 2>/dev/null | wc -l)
 if [[ ${xrayy:-0} -le 5 ]]; then
   systemctl restart xray
 fi
-
-# xraylimit kadang error kalau stat user belum ada -> bungkam agar tidak merusak output
 xraylimit >/dev/null 2>&1 || true
 
 echo -e "$COLOR1╭═════════════════════════════════════════════════╮${NC}"
@@ -1103,16 +1100,22 @@ for db1 in ${vm[@]}; do
   done <<<"${logvm}"
 done
 
+# ====== MODE TAMPIL: TABEL MENYAMPING ======
+# siapkan file tabel
+: > /tmp/vmess-table.txt
+
+# header tabel (nama kolom pendek biar muat)
+# Kolom: USERNAME | IPs | USAGE | LIMIT | EXP | %
+printf "%-18s %-5s %-12s %-12s %-12s %-5s\n" "USERNAME" "IPs" "USAGE" "LIMIT" "EXPIRED" "%" >> /tmp/vmess-table.txt
+printf "%-18s %-5s %-12s %-12s %-12s %-5s\n" "------------------" "-----" "------------" "------------" "------------" "-----" >> /tmp/vmess-table.txt
+
 if [[ -n "${splvm}" ]]; then
   for vmuser in ${vm[@]}; do
-    # jumlah IP yang tercatat aktif
     vmhas=$(grep -w "${vmuser}" /tmp/vm 2>/dev/null | wc -l)
     vmhas=${vmhas:-0}
     tess=0
     if [[ ${vmhas} -gt $tess ]]; then
-      # === pemakaian kuota ===
-      # Sanitize: kalau file tidak ada / non-angka -> 0
-      local byt lim gb lim2 pct exp
+      # sanitize angka
       if [[ -f /etc/limit/vmess/${vmuser} ]]; then
         byt=$(awk '($1 ~ /^[0-9]+$/){print $1; next} {print 0}' /etc/limit/vmess/${vmuser} 2>/dev/null)
       else
@@ -1124,34 +1127,37 @@ if [[ -n "${splvm}" ]]; then
         lim=0
       fi
 
-      # tampilkan human-readable via fungsi convert milikmu
+      # konversi human-readable lewat fungsi convert milikmu
       gb=$(convert ${byt})
       lim2=$(convert ${lim})
 
-      # === tanggal expire ===
-      # Ambil dari "#vmg <user> <exp>" (kolom-3). Jika tidak ada -> "-"
+      # expiry dari #vmg <user> <exp>
       exp=$(grep -w "^#vmg" /etc/xray/config.json 2>/dev/null | awk -v u="${vmuser}" '$2==u{print $3}' | head -n1)
       [[ -z "$exp" ]] && exp="-"
 
-      # === persen penggunaan (aman bila limit 0 / kosong) ===
+      # persen aman
       pct=$(awk -v b="${byt}" -v l="${lim}" 'BEGIN{
         if (l+0 > 0 && b ~ /^[0-9]+$/ && l ~ /^[0-9]+$/) {
-          printf("%d%%", int(100*b/l))
+          printf("%d", int(100*b/l))
         } else {
-          printf("0%%")
+          printf("0")
         }
       }')
 
-      echo -e "$COLOR1${NC} USERNAME : \033[0;33m$vmuser"
-      echo -e "$COLOR1${NC} IP LOGIN : \033[0;33m$vmhas"
-      echo -e "$COLOR1${NC} USAGE    : \033[0;33m$gb"
-      echo -e "$COLOR1${NC} LIMIT    : \033[0;33m$lim2"
-      echo -e "$COLOR1${NC} EXPIRED  : \033[0;33m$exp"
-      echo -e "$COLOR1${NC} PERCENT  : \033[0;33m${pct}"
-      echo -e ""
+      # potong username kalau terlalu panjang biar tabel tidak melebar
+      uname="$vmuser"
+      if [[ ${#uname} -gt 18 ]]; then
+        uname="${uname:0:15}..."
+      fi
+
+      # tulis baris tabel
+      printf "%-18s %-5s %-12s %-12s %-12s %-5s\n" "$uname" "$vmhas" "$gb" "$lim2" "$exp" "${pct}%" >> /tmp/vmess-table.txt
     fi
   done
 fi
+
+# cetak tabel
+cat /tmp/vmess-table.txt
 
 echo -e "$COLOR1╰═════════════════════════════════════════════════╯${NC}"
 echo ""
