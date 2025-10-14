@@ -308,9 +308,10 @@ clear
 clear && clear && clear
 #!/bin/bash
 
-# --- Deklarasi Warna (Versi Bold/Bright) ---
-GR='\033[1;32m' # Green (Bold)
-YL='\033[1;33m' # Yellow (Bold)
+# --- Deklarasi Warna (Tema Biru Tua & Merah Tua) ---
+DB='\033[0;34m' # Dark Blue
+DR='\033[0;31m' # Dark Red
+LB='\033[1;34m' # Light Blue (Bold)
 WH='\033[1;37m' # White (Bold)
 NC='\033[0m'    # No Color
 
@@ -318,67 +319,64 @@ NC='\033[0m'    # No Color
 clear
 
 # Header Utama
-echo -e "${GR}═══════════════════•${WH} AcilShop | Autoscript Premium ${GR}•═══════════════════${NC}"
+echo -e "${DB}═══════════════════•${WH} AcilShop | Autoscript Premium ${DB}•═══════════════════${NC}"
 
 # Kotak Info Client & Versi
-echo -e "${GR}╭────────────────────────────────────────────────────────────╮${NC}"
-echo -e "${GR}│ ${WH}Client: ${YL}$author ${GR}│ ${WH}Version: ${YL}V3.12 ${GR}│${NC}"
-echo -e "${GR}╰────────────────────────────────────────────────────────────╯${NC}"
+echo -e "${DB}╭────────────────────────────────────────────────────────────╮${NC}"
+echo -e "${DB}│ ${WH}Client: ${LB}$author ${DB}│ ${WH}Version: ${LB}V3.12 ${DB}│${NC}"
+echo -e "${DB}╰────────────────────────────────────────────────────────────╯${NC}"
 
 # --- Kotak Dasbor Server Terpadu ---
 width=62
 # Fungsi untuk membuat garis pemisah internal
 print_line() {
-    printf "${GR}│%*s│${NC}\n" "$width" "" | sed "s/ /─/g"
+    printf "${DB}│%*s│${NC}\n" "$width" "" | sed "s/ /─/g"
 }
 
 # Header Kotak
-printf "${GR}╭─${WH} DASBOR SERVER %*s─╮${NC}\n" "$(($width - 18))" "" | sed "s/ /─/g"
+printf "${DB}╭─${DR} DASBOR SERVER %*s─╮${NC}\n" "$(($width - 18))" "" | sed "s/ /─/g"
 
-# Info Server (Bagian ini sudah benar, tidak perlu diubah)
-printf "${GR}│ ${WH}%-14s: ${YL}%-43s ${GR}│${NC}\n" "OS" "$MODEL2"
-printf "${GR}│ ${WH}%-14s: ${YL}%-43s ${GR}│${NC}\n" "IP/Domain" "$MYIP / $(cat /etc/xray/domain)"
-printf "${GR}│ ${WH}%-14s: ${YL}%-43s ${GR}│${NC}\n" "CPU/RAM" "$cpu_usage / $uram MB dari $tram MB"
-printf "${GR}│ ${WH}%-14s: ${YL}%-43s ${GR}│${NC}\n" "Lokasi" "$ISP - $CITY"
+# Info Server
+printf "${DB}│ ${WH}%-14s: ${LB}%-43s ${DB}│${NC}\n" "OS" "$MODEL2"
+printf "${DB}│ ${WH}%-14s: ${LB}%-43s ${DB}│${NC}\n" "IP/Domain" "$MYIP / $(cat /etc/xray/domain)"
+printf "${DB}│ ${WH}%-14s: ${LB}%-43s ${DB}│${NC}\n" "CPU/RAM" "$cpu_usage / $uram MB dari $tram MB"
+printf "${DB}│ ${WH}%-14s: ${LB}%-43s ${DB}│${NC}\n" "Lokasi" "$ISP - $CITY"
 
-# Status Layanan (Diperbaiki menggunakan echo -e)
+# Status Layanan
 print_line
-echo -e "${GR}│ ${WH}STATUS LAYANAN                                                 ${GR}│${NC}"
-echo -e "${GR}│   ${WH}[ XRAY: ${status_xray}${WH} ]   [ NGINX: ${status_nginx}${WH} ]   [ SSH: ${status_beruangjatuh}${WH} ]        ${GR}│${NC}"
-echo -e "${GR}│   ${WH}[ WS-TLS: ${status_ws}${WH} ] [ UDP: ${status_udp}${WH} ]     [ TR-GO: ${stat_trgo}${WH} ]        ${GR}│${NC}"
+echo -e "${DB}│ ${DR}STATUS LAYANAN                                                 ${DB}│${NC}"
+echo -e "${DB}│   ${WH}[ XRAY: ${status_xray}${WH} ]   [ NGINX: ${status_nginx}${WH} ]   [ SSH: ${status_beruangjatuh}${WH} ]        ${DB}│${NC}"
+echo -e "${DB}│   ${WH}[ WS-TLS: ${status_ws}${WH} ] [ UDP: ${status_udp}${WH} ]     [ TR-GO: ${stat_trgo}${WH} ]        ${DB}│${NC}"
 
-
-# Statistik Penggunaan (Diperbaiki menggunakan echo -e)
+# Statistik Penggunaan
 print_line
-echo -e "${GR}│ ${WH}STATISTIK PENGGUNAAN                                           ${GR}│${NC}"
-echo -e "${GR}│${NC} ${GR}├─ ${WH}Bandwidth Hari Ini  : ${YL}$today_tx $today_txv"
-echo -e "${GR}│${NC} ${GR}├─ ${WH}Bandwidth Kemarin : ${YL}$yesterday_tx $yesterday_txv"
-echo -e "${GR}│${NC} ${GR}├─ ${WH}Bandwidth Bulan Ini : ${YL}$month_tx $month_txv"
-echo -e "${GR}│${NC} ${GR}└─ ${WH}Total Akun          : ${WH}SSH:${YL}$total_ssh ${WH}VMESS:${YL}$vmess ${WH}VLESS:${YL}$vless ${WH}TROJAN:${YL}$trtls"
+echo -e "${DB}│ ${DR}STATISTIK PENGGUNAAN                                           ${DB}│${NC}"
+echo -e "${DB}│${NC} ${DB}├─ ${WH}Bandwidth Hari Ini  : ${LB}$today_tx $today_txv"
+echo -e "${DB}│${NC} ${DB}├─ ${WH}Bandwidth Kemarin : ${LB}$yesterday_tx $yesterday_txv"
+echo -e "${DB}│${NC} ${DB}├─ ${WH}Bandwidth Bulan Ini : ${LB}$month_tx $month_txv"
+echo -e "${DB}│${NC} ${DB}└─ ${WH}Total Akun          : ${WH}SSH:${LB}$total_ssh ${WH}VMESS:${LB}$vmess ${WH}VLESS:${LB}$vless ${WH}TROJAN:${LB}$trtls"
 
 # Footer Kotak
-printf "${GR}╰%*s╯${NC}\n" "$width" "" | sed "s/ /─/g"
+printf "${DB}╰%*s╯${NC}\n" "$width" "" | sed "s/ /─/g"
 
-# Bagian 3: Menu Utama
-echo -e "${GR}═══════════════════════════• ${WH}MENU UTAMA${GR} •═════════════════════════════${NC}"
-printf "  ${GR}[${WH}%2s${GR}]${NC} %-26s ${GR}[${WH}%2s${GR}]${NC} %-26s\n" "1" "SSH & OpenVPN" "8" "Cek Layanan Aktif"
-printf "  ${GR}[${WH}%2s${GR}]${NC} %-26s ${GR}[${WH}%2s${GR}]${NC} %-26s\n" "2" "Vmess" "9" "Restart Layanan"
-printf "  ${GR}[${WH}%2s${GR}]${NC} %-26s ${GR}[${WH}%2s${GR}]${NC} %-26s\n" "3" "Vless" "10" "Menu Sistem"
-printf "  ${GR}[${WH}%2s${GR}]${NC} %-26s ${GR}[${WH}%2s${GR}]${NC} %-26s\n" "4" "Trojan" "11" "Panel Bot Telegram"
-printf "  ${GR}[${WH}%2s${GR}]${NC} %-26s ${GR}[${WH}%2s${GR}]${NC} %-26s\n" "5" "NoobzVPN" "12" "Notifikasi Bot Telegram"
-printf "  ${GR}[${WH}%2s${GR}]${NC} %-26s ${GR}[${WH}%2s${GR}]${NC} %-26s\n" "6" "Trojan-Go" "13" "Backup & Restore"
-printf "  ${GR}[${WH}%2s${GR}]${NC} %-26s ${GR}[${WH}%2s${GR}]${NC} %-26s\n" "7" "Hapus Akun Kadaluarsa" "14" "Menu Rebuild"
-printf "  ${GR}[${WH}%2s${GR}]${NC} %-26s\n" "15" "Update Script"
+# Bagian 3: Menu Utama (Teks Menu Dibuat Bold)
+echo -e "${DB}═══════════════════════════• ${DR}MENU UTAMA${DB} •═════════════════════════════${NC}"
+printf "  ${DB}[${WH}%2s${DB}]${NC} ${WH}%-26s ${DB}[${WH}%2s${DB}]${NC} ${WH}%-26s\n" "1" "SSH & OpenVPN" "8" "Cek Layanan Aktif"
+printf "  ${DB}[${WH}%2s${DB}]${NC} ${WH}%-26s ${DB}[${WH}%2s${DB}]${NC} ${WH}%-26s\n" "2" "Vmess" "9" "Restart Layanan"
+printf "  ${DB}[${WH}%2s${DB}]${NC} ${WH}%-26s ${DB}[${WH}%2s${DB}]${NC} ${WH}%-26s\n" "3" "Vless" "10" "Menu Sistem"
+printf "  ${DB}[${WH}%2s${DB}]${NC} ${WH}%-26s ${DB}[${WH}%2s${DB}]${NC} ${WH}%-26s\n" "4" "Trojan" "11" "Panel Bot Telegram"
+printf "  ${DB}[${WH}%2s${DB}]${NC} ${WH}%-26s ${DB}[${WH}%2s${DB}]${NC} ${WH}%-26s\n" "5" "NoobzVPN" "12" "Notifikasi Bot Telegram"
+printf "  ${DB}[${WH}%2s${DB}]${NC} ${WH}%-26s ${DB}[${WH}%2s${DB}]${NC} ${WH}%-26s\n" "6" "Trojan-Go" "13" "Backup & Restore"
+printf "  ${DB}[${WH}%2s${DB}]${NC} ${WH}%-26s ${DB}[${WH}%2s${DB}]${NC} ${WH}%-26s\n" "7" "Hapus Akun Kadaluarsa" "14" "Menu Rebuild"
+printf "  ${DB}[${WH}%2s${DB}]${NC} ${WH}%-26s\n" "15" "Update Script"
 
 # Panel Admin (jika aktif)
 if [ "$Isadmin" = "ON" ]; then
-  echo -e "${GR}═══════════════════════════• ${WH}PANEL ADMIN${GR} •═════════════════════════════${NC}"
-  printf "  ${GR}[${WH}%2s${GR}]${NC} %-26s\n" "16" "Menu Reseller IP"
-  ressee="m-ip2"
-  bottt="m-bot"
+  echo -e "${DB}═══════════════════════════• ${DR}PANEL ADMIN${DB} •═════════════════════════════${NC}"
+  printf "  ${DB}[${WH}%2s${DB}]${NC} ${WH}%-26s\n" "16" "Menu Reseller IP"
 fi
 
-echo -e "${GR}══════════════════════════════════════════════════════════════════${NC}"
+echo -e "${DB}══════════════════════════════════════════════════════════════════${NC}"
 
 # Informasi Masa Aktif & Keluar
 DATE=$(date +'%Y-%m-%d')
@@ -388,9 +386,9 @@ datediff() {
     echo "$(( (d1 - d2) / 86400 )) Hari"
 }
 
-echo -e " ${WH}Skrip Aktif Hingga: ${YL}$Exp2${NC} (${WH}$(datediff "$Exp2" "$DATE")${NC}) ${YL}$sts${NC}"
-echo -e " ${WH}Ketik ${GR}[${WH}0${GR}]${NC} atau tekan ${WH}CTRL+C${NC} untuk keluar."
-echo -e "${GR}══════════════════════════════════════════════════════════════════${NC}"
+echo -e " ${WH}Skrip Aktif Hingga: ${LB}$Exp2${NC} (${WH}$(datediff "$Exp2" "$DATE")${NC}) ${LB}$sts${NC}"
+echo -e " ${WH}Ketik ${DB}[${WH}0${DB}]${NC} atau tekan ${WH}CTRL+C${NC} untuk keluar."
+echo -e "${DB}══════════════════════════════════════════════════════════════════${NC}"
 function new(){
 cat> /etc/cron.d/autocpu << END
 SHELL=/bin/sh
