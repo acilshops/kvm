@@ -306,6 +306,15 @@ menu
 }
 clear
 clear && clear && clear
+#!/bin/bash
+
+# --- Deklarasi Warna (Tema Biru Tua & Merah Tua) ---
+DB='\033[0;34m' # Dark Blue
+DR='\033[0;31m' # Dark Red
+LB='\033[1;34m' # Light Blue (Bold)
+WH='\033[1;37m' # White (Bold)
+NC='\033[0m'    # No Color
+
 # --- Mulai Skrip Menu ---
 clear
 
@@ -359,6 +368,31 @@ echo "" # Memberi sedikit spasi
 
 # --- Meletakkan Opsi 15 (Update Script) di Tengah ---
 printf "%26s${DB}[${WH}%2s${DB}]${NC} ${WH}%-s\n" "" "15" "Update Script"
+
+
+# Panel Admin (jika aktif)
+if [ "$Isadmin" = "ON" ]; then
+  echo -e "${DB}═══════════════════════════• ${DR}PANEL ADMIN${DB} •═════════════════════════════${NC}"
+  printf "  ${DB}[${WH}%2s${DB}]${NC} ${WH}%-26s\n" "16" "Menu Reseller IP"
+fi
+
+# --- Kotak Info Client ---
+echo ""
+echo -e "                  ${DB}╭──────────────────────────────────╮${NC}"
+echo -e "                  ${DB}│   ${WH}Client: ${LB}${author}${WH} | ${WH}Version: ${LB}V3.12${WH}   ${DB}│${NC}"
+echo -e "                  ${DB}╰──────────────────────────────────╯${NC}"
+
+# Informasi Masa Aktif & Keluar
+echo -e "${DB}══════════════════════════════════════════════════════════════════${NC}"
+DATE=$(date +'%Y-%m-%d')
+datediff() {
+    d1=$(date -d "$1" +%s)
+    d2=$(date -d "$2" +%s)
+    echo "$(( (d1 - d2) / 86400 )) Hari"
+}
+echo -e " ${WH}Skrip Aktif Hingga: ${LB}$Exp2${NC} (${WH}$(datediff "$Exp2" "$DATE")${NC}) ${LB}$sts${NC}"
+echo -e " ${WH}Ketik ${DB}[${WH}0${DB}]${NC} atau tekan ${WH}CTRL+C${NC} untuk keluar."
+echo -e "${DB}══════════════════════════════════════════════════════════════════${NC}"
 function new(){
 cat> /etc/cron.d/autocpu << END
 SHELL=/bin/sh
