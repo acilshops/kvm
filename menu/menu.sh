@@ -306,7 +306,7 @@ menu
 }
 clear
 clear && clear && clear
-#!/bin/bash
+##!/bin/bash
 
 # --- Deklarasi Warna (Tema Biru Tua & Merah Tua) ---
 DB='\033[0;34m' # Dark Blue
@@ -321,12 +321,7 @@ clear
 # Header Utama
 echo -e "${DB}═══════════════════•${WH} AcilShop | Autoscript Premium ${DB}•═══════════════════${NC}"
 
-# Kotak Info Client & Versi
-echo -e "${DB}╭────────────────────────────────────────────────────────────╮${NC}"
-echo -e "${DB}│ ${WH}Client: ${LB}$author ${DB}│ ${WH}Version: ${LB}V3.12 ${DB}│${NC}"
-echo -e "${DB}╰────────────────────────────────────────────────────────────╯${NC}"
-
-# --- Kotak Dasbor Server Terpadu ---
+# --- Kotak Dasbor Server (PERBAIKAN PERATAAN) ---
 width=62
 # Fungsi untuk membuat garis pemisah internal
 print_line() {
@@ -344,22 +339,23 @@ printf "${DB}│ ${WH}%-14s: ${LB}%-43s ${DB}│${NC}\n" "Lokasi" "$ISP - $CITY"
 
 # Status Layanan
 print_line
-echo -e "${DB}│ ${DR}STATUS LAYANAN                                                 ${DB}│${NC}"
+printf "${DB}│ ${DR}%-60s ${DB}│${NC}\n" "STATUS LAYANAN"
 echo -e "${DB}│   ${WH}[ XRAY: ${status_xray}${WH} ]   [ NGINX: ${status_nginx}${WH} ]   [ SSH: ${status_beruangjatuh}${WH} ]        ${DB}│${NC}"
 echo -e "${DB}│   ${WH}[ WS-TLS: ${status_ws}${WH} ] [ UDP: ${status_udp}${WH} ]     [ TR-GO: ${stat_trgo}${WH} ]        ${DB}│${NC}"
 
 # Statistik Penggunaan
 print_line
-echo -e "${DB}│ ${DR}STATISTIK PENGGUNAAN                                           ${DB}│${NC}"
-echo -e "${DB}│${NC} ${DB}├─ ${WH}Bandwidth Hari Ini  : ${LB}$today_tx $today_txv"
-echo -e "${DB}│${NC} ${DB}├─ ${WH}Bandwidth Kemarin : ${LB}$yesterday_tx $yesterday_txv"
-echo -e "${DB}│${NC} ${DB}├─ ${WH}Bandwidth Bulan Ini : ${LB}$month_tx $month_txv"
-echo -e "${DB}│${NC} ${DB}└─ ${WH}Total Akun          : ${WH}SSH:${LB}$total_ssh ${WH}VMESS:${LB}$vmess ${WH}VLESS:${LB}$vless ${WH}TROJAN:${LB}$trtls"
+printf "${DB}│ ${DR}%-60s ${DB}│${NC}\n" "STATISTIK PENGGUNAAN"
+# Setiap baris di bawah ini sekarang di-padding dan diberi penutup │
+printf "${DB}│${NC} ${DB}├─ ${WH}Bandwidth Hari Ini  : ${LB}%-33s ${DB}│${NC}\n" "$today_tx $today_txv"
+printf "${DB}│${NC} ${DB}├─ ${WH}Bandwidth Kemarin : ${LB}%-35s ${DB}│${NC}\n" "$yesterday_tx $yesterday_txv"
+printf "${DB}│${NC} ${DB}├─ ${WH}Bandwidth Bulan Ini : ${LB}%-33s ${DB}│${NC}\n" "$month_tx $month_txv"
+printf "${DB}│${NC} ${DB}└─ ${WH}Total Akun          : ${WH}SSH:${LB}$total_ssh ${WH}VMESS:${LB}$vmess ${WH}VLESS:${LB}$vless ${WH}TROJAN:${LB}$trtls%-6s ${DB}│${NC}\n"
 
 # Footer Kotak
 printf "${DB}╰%*s╯${NC}\n" "$width" "" | sed "s/ /─/g"
 
-# Bagian 3: Menu Utama (Teks Menu Dibuat Bold)
+# Bagian 3: Menu Utama
 echo -e "${DB}═══════════════════════════• ${DR}MENU UTAMA${DB} •═════════════════════════════${NC}"
 printf "  ${DB}[${WH}%2s${DB}]${NC} ${WH}%-26s ${DB}[${WH}%2s${DB}]${NC} ${WH}%-26s\n" "1" "SSH & OpenVPN" "8" "Cek Layanan Aktif"
 printf "  ${DB}[${WH}%2s${DB}]${NC} ${WH}%-26s ${DB}[${WH}%2s${DB}]${NC} ${WH}%-26s\n" "2" "Vmess" "9" "Restart Layanan"
@@ -376,16 +372,20 @@ if [ "$Isadmin" = "ON" ]; then
   printf "  ${DB}[${WH}%2s${DB}]${NC} ${WH}%-26s\n" "16" "Menu Reseller IP"
 fi
 
-echo -e "${DB}══════════════════════════════════════════════════════════════════${NC}"
+# --- Kotak Info Client ---
+echo ""
+echo -e "                  ${DB}╭──────────────────────────────────╮${NC}"
+echo -e "                  ${DB}│   ${WH}Client: ${LB}${author}${WH} | ${WH}Version: ${LB}V3.12${WH}   ${DB}│${NC}"
+echo -e "                  ${DB}╰──────────────────────────────────╯${NC}"
 
 # Informasi Masa Aktif & Keluar
+echo -e "${DB}══════════════════════════════════════════════════════════════════${NC}"
 DATE=$(date +'%Y-%m-%d')
 datediff() {
     d1=$(date -d "$1" +%s)
     d2=$(date -d "$2" +%s)
     echo "$(( (d1 - d2) / 86400 )) Hari"
 }
-
 echo -e " ${WH}Skrip Aktif Hingga: ${LB}$Exp2${NC} (${WH}$(datediff "$Exp2" "$DATE")${NC}) ${LB}$sts${NC}"
 echo -e " ${WH}Ketik ${DB}[${WH}0${DB}]${NC} atau tekan ${WH}CTRL+C${NC} untuk keluar."
 echo -e "${DB}══════════════════════════════════════════════════════════════════${NC}"
