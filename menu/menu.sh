@@ -308,17 +308,14 @@ clear
 clear && clear && clear
 #!/bin/bash
 
-# --- Deklarasi Warna ---
-# Anda bisa mengganti warna GR (Green) dengan warna lain jika suka.
-# Contoh:
-# CY='\033[0;36m' # Cyan
-# YL='\033[1;33m' # Yellow
-# WH='\033[1;37m' # White
-# NC='\033[0m'    # No Color
+# --- Deklarasi Warna (Versi Bold/Bright) ---
+# Semua warna menggunakan '1;' untuk efek tebal/terang.
+# GR='\033[1;32m' # Green
+# CY='\033[1;36m' # Cyan
 
-GR='\033[0;32m' # Green
-YL='\033[1;33m' # Yellow
-WH='\033[1;37m' # White
+GR='\033[1;32m' # Green (Bold)
+YL='\033[1;33m' # Yellow (Bold)
+WH='\033[1;37m' # White (Bold)
 NC='\033[0m'    # No Color
 
 # --- Mulai Skrip Menu ---
@@ -332,18 +329,42 @@ echo -e "${GR}╭─────────────────────
 echo -e "${GR}│ ${WH}Client: ${YL}$author ${GR}│ ${WH}Version: ${YL}V3.12 ${GR}│${NC}"
 echo -e "${GR}╰────────────────────────────────────────────────────────────╯${NC}"
 
-# Bagian 1: Info Utama Server
-echo -e " ${GR}INFO SERVER${NC}"
-echo -e " ${GR}├─ ${WH}OS        : ${YL}$MODEL2${NC}"
-echo -e " ${GR}├─ ${WH}IP/Domain : ${YL}$MYIP${NC} / ${YL}$(cat /etc/xray/domain)${NC}"
-echo -e " ${GR}├─ ${WH}CPU/RAM   : ${YL}$cpu_usage${NC} / ${YL}$uram MB dari $tram MB${NC}"
-echo -e " ${GR}└─ ${WH}Lokasi    : ${YL}$ISP - $CITY${NC}"
+# --- Kotak Dasbor Server Terpadu ---
+# Menghitung lebar terminal agar kotak bisa responsif (opsional, tapi bagus)
+# Untuk kesederhanaan, kita gunakan lebar tetap 62 karakter
+width=62
 
-# Bagian 2: Status Layanan & Statistik
-echo -e " ${GR}STATUS & STATISTIK${NC}"
-echo -e " ${GR}├─ ${WH}Layanan   : ${WH}XRAY${NC}${status_xray} ${WH}NGINX${NC}${status_nginx} ${WH}SSH${NC}${status_beruangjatuh} ${WH}WS${NC}${status_ws} ${WH}UDP${NC}${status_udp} ${WH}TRGO${NC}${stat_trgo}"
-echo -e " ${GR}├─ ${WH}Bandwidth : ${WH}Hari Ini ${YL}$today_tx $today_txv${WH} | Kemarin ${YL}$yesterday_tx $yesterday_txv${WH} | Bulan Ini ${YL}$month_tx $month_txv${NC}"
-echo -e " ${GR}└─ ${WH}Total Akun: ${WH}SSH: ${YL}$total_ssh${NC} | ${WH}VMESS: ${YL}$vmess${NC} | ${WH}VLESS: ${YL}$vless${NC} | ${WH}TROJAN: ${YL}$trtls${NC} | ${WH}TRGO: ${YL}$jumlah_trgo${NC}"
+# Fungsi untuk membuat garis pemisah
+print_line() {
+    printf "${GR}├%*s┤${NC}\n" "$width" "" | sed "s/ /─/g"
+}
+
+# Header Kotak
+printf "${GR}╭─${WH} DASBOR SERVER %*s─╮${NC}\n" "$(($width - 18))" "" | sed "s/ /─/g"
+
+# Info Server
+printf "${GR}│ ${WH}%-14s: ${YL}%-43s ${GR}│${NC}\n" "OS" "$MODEL2"
+printf "${GR}│ ${WH}%-14s: ${YL}%-43s ${GR}│${NC}\n" "IP/Domain" "$MYIP / $(cat /etc/xray/domain)"
+printf "${GR}│ ${WH}%-14s: ${YL}%-43s ${GR}│${NC}\n" "CPU/RAM" "$cpu_usage / $uram MB dari $tram MB"
+printf "${GR}│ ${WH}%-14s: ${YL}%-43s ${GR}│${NC}\n" "Lokasi" "$ISP - $CITY"
+
+# Status Layanan
+print_line
+printf "${GR}│ ${WH}%-60s ${GR}│${NC}\n" "STATUS LAYANAN"
+printf "${GR}│ ${WH}XRAY${NC}${status_xray} ${WH}NGINX${NC}${status_nginx} ${WH}SSH${NC}${status_beruangjatuh} ${WH}WS${NC}${status_ws} ${WH}UDP${NC}${status_udp} ${WH}TRGO${NC}${stat_trgo} %-5s${GR}│${NC}\n" ""
+
+# Statistik Penggunaan
+print_line
+printf "${GR}│ ${WH}%-60s ${GR}│${NC}\n" "STATISTIK PENGGUNAAN"
+printf "${GR}│ ${WH}%-20s: ${YL}%-37s ${GR}│${NC}\n" "Bandwidth Hari Ini" "$today_tx $today_txv"
+printf "${GR}│ ${WH}%-20s: ${YL}%-37s ${GR}│${NC}\n" "Bandwidth Kemarin" "$yesterday_tx $yesterday_txv"
+printf "${GR}│ ${WH}%-20s: ${YL}%-37s ${GR}│${NC}\n" "Bandwidth Bulan Ini" "$month_tx $month_txv"
+printf "${GR}│ ${WH}%-20s: ${WH}SSH:${YL}$total_ssh ${WH}VMESS:${YL}$vmess ${WH}VLESS:${YL}$vless%-8s ${GR}│${NC}\n" "Total Akun" ""
+printf "${GR}│ ${WH}%-20s  ${WH}TROJAN:${YL}$trtls ${WH}TRGO:${YL}$jumlah_trgo%-16s ${GR}│${NC}\n" "" ""
+
+# Footer Kotak
+printf "${GR}╰%*s╯${NC}\n" "$width" "" | sed "s/ /─/g"
+
 
 # Bagian 3: Menu Utama (menggunakan printf agar rata)
 echo -e "${GR}═══════════════════════════• ${WH}MENU UTAMA${GR} •═════════════════════════════${NC}"
