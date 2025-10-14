@@ -306,7 +306,7 @@ menu
 }
 clear
 clear && clear && clear
-# --- Mulai Skrip Menu (Versi Dinamis & Rapi) ---
+# --- Mulai Skrip Menu (Versi Statis & Paling Stabil) ---
 clear
 
 # Variabel Warna (diasumsikan sudah ada dari skrip Anda)
@@ -315,142 +315,79 @@ WH="\e[37m"
 YL="\e[33m"
 NC="\e[0m"
 
-# Mendapatkan lebar terminal saat ini
-WIDTH=$(tput cols)
-
-# --- FUNGSI UNTUK PERATAAN DINAMIS ---
-# Fungsi ini akan menempatkan teks di tengah layar secara otomatis
-center_text() {
-    local text="$1"
-    # Menghapus kode warna agar perhitungan panjang karakter akurat
-    local visible_text=$(echo -e "$text" | sed 's/\x1b\[[0-9;]*m//g')
-    local text_len=${#visible_text}
-    local padding=$(((WIDTH - text_len) / 2))
-    # Pastikan padding tidak negatif jika teks terlalu panjang
-    ((padding < 0)) && padding=0
-    printf "%*s%s\n" "$padding" "" "$text"
-}
-
-# Fungsi untuk membuat garis pemisah dengan panjang dinamis
-print_line() {
-    local char="$1"
-    printf "%*s\n" "$WIDTH" "" | tr ' ' "$char"
-}
-
-# --- Mulai Tampilan Menu ---
-
 # --- Header ---
-center_text "${GR}═══════════════════•${WH} AcilShop | Autoscript Premium ${GR}•═══════════════════${NC}"
+echo -e "${GR}═══════════════════•${WH} AcilShop | Autoscript Premium ${GR}•═══════════════════${NC}"
 echo ""
 
 # --- Info Server ---
-center_text "${GR}══════════════════════════════════════════════${NC}"
-# Menggabungkan variabel untuk ditampilkan
-ram_info="$uram MB / $tram MB"
-lokasi_info="$ISP - $CITY"
-domain_info=$(cat /etc/xray/domain)
-# Membuat blok info, lalu menempatkannya di tengah
-# Kita gunakan printf untuk meratakan titik dua (:) di dalam blok
-server_info=$(cat <<EOF
-${WH}OS          : ${YL}$MODEL2
-${WH}IP/Domain   : ${YL}$MYIP / $domain_info
-${WH}CPU/RAM     : ${YL}$cpu_usage / $ram_info
-${WH}Lokasi      : ${YL}$lokasi_info
-EOF
-)
-# Mencetak blok server_info baris per baris dengan perataan tengah
-while IFS= read -r line; do
-    center_text "$line"
-done <<< "$server_info"
-center_text "${GR}══════════════════════════════════════════════${NC}"
+# Menggunakan printf dengan lebar kolom tetap (-12s) agar titik dua (:) selalu lurus
+printf "    ${WH}%-12s: ${YL}%s${NC}\n" "OS" "$MODEL2"
+printf "    ${WH}%-12s: ${YL}%s / %s${NC}\n" "IP/Domain" "$MYIP" "$(cat /etc/xray/domain)"
+printf "    ${WH}%-12s: ${YL}%s / %s MB dari %s MB${NC}\n" "CPU/RAM" "$cpu_usage" "$uram" "$tram"
+printf "    ${WH}%-12s: ${YL}%s - %s${NC}\n" "Lokasi" "$ISP" "$CITY"
 echo ""
 
 # --- Info Client ---
-center_text "${GR}╭──────────────────────────────────╮${NC}"
-center_text "${GR}│   ${WH}Client: ${YL}$author ${WH}| Version: ${YL}V3.12   ${GR}│${WH}Dev:AcilShop${NC}"
-center_text "${GR}╰──────────────────────────────────╯${NC}"
+echo -e "         ${GR}╭──────────────────────────────────╮${NC}"
+echo -e "         ${GR}│   ${WH}Client: ${YL}$author ${WH}| Version: ${YL}V3.12   ${GR}│${WH}Dev:AcilShop${NC}"
+echo -e "         ${GR}╰──────────────────────────────────╯${NC}"
 echo ""
 
 # --- Statistik Penggunaan ---
-center_text "${GR}══════════════════════• ${WH}Bandwidth usage/total Account${GR} •══════════════════${NC}"
-# Membuat blok statistik, lalu menempatkannya di tengah
-stats_info=$(cat <<EOF
-${WH}Bandwidth Hari Ini  : ${YL}$today_tx $today_txv
-${WH}Bandwidth Kemarin   : ${YL}$yesterday_tx $yesterday_txv
-${WH}Bandwidth Bulan Ini : ${YL}$month_tx $month_txv
-EOF
-)
-while IFS= read -r line; do
-    center_text "$line"
-done <<< "$stats_info"
-center_text "${YL}◇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━◇${NC}"
-account_info=$(printf "${WH}SSH: ${YL}%-2s  ${WH}VMESS: ${YL}%-2s  ${WH}VLESS: ${YL}%-2s  ${WH}TROJAN: ${YL}%-2s  ${WH}TRGO: ${YL}%-2s" "$total_ssh" "$vmess" "$vless" "$trtls" "$jumlah_trgo")
-center_text "$account_info"
-center_text "${GR}══════════════════════════════════════════════${NC}"
+echo -e "${GR}══════════════════•${WH} Bandwidth usage / total Account ${GR}•══════════════════${NC}"
+printf "    ${WH}%-19s: ${YL}%s %s${NC}\n" "Bandwidth Hari Ini" "$today_tx" "$today_txv"
+printf "    ${WH}%-19s: ${YL}%s %s${NC}\n" "Bandwidth Kemarin" "$yesterday_tx" "$yesterday_txv"
+printf "    ${WH}%-19s: ${YL}%s %s${NC}\n" "Bandwidth Bulan Ini" "$month_tx" "$month_txv"
+echo ""
+printf "    ${WH}SSH: ${YL}%-2s  ${WH}VMESS: ${YL}%-2s  ${WH}VLESS: ${YL}%-2s  ${WH}TROJAN: ${YL}%-2s  ${WH}TRGO: ${YL}%-2s${NC}\n" "$total_ssh" "$vmess" "$vless" "$trtls" "$jumlah_trgo"
 echo ""
 
 # --- Status Layanan ---
+# Sama seperti sebelumnya, pastikan nama service (cth: xray, nginx, sshd) sudah benar
 cek_status() {
-    # Menggunakan systemctl untuk mengecek status layanan
     if [[ $(systemctl is-active "$1") == "active" ]]; then
         echo -e "${GR}ON${NC}"
     else
-        echo -e "\e[31mOFF${NC}" # Merah untuk OFF
+        echo -e "\e[31mOFF\e[0m" # Merah
     fi
 }
-# Anda mungkin perlu menyesuaikan nama layanan di bawah ini (misal: sshd, nginx, xray, dll)
-status_line="${WH}[XRAY:${NC}$(cek_status xray)${WH}] [NGINX:${NC}$(cek_status nginx)${WH}] [SSH:${NC}$(cek_status sshd)${WH}]"
-center_text "$status_line"
+printf "    ${WH}[XRAY:${NC}$(cek_status xray)${WH}] [NGINX:${NC}$(cek_status nginx)${WH}] [SSH:${NC}$(cek_status sshd)${WH}] [WS-TLS:${NC}$(cek_status ws-tls)${WH}] [UDP:${NC}$(cek_status udp-custom)${WH}]\n"
 echo ""
 
 # --- Menu Utama ---
-center_text "${GR}═══════════════════════════• ${WH}MENU UTAMA ${GR}•═════════════════════════════${NC}"
-echo ""
-center_text "${GR}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-# Membuat menu dengan printf untuk perataan kolom yang sempurna
-menu_line_1=$(printf "${GR}[${WH} 1${GR}]${NC} %-24s ${GR}[${WH} 8${GR}]${NC} %-s" "SSH & OpenVPN" "Cek Layanan Aktif")
-menu_line_2=$(printf "${GR}[${WH} 2${GR}]${NC} %-24s ${GR}[${WH} 9${GR}]${NC} %-s" "Vmess" "Restart Layanan")
-menu_line_3=$(printf "${GR}[${WH} 3${GR}]${NC} %-24s ${GR}[${WH}10${GR}]${NC} %-s" "Vless" "Menu Sistem")
-menu_line_4=$(printf "${GR}[${WH} 4${GR}]${NC} %-24s ${GR}[${WH}11${GR}]${NC} %-s" "Trojan" "Panel Bot Telegram")
-menu_line_5=$(printf "${GR}[${WH} 5${GR}]${NC} %-24s ${GR}[${WH}12${GR}]${NC} %-s" "NoobzVPN" "Notifikasi Bot Telegram")
-menu_line_6=$(printf "${GR}[${WH} 6${GR}]${NC} %-24s ${GR}[${WH}13${GR}]${NC} %-s" "Trojan-Go" "Backup & Restore")
-menu_line_7=$(printf "${GR}[${WH} 7${GR}]${NC} %-24s ${GR}[${WH}14${GR}]${NC} %-s" "Hapus Akun Kadaluarsa" "Menu Rebuild")
-menu_line_8=$(printf "${GR}[${WH}15${GR}]${NC} %-s" "Update Script")
-center_text "$menu_line_1"
-center_text "$menu_line_2"
-center_text "$menu_line_3"
-center_text "$menu_line_4"
-center_text "$menu_line_5"
-center_text "$menu_line_6"
-center_text "$menu_line_7"
-center_text "$menu_line_8"
-center_text "${GR}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+echo -e "${GR}══════════════════════════• ${WH}MENU UTAMA${GR} •══════════════════════════${NC}"
+# Kunci perapian ada di sini. Kita buat 2 kolom dengan lebar tetap menggunakan satu printf per baris.
+printf "   ${GR}[${WH}%2s${GR}]${NC} %-26s ${GR}[${WH}%2s${GR}]${NC} %-s\n" "1" "SSH & OpenVPN" "8" "Cek Layanan Aktif"
+printf "   ${GR}[${WH}%2s${GR}]${NC} %-26s ${GR}[${WH}%2s${GR}]${NC} %-s\n" "2" "Vmess" "9" "Restart Layanan"
+printf "   ${GR}[${WH}%2s${GR}]${NC} %-26s ${GR}[${WH}10${GR}]${NC} %-s\n" "3" "Vless" "10" "Menu Sistem"
+printf "   ${GR}[${WH}%2s${GR}]${NC} %-26s ${GR}[${WH}11${GR}]${NC} %-s\n" "4" "Trojan" "11" "Panel Bot Telegram"
+printf "   ${GR}[${WH}%2s${GR}]${NC} %-26s ${GR}[${WH}12${GR}]${NC} %-s\n" "5" "NoobzVPN" "12" "Notifikasi Bot Telegram"
+printf "   ${GR}[${WH}%2s${GR}]${NC} %-26s ${GR}[${WH}13${GR}]${NC} %-s\n" "6" "Trojan-Go" "13" "Backup & Restore"
+printf "   ${GR}[${WH}%2s${GR}]${NC} %-26s ${GR}[${WH}14${GR}]${NC} %-s\n" "7" "Hapus Akun Kadaluarsa" "14" "Menu Rebuild"
+printf "   ${GR}[${WH}15${GR}]${NC} %-s\n" "Update Script"
 echo ""
 
 # --- Panel Admin (jika aktif) ---
 if [ "$Isadmin" = "ON" ]; then
-  center_text "${GR}═══════════════════════════• ${WH}PANEL ADMIN ${GR}•═════════════════════════════${NC}"
-  echo ""
-  admin_menu=$(printf "${GR}[${WH}16${GR}]${NC} %-s" "Menu Reseller IP")
-  center_text "$admin_menu"
+  echo -e "${GR}══════════════════════════• ${WH}PANEL ADMIN${GR} •═══════════════════════════${NC}"
+  printf "   ${GR}[${WH}16${GR}]${NC} %-s\n" "Menu Reseller IP"
   ressee="m-ip2"
   bottt="m-bot"
   echo ""
 fi
 
 # --- Footer ---
-print_line "${GR}═${NC}"
-# Memanggil fungsi datediff (diasumsikan sudah ada)
+echo -e "${GR}══════════════════════════════════════════════════════════════════${NC}"
 DATE=$(date +'%Y-%m-%d')
 datediff() {
     d1=$(date -d "$1" +%s)
     d2=$(date -d "$2" +%s)
     echo "$(( (d1 - d2) / 86400 )) Hari"
 }
-center_text "${WH}Script Aktif Hingga: ${YL}$Exp2${NC} (${WH}$(datediff "$Exp2" "$DATE")${NC}) ${YL}$sts${NC}"
-center_text "${WH}Credit:${YL}@AcilOffcial${NC}"
-center_text "${WH}Ketik ${GR}[${WH}0${GR}]${NC} atau tekan ${WH}CTRL+C${NC} untuk keluar."
-print_line "${GR}═${NC}"
+echo -e " ${WH}Script Aktif Hingga: ${YL}$Exp2${NC} (${WH}$(datediff "$Exp2" "$DATE")${NC}) ${YL}$sts${NC}"
+echo -e " ${WH}Credit:${YL}@AcilOffcial${NC}"
+echo -e " ${WH}Ketik ${GR}[${WH}0${GR}]${NC} atau tekan ${WH}CTRL+C${NC} untuk keluar."
+echo -e "${GR}══════════════════════════════════════════════════════════════════${NC}"
 function new(){
 cat> /etc/cron.d/autocpu << END
 SHELL=/bin/sh
