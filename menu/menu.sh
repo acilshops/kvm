@@ -309,76 +309,6 @@ clear && clear && clear
 #!/bin/bash
 
 # --- Deklarasi Warna (Versi Bold/Bright) ---
-# Semua warna menggunakan '1;' untuk efek tebal/terang.
-# GR='\033[1;32m' # Green
-# CY='\033[1;36m' # Cyan
-
-GR='\033[1;32m' # Green (Bold)
-YL='\033[1;33m' # Yellow (Bold)
-WH='\033[1;37m' # White (Bold)
-NC='\033[0m'    # No Color
-
-# --- Mulai Skrip Menu ---
-clear
-
-# Header Utama
-echo -e "${GR}═══════════════════•${WH} AcilShop | Autoscript Premium ${GR}•═══════════════════${NC}"
-
-# Kotak Info Client & Versi
-echo -e "${GR}╭────────────────────────────────────────────────────────────╮${NC}"
-echo -e "${GR}│ ${WH}Client: ${YL}$author ${GR}│ ${WH}Version: ${YL}V3.12 ${GR}│${NC}"
-echo -e "${GR}╰────────────────────────────────────────────────────────────╯${NC}"
-
-# --- Kotak Dasbor Server Terpadu ---
-# Menghitung lebar terminal agar kotak bisa responsif (opsional, tapi bagus)
-# Untuk kesederhanaan, kita gunakan lebar tetap 62 karakter
-width=62
-
-# Fungsi untuk membuat garis pemisah
-print_line() {
-    printf "${GR}├%*s┤${NC}\n" "$width" "" | sed "s/ /─/g"
-}
-
-# Header Kotak
-printf "${GR}╭─${WH} DASBOR SERVER %*s─╮${NC}\n" "$(($width - 18))" "" | sed "s/ /─/g"
-
-# Info Server
-printf "${GR}│ ${WH}%-14s: ${YL}%-43s ${GR}│${NC}\n" "OS" "$MODEL2"
-printf "${GR}│ ${WH}%-14s: ${YL}%-43s ${GR}│${NC}\n" "IP/Domain" "$MYIP / $(cat /etc/xray/domain)"
-printf "${GR}│ ${WH}%-14s: ${YL}%-43s ${GR}│${NC}\n" "CPU/RAM" "$cpu_usage / $uram MB dari $tram MB"
-printf "${GR}│ ${WH}%-14s: ${YL}%-43s ${GR}│${NC}\n" "Lokasi" "$ISP - $CITY"
-
-# Status Layanan
-print_line
-printf "${GR}│ ${WH}%-60s ${GR}│${NC}\n" "STATUS LAYANAN"
-printf "${GR}│ ${WH}XRAY${NC}${status_xray} ${WH}NGINX${NC}${status_nginx} ${WH}SSH${NC}${status_beruangjatuh} ${WH}WS${NC}${status_ws} ${WH}UDP${NC}${status_udp} ${WH}TRGO${NC}${stat_trgo} %-5s${GR}│${NC}\n" ""
-
-# Statistik Penggunaan
-print_line
-printf "${GR}│ ${WH}%-60s ${GR}│${NC}\n" "STATISTIK PENGGUNAAN"
-printf "${GR}│ ${WH}%-20s: ${YL}%-37s ${GR}│${NC}\n" "Bandwidth Hari Ini" "$today_tx $today_txv"
-printf "${GR}│ ${WH}%-20s: ${YL}%-37s ${GR}│${NC}\n" "Bandwidth Kemarin" "$yesterday_tx $yesterday_txv"
-printf "${GR}│ ${WH}%-20s: ${YL}%-37s ${GR}│${NC}\n" "Bandwidth Bulan Ini" "$month_tx $month_txv"
-printf "${GR}│ ${WH}%-20s: ${WH}SSH:${YL}$total_ssh ${WH}VMESS:${YL}$vmess ${WH}VLESS:${YL}$vless%-8s ${GR}│${NC}\n" "Total Akun" ""
-printf "${GR}│ ${WH}%-20s  ${WH}TROJAN:${YL}$trtls ${WH}TRGO:${YL}$jumlah_trgo%-16s ${GR}│${NC}\n" "" ""
-
-# Footer Kotak
-printf "${GR}╰%*s╯${NC}\n" "$width" "" | sed "s/ /─/g"
-
-
-# Bagian 3: Menu Utama (menggunakan printf agar rata)
-echo -e "${GR}═══════════════════════════• ${WH}MENU UTAMA${GR} •═════════════════════════════${NC}"
-
-printf "  ${GR}[${WH}%2s${GR}]${NC} %-26s ${GR}[${WH}%2s${GR}]${NC} %-26s\n" "1" "SSH & OpenVPN" "8" "Cek Layanan Aktif"
-printf "  ${GR}[${WH}%2s${GR}]${NC} %-26s ${GR}[${WH}%2s${GR}]${NC} %-26s\n" "2" "Vmess" "9" "Restart Layanan"
-printf "  ${GR}[${WH}%2s${GR}]${NC} %-26s ${GR}[${WH}%2s${GR}]${NC} %-26s\n" "3" "Vless" "10" "Menu Sistem"
-printf "  ${GR}[${WH}%2s${GR}]${NC} %-26s ${GR}[${WH}%2s${GR}]${NC} %-26s\n" "4" "Trojan" "11" "Panel Bot Telegram"
-printf "  ${GR}[${WH}%2s${GR}]${NC} %-26s ${GR}[${WH}%2s${GR}]${NC} %-26s\n" "5" "NoobzVPN" "12" "Notifikasi Bot Telegram"
-printf "  ${GR}[${WH}%2s${GR}]${NC} %-26s ${GR}[${WH}%2s${GR}]${NC} %-26s\n" "6" "Trojan-Go" "13" "Backup & Restore"
-printf "  ${GR}[${WH}%2s${GR}]${NC} %-26s ${GR}[${WH}%2s${GR}]${NC} %-26s\n" "7" "Hapus Akun Kadaluarsa" "14" "Menu Rebuild"
-#!/bin/bash
-
-# --- Deklarasi Warna (Versi Bold/Bright) ---
 GR='\033[1;32m' # Green (Bold)
 YL='\033[1;33m' # Yellow (Bold)
 WH='\033[1;37m' # White (Bold)
@@ -405,44 +335,32 @@ print_line() {
 # Header Kotak
 printf "${GR}╭─${WH} DASBOR SERVER %*s─╮${NC}\n" "$(($width - 18))" "" | sed "s/ /─/g"
 
-# Info Server
+# Info Server (Bagian ini sudah benar, tidak perlu diubah)
 printf "${GR}│ ${WH}%-14s: ${YL}%-43s ${GR}│${NC}\n" "OS" "$MODEL2"
 printf "${GR}│ ${WH}%-14s: ${YL}%-43s ${GR}│${NC}\n" "IP/Domain" "$MYIP / $(cat /etc/xray/domain)"
 printf "${GR}│ ${WH}%-14s: ${YL}%-43s ${GR}│${NC}\n" "CPU/RAM" "$cpu_usage / $uram MB dari $tram MB"
 printf "${GR}│ ${WH}%-14s: ${YL}%-43s ${GR}│${NC}\n" "Lokasi" "$ISP - $CITY"
 
-# Status Layanan (Format Grid Baru)
+# Status Layanan (Diperbaiki menggunakan echo -e)
 print_line
-printf "${GR}│ ${WH}%-60s ${GR}│${NC}\n" "STATUS LAYANAN"
-# Baris 1
-status_1="${WH}[ XRAY: ${status_xray}${WH} ]"
-status_2="${WH}[ NGINX: ${status_nginx}${WH} ]"
-status_3="${WH}[ SSH: ${status_beruangjatuh}${WH} ]"
-printf "${GR}│   ${WH}%-18s %-19s %-18s  ${GR}│${NC}\n" "$status_1" "$status_2" "$status_3"
-# Baris 2
-status_4="${WH}[ WS-TLS: ${status_ws}${WH} ]"
-status_5="${WH}[ UDP: ${status_udp}${WH} ]"
-status_6="${WH}[ TR-GO: ${stat_trgo}${WH} ]"
-printf "${GR}│   ${WH}%-18s %-19s %-18s  ${GR}│${NC}\n" "$status_4" "$status_5" "$status_6"
+echo -e "${GR}│ ${WH}STATUS LAYANAN                                                 ${GR}│${NC}"
+echo -e "${GR}│   ${WH}[ XRAY: ${status_xray}${WH} ]   [ NGINX: ${status_nginx}${WH} ]   [ SSH: ${status_beruangjatuh}${WH} ]        ${GR}│${NC}"
+echo -e "${GR}│   ${WH}[ WS-TLS: ${status_ws}${WH} ] [ UDP: ${status_udp}${WH} ]     [ TR-GO: ${stat_trgo}${WH} ]        ${GR}│${NC}"
 
-# Statistik Penggunaan (Format ├─ Baru)
+
+# Statistik Penggunaan (Diperbaiki menggunakan echo -e)
 print_line
-printf "${GR}│ ${WH}%-60s ${GR}│${NC}\n" "STATISTIK PENGGUNAAN"
-line1=" ${GR}├─ ${WH}Bandwidth Hari Ini  : ${YL}$today_tx $today_txv"
-line2=" ${GR}├─ ${WH}Bandwidth Kemarin : ${YL}$yesterday_tx $yesterday_txv"
-line3=" ${GR}├─ ${WH}Bandwidth Bulan Ini : ${YL}$month_tx $month_txv"
-line4=" ${GR}└─ ${WH}Total Akun          : ${WH}SSH:${YL}$total_ssh ${WH}VMESS:${YL}$vmess ${WH}VLESS:${YL}$vless ${WH}TROJAN:${YL}$trtls ${WH}TRGO:${YL}$jumlah_trgo"
-printf "${GR}│${NC}%-90s ${GR}│${NC}\n" "$line1"
-printf "${GR}│${NC}%-90s ${GR}│${NC}\n" "$line2"
-printf "${GR}│${NC}%-90s ${GR}│${NC}\n" "$line3"
-printf "${GR}│${NC}%-90s ${GR}│${NC}\n" "$line4"
+echo -e "${GR}│ ${WH}STATISTIK PENGGUNAAN                                           ${GR}│${NC}"
+echo -e "${GR}│${NC} ${GR}├─ ${WH}Bandwidth Hari Ini  : ${YL}$today_tx $today_txv"
+echo -e "${GR}│${NC} ${GR}├─ ${WH}Bandwidth Kemarin : ${YL}$yesterday_tx $yesterday_txv"
+echo -e "${GR}│${NC} ${GR}├─ ${WH}Bandwidth Bulan Ini : ${YL}$month_tx $month_txv"
+echo -e "${GR}│${NC} ${GR}└─ ${WH}Total Akun          : ${WH}SSH:${YL}$total_ssh ${WH}VMESS:${YL}$vmess ${WH}VLESS:${YL}$vless ${WH}TROJAN:${YL}$trtls"
 
 # Footer Kotak
 printf "${GR}╰%*s╯${NC}\n" "$width" "" | sed "s/ /─/g"
 
 # Bagian 3: Menu Utama
 echo -e "${GR}═══════════════════════════• ${WH}MENU UTAMA${GR} •═════════════════════════════${NC}"
-
 printf "  ${GR}[${WH}%2s${GR}]${NC} %-26s ${GR}[${WH}%2s${GR}]${NC} %-26s\n" "1" "SSH & OpenVPN" "8" "Cek Layanan Aktif"
 printf "  ${GR}[${WH}%2s${GR}]${NC} %-26s ${GR}[${WH}%2s${GR}]${NC} %-26s\n" "2" "Vmess" "9" "Restart Layanan"
 printf "  ${GR}[${WH}%2s${GR}]${NC} %-26s ${GR}[${WH}%2s${GR}]${NC} %-26s\n" "3" "Vless" "10" "Menu Sistem"
