@@ -306,89 +306,59 @@ menu
 }
 clear
 clear && clear && clear
-#!/bin/bash
-
-# --- Deklarasi Warna (Tema Biru Tua & Merah Tua) ---
-DB='\033[0;34m' # Dark Blue
-DR='\033[0;31m' # Dark Red
-LB='\033[1;34m' # Light Blue (Bold)
-WH='\033[1;37m' # White (Bold)
-NC='\033[0m'    # No Color
-
 # --- Mulai Skrip Menu ---
 clear
 
-# --- Variabel Desain ---
-SEPARATOR="${DB}──────────────────────────────────────────────────────────────────────${NC}"
-
 # --- Header Utama ---
 echo -e "${DB}═══════════════════•${WH} AcilShop | Autoscript Premium ${DB}•═══════════════════${NC}"
+echo "" # Spasi
 
-# --- Dasbor Server ---
-echo -e "  ${DR}• ${WH}DASBOR SERVER ${DR}•${NC}"
-printf "    ${DB}» ${WH}%-12s: ${LB}%s${NC}\n" "OS" "$MODEL2"
-printf "    ${DB}» ${WH}%-12s: ${LB}%s${NC}\n" "IP/Domain" "$MYIP / $(cat /etc/xray/domain)"
-printf "    ${DB}» ${WH}%-12s: ${LB}%s${NC}\n" "CPU/RAM" "$cpu_usage / $uram MB dari $tram MB"
-printf "    ${DB}» ${WH}%-12s: ${LB}%s${NC}\n" "Lokasi" "$ISP - $CITY"
+# --- Kotak Dasbor & Statistik (Ukuran Lebih Kecil) ---
+info_width=55 # Lebar kotak info baru (lebih kecil dari 70)
 
-# --- Status Layanan ---
-echo -e "\n  ${DR}• ${WH}STATUS LAYANAN ${DR}•${NC}"
-# Mengatur status dalam 2 kolom yang rapi
-printf "    ${WH}%-25s ${WH}%-25s\n" "[ XRAY: ${status_xray} ]" "[ NGINX: ${status_nginx} ]"
-printf "    ${WH}%-25s ${WH}%-25s\n" "[ SSH: ${status_beruangjatuh} ]" "[ WS-TLS: ${status_ws} ]"
-printf "    ${WH}%-25s ${WH}%-25s\n" "[ UDP: ${status_udp} ]" "[ TR-GO: ${stat_trgo} ]"
+# Fungsi untuk membuat garis pemisah internal KECIL
+print_info_line() {
+    printf "${DB}│%*s│${NC}\n" "$info_width" "" | sed "s/ /─/g"
+}
 
+# Kotak Dasbor
+printf "${DB}╭─${DR} DASBOR SERVER %*s─╮${NC}\n" "$(($info_width - 18))" "" | sed "s/ /─/g"
+printf "${DB}│ ${WH}%-12s: ${LB}%-39s ${DB}│${NC}\n" "OS" "$MODEL2"
+printf "${DB}│ ${WH}%-12s: ${LB}%-39s ${DB}│${NC}\n" "IP/Domain" "$MYIP / $(cat /etc/xray/domain)"
+printf "${DB}│ ${WH}%-12s: ${LB}%-39s ${DB}│${NC}\n" "CPU/RAM" "$cpu_usage / $uram MB"
+printf "${DB}│ ${WH}%-12s: ${LB}%-39s ${DB}│${NC}\n" "Lokasi" "$ISP - $CITY"
+printf "${DB}╰%*s╯${NC}\n" "$info_width" "" | sed "s/ /─/g"
+echo "" # Spasi
 
-# --- Statistik Penggunaan ---
-echo -e "\n  ${DR}• ${WH}STATISTIK PENGGUNAAN ${DR}•${NC}"
-# Merapikan perataan tanda titik dua (:)
-printf "    ${DB}» ${WH}%-19s: ${LB}%s${NC}\n" "Bandwidth Hari Ini" "$today_tx $today_txv"
-printf "    ${DB}» ${WH}%-19s: ${LB}%s${NC}\n" "Bandwidth Kemarin" "$yesterday_tx $yesterday_txv"
-printf "    ${DB}» ${WH}%-19s: ${LB}%s${NC}\n" "Bandwidth Bulan Ini" "$month_tx $month_txv"
-echo -e "    ${DB}» ${WH}Total Akun           : ${WH}SSH:${LB}$total_ssh ${WH}VMESS:${LB}$vmess ${WH}VLESS:${LB}$vless ${WH}TROJAN:${LB}$trtls${NC}"
+# Kotak Statistik
+printf "${DB}╭─${DR} STATISTIK PENGGUNAAN %*s─╮${NC}\n" "$(($info_width - 25))" "" | sed "s/ /─/g"
+printf "${DB}│ ${DB}├─ ${WH}%-18s: ${LB}%-29s ${DB}│${NC}\n" "Bandwidth Hari Ini" "$today_tx $today_txv"
+printf "${DB}│ ${DB}├─ ${WH}%-18s: ${LB}%-29s ${DB}│${NC}\n" "Bandwidth Kemarin" "$yesterday_tx $yesterday_txv"
+printf "${DB}│ ${DB}├─ ${WH}%-18s: ${LB}%-29s ${DB}│${NC}\n" "Bandwidth Bulan Ini" "$month_tx $month_txv"
+print_info_line
+printf "${DB}│ ${DB}└─ ${WH}Total Akun: ${WH}SSH:${LB}$total_ssh ${WH}VM:${LB}$vmess ${WH}VL:${LB}$vless ${WH}TR:${LB}$trtls%-11s${DB}│${NC}\n" ""
+printf "${DB}╰%*s╯${NC}\n" "$info_width" "" | sed "s/ /─/g"
+echo "" # Spasi
 
-echo -e "$SEPARATOR" # Garis pemisah sebelum menu utama
+# --- Status Layanan (di atas Menu Utama) ---
+echo -e "  ${DR}• ${WH}STATUS LAYANAN ${DR}•${NC}"
+echo -e "    ${WH}[XRAY:${status_xray}] [NGINX:${status_nginx}] [SSH:${status_beruangjatuh}] [WS-TLS:${status_ws}] [UDP:${status_udp}]"
+echo "" # Spasi
 
-# Bagian 3: Menu Utama
+# Bagian 3: Menu Utama (Jarak Dirapatkan)
 echo -e "${DB}═══════════════════════════• ${DR}MENU UTAMA${DB} •═════════════════════════════${NC}"
-# %-26s memastikan setiap teks menu memiliki lebar total 26 karakter (diratakan ke kiri),
-# sehingga kolom kedua selalu dimulai pada posisi yang sama.
-printf "  ${DB}[${WH}%2s${DB}]${NC} ${WH}%-26s ${DB}[${WH}%2s${DB}]${NC} ${WH}%-26s\n" "1" "SSH & OpenVPN" "8" "Cek Layanan Aktif"
-printf "  ${DB}[${WH}%2s${DB}]${NC} ${WH}%-26s ${DB}[${WH}%2s${DB}]${NC} ${WH}%-26s\n" "2" "Vmess" "9" "Restart Layanan"
-printf "  ${DB}[${WH}%2s${DB}]${NC} ${WH}%-26s ${DB}[${WH}%2s${DB}]${NC} ${WH}%-26s\n" "3" "Vless" "10" "Menu Sistem"
-printf "  ${DB}[${WH}%2s${DB}]${NC} ${WH}%-26s ${DB}[${WH}%2s${DB}]${NC} ${WH}%-26s\n" "4" "Trojan" "11" "Panel Bot Telegram"
-printf "  ${DB}[${WH}%2s${DB}]${NC} ${WH}%-26s ${DB}[${WH}%2s${DB}]${NC} ${WH}%-26s\n" "5" "NoobzVPN" "12" "Notifikasi Bot Telegram"
-printf "  ${DB}[${WH}%2s${DB}]${NC} ${WH}%-26s ${DB}[${WH}%2s${DB}]${NC} ${WH}%-26s\n" "6" "Trojan-Go" "13" "Backup & Restore"
-printf "  ${DB}[${WH}%2s${DB}]${NC} ${WH}%-26s ${DB}[${WH}%2s${DB}]${NC} ${WH}%-26s\n" "7" "Hapus Akun Kadaluarsa" "14" "Menu Rebuild"
+# Jarak kolom dipersempit dengan mengubah padding dari %-26s menjadi %-22s
+printf "  ${DB}[${WH}%2s${DB}]${NC} ${WH}%-22s ${DB}[${WH}%2s${DB}]${NC} ${WH}%-26s\n" "1" "SSH & OpenVPN" "8" "Cek Layanan Aktif"
+printf "  ${DB}[${WH}%2s${DB}]${NC} ${WH}%-22s ${DB}[${WH}%2s${DB}]${NC} ${WH}%-26s\n" "2" "Vmess" "9" "Restart Layanan"
+printf "  ${DB}[${WH}%2s${DB}]${NC} ${WH}%-22s ${DB}[${WH}%2s${DB}]${NC} ${WH}%-26s\n" "3" "Vless" "10" "Menu Sistem"
+printf "  ${DB}[${WH}%2s${DB}]${NC} ${WH}%-22s ${DB}[${WH}%2s${DB}]${NC} ${WH}%-26s\n" "4" "Trojan" "11" "Panel Bot Telegram"
+printf "  ${DB}[${WH}%2s${DB}]${NC} ${WH}%-22s ${DB}[${WH}%2s${DB}]${NC} ${WH}%-26s\n" "5" "NoobzVPN" "12" "Notifikasi Bot Telegram"
+printf "  ${DB}[${WH}%2s${DB}]${NC} ${WH}%-22s ${DB}[${WH}%2s${DB}]${NC} ${WH}%-26s\n" "6" "Trojan-Go" "13" "Backup & Restore"
+printf "  ${DB}[${WH}%2s${DB}]${NC} ${WH}%-22s ${DB}[${WH}%2s${DB}]${NC} ${WH}%-26s\n" "7" "Hapus Akun Kadaluarsa" "14" "Menu Rebuild"
 echo "" # Memberi sedikit spasi
 
 # --- Meletakkan Opsi 15 (Update Script) di Tengah ---
 printf "%26s${DB}[${WH}%2s${DB}]${NC} ${WH}%-s\n" "" "15" "Update Script"
-
-
-# Panel Admin (jika aktif)
-if [ "$Isadmin" = "ON" ]; then
-  echo -e "${DB}═══════════════════════════• ${DR}PANEL ADMIN${DB} •═════════════════════════════${NC}"
-  printf "  ${DB}[${WH}%2s${DB}]${NC} ${WH}%-26s\n" "16" "Menu Reseller IP"
-fi
-
-# --- Kotak Info Client ---
-echo ""
-echo -e "                  ${DB}╭──────────────────────────────────╮${NC}"
-echo -e "                  ${DB}│   ${WH}Client: ${LB}${author}${WH} | ${WH}Version: ${LB}V3.12${WH}   ${DB}│${NC}"
-echo -e "                  ${DB}╰──────────────────────────────────╯${NC}"
-
-# Informasi Masa Aktif & Keluar
-echo -e "${DB}══════════════════════════════════════════════════════════════════${NC}"
-DATE=$(date +'%Y-%m-%d')
-datediff() {
-    d1=$(date -d "$1" +%s)
-    d2=$(date -d "$2" +%s)
-    echo "$(( (d1 - d2) / 86400 )) Hari"
-}
-echo -e " ${WH}Skrip Aktif Hingga: ${LB}$Exp2${NC} (${WH}$(datediff "$Exp2" "$DATE")${NC}) ${LB}$sts${NC}"
-echo -e " ${WH}Ketik ${DB}[${WH}0${DB}]${NC} atau tekan ${WH}CTRL+C${NC} untuk keluar."
-echo -e "${DB}══════════════════════════════════════════════════════════════════${NC}"
 function new(){
 cat> /etc/cron.d/autocpu << END
 SHELL=/bin/sh
