@@ -306,7 +306,7 @@ menu
 }
 clear
 clear && clear && clear
-##!/bin/bash
+#!/bin/bash
 
 # --- Deklarasi Warna (Tema Biru Tua & Merah Tua) ---
 DB='\033[0;34m' # Dark Blue
@@ -318,45 +318,41 @@ NC='\033[0m'    # No Color
 # --- Mulai Skrip Menu ---
 clear
 
-# Header Utama
+# --- Variabel Desain ---
+SEPARATOR="${DB}──────────────────────────────────────────────────────────────────────${NC}"
+
+# --- Header Utama ---
 echo -e "${DB}═══════════════════•${WH} AcilShop | Autoscript Premium ${DB}•═══════════════════${NC}"
 
-# --- Kotak Dasbor Server (PERBAIKAN PERATAAN) ---
-width=62
-# Fungsi untuk membuat garis pemisah internal
-print_line() {
-    printf "${DB}│%*s│${NC}\n" "$width" "" | sed "s/ /─/g"
-}
+# --- Dasbor Server ---
+echo -e "  ${DR}• ${WH}DASBOR SERVER ${DR}•${NC}"
+printf "    ${DB}» ${WH}%-12s: ${LB}%s${NC}\n" "OS" "$MODEL2"
+printf "    ${DB}» ${WH}%-12s: ${LB}%s${NC}\n" "IP/Domain" "$MYIP / $(cat /etc/xray/domain)"
+printf "    ${DB}» ${WH}%-12s: ${LB}%s${NC}\n" "CPU/RAM" "$cpu_usage / $uram MB dari $tram MB"
+printf "    ${DB}» ${WH}%-12s: ${LB}%s${NC}\n" "Lokasi" "$ISP - $CITY"
 
-# Header Kotak
-printf "${DB}╭─${DR} DASBOR SERVER %*s─╮${NC}\n" "$(($width - 18))" "" | sed "s/ /─/g"
+# --- Status Layanan ---
+echo -e "\n  ${DR}• ${WH}STATUS LAYANAN ${DR}•${NC}"
+# Mengatur status dalam 2 kolom yang rapi
+printf "    ${WH}%-25s ${WH}%-25s\n" "[ XRAY: ${status_xray} ]" "[ NGINX: ${status_nginx} ]"
+printf "    ${WH}%-25s ${WH}%-25s\n" "[ SSH: ${status_beruangjatuh} ]" "[ WS-TLS: ${status_ws} ]"
+printf "    ${WH}%-25s ${WH}%-25s\n" "[ UDP: ${status_udp} ]" "[ TR-GO: ${stat_trgo} ]"
 
-# Info Server
-printf "${DB}│ ${WH}%-14s: ${LB}%-43s ${DB}│${NC}\n" "OS" "$MODEL2"
-printf "${DB}│ ${WH}%-14s: ${LB}%-43s ${DB}│${NC}\n" "IP/Domain" "$MYIP / $(cat /etc/xray/domain)"
-printf "${DB}│ ${WH}%-14s: ${LB}%-43s ${DB}│${NC}\n" "CPU/RAM" "$cpu_usage / $uram MB dari $tram MB"
-printf "${DB}│ ${WH}%-14s: ${LB}%-43s ${DB}│${NC}\n" "Lokasi" "$ISP - $CITY"
 
-# Status Layanan
-print_line
-printf "${DB}│ ${DR}%-60s ${DB}│${NC}\n" "STATUS LAYANAN"
-echo -e "${DB}│   ${WH}[ XRAY: ${status_xray}${WH} ]   [ NGINX: ${status_nginx}${WH} ]   [ SSH: ${status_beruangjatuh}${WH} ]        ${DB}│${NC}"
-echo -e "${DB}│   ${WH}[ WS-TLS: ${status_ws}${WH} ] [ UDP: ${status_udp}${WH} ]     [ TR-GO: ${stat_trgo}${WH} ]        ${DB}│${NC}"
+# --- Statistik Penggunaan ---
+echo -e "\n  ${DR}• ${WH}STATISTIK PENGGUNAAN ${DR}•${NC}"
+# Merapikan perataan tanda titik dua (:)
+printf "    ${DB}» ${WH}%-19s: ${LB}%s${NC}\n" "Bandwidth Hari Ini" "$today_tx $today_txv"
+printf "    ${DB}» ${WH}%-19s: ${LB}%s${NC}\n" "Bandwidth Kemarin" "$yesterday_tx $yesterday_txv"
+printf "    ${DB}» ${WH}%-19s: ${LB}%s${NC}\n" "Bandwidth Bulan Ini" "$month_tx $month_txv"
+echo -e "    ${DB}» ${WH}Total Akun           : ${WH}SSH:${LB}$total_ssh ${WH}VMESS:${LB}$vmess ${WH}VLESS:${LB}$vless ${WH}TROJAN:${LB}$trtls${NC}"
 
-# Statistik Penggunaan
-print_line
-printf "${DB}│ ${DR}%-60s ${DB}│${NC}\n" "STATISTIK PENGGUNAAN"
-# Setiap baris di bawah ini sekarang di-padding dan diberi penutup │
-printf "${DB}│${NC} ${DB}├─ ${WH}Bandwidth Hari Ini  : ${LB}%-33s ${DB}│${NC}\n" "$today_tx $today_txv"
-printf "${DB}│${NC} ${DB}├─ ${WH}Bandwidth Kemarin : ${LB}%-35s ${DB}│${NC}\n" "$yesterday_tx $yesterday_txv"
-printf "${DB}│${NC} ${DB}├─ ${WH}Bandwidth Bulan Ini : ${LB}%-33s ${DB}│${NC}\n" "$month_tx $month_txv"
-printf "${DB}│${NC} ${DB}└─ ${WH}Total Akun          : ${WH}SSH:${LB}$total_ssh ${WH}VMESS:${LB}$vmess ${WH}VLESS:${LB}$vless ${WH}TROJAN:${LB}$trtls%-6s ${DB}│${NC}\n"
-
-# Footer Kotak
-printf "${DB}╰%*s╯${NC}\n" "$width" "" | sed "s/ /─/g"
+echo -e "$SEPARATOR" # Garis pemisah sebelum menu utama
 
 # Bagian 3: Menu Utama
 echo -e "${DB}═══════════════════════════• ${DR}MENU UTAMA${DB} •═════════════════════════════${NC}"
+# %-26s memastikan setiap teks menu memiliki lebar total 26 karakter (diratakan ke kiri),
+# sehingga kolom kedua selalu dimulai pada posisi yang sama.
 printf "  ${DB}[${WH}%2s${DB}]${NC} ${WH}%-26s ${DB}[${WH}%2s${DB}]${NC} ${WH}%-26s\n" "1" "SSH & OpenVPN" "8" "Cek Layanan Aktif"
 printf "  ${DB}[${WH}%2s${DB}]${NC} ${WH}%-26s ${DB}[${WH}%2s${DB}]${NC} ${WH}%-26s\n" "2" "Vmess" "9" "Restart Layanan"
 printf "  ${DB}[${WH}%2s${DB}]${NC} ${WH}%-26s ${DB}[${WH}%2s${DB}]${NC} ${WH}%-26s\n" "3" "Vless" "10" "Menu Sistem"
@@ -364,7 +360,11 @@ printf "  ${DB}[${WH}%2s${DB}]${NC} ${WH}%-26s ${DB}[${WH}%2s${DB}]${NC} ${WH}%-
 printf "  ${DB}[${WH}%2s${DB}]${NC} ${WH}%-26s ${DB}[${WH}%2s${DB}]${NC} ${WH}%-26s\n" "5" "NoobzVPN" "12" "Notifikasi Bot Telegram"
 printf "  ${DB}[${WH}%2s${DB}]${NC} ${WH}%-26s ${DB}[${WH}%2s${DB}]${NC} ${WH}%-26s\n" "6" "Trojan-Go" "13" "Backup & Restore"
 printf "  ${DB}[${WH}%2s${DB}]${NC} ${WH}%-26s ${DB}[${WH}%2s${DB}]${NC} ${WH}%-26s\n" "7" "Hapus Akun Kadaluarsa" "14" "Menu Rebuild"
-printf "  ${DB}[${WH}%2s${DB}]${NC} ${WH}%-26s\n" "15" "Update Script"
+echo "" # Memberi sedikit spasi
+
+# --- Meletakkan Opsi 15 (Update Script) di Tengah ---
+printf "%26s${DB}[${WH}%2s${DB}]${NC} ${WH}%-s\n" "" "15" "Update Script"
+
 
 # Panel Admin (jika aktif)
 if [ "$Isadmin" = "ON" ]; then
