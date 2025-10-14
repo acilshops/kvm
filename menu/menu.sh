@@ -306,7 +306,7 @@ menu
 }
 clear
 clear && clear && clear
-# --- Mulai Skrip Menu (Versi Statis & Paling Stabil) ---
+# --- Mulai Skrip Menu (Versi Super Ringkas) ---
 clear
 
 # Variabel Warna (diasumsikan sudah ada dari skrip Anda)
@@ -316,78 +316,78 @@ YL="\e[33m"
 NC="\e[0m"
 
 # --- Header ---
-echo -e "${GR}═══════════════════•${WH} AcilShop | Autoscript Premium ${GR}•═══════════════════${NC}"
+echo -e "${GR}══════════════════•${WH} AcilShop | Autoscript Premium ${GR}•══════════════════${NC}"
 echo ""
 
 # --- Info Server ---
-# Menggunakan printf dengan lebar kolom tetap (-12s) agar titik dua (:) selalu lurus
-printf "    ${WH}%-12s: ${YL}%s${NC}\n" "OS" "$MODEL2"
-printf "    ${WH}%-12s: ${YL}%s / %s${NC}\n" "IP/Domain" "$MYIP" "$(cat /etc/xray/domain)"
-printf "    ${WH}%-12s: ${YL}%s / %s MB dari %s MB${NC}\n" "CPU/RAM" "$cpu_usage" "$uram" "$tram"
-printf "    ${WH}%-12s: ${YL}%s - %s${NC}\n" "Lokasi" "$ISP" "$CITY"
+printf "  ${WH}%-11s: ${YL}%s${NC}\n" "OS" "$MODEL2"
+printf "  ${WH}%-11s: ${YL}%s / %s${NC}\n" "IP/Domain" "$MYIP" "$(cat /etc/xray/domain)"
+printf "  ${WH}%-11s: ${YL}%s / %s MB dari %s MB${NC}\n" "CPU/RAM" "$cpu_usage" "$uram" "$tram"
+printf "  ${WH}%-11s: ${YL}%s - %s${NC}\n" "Lokasi" "$ISP" "$CITY"
 echo ""
 
 # --- Info Client ---
-echo -e "         ${GR}╭──────────────────────────────────╮${NC}"
-echo -e "         ${GR}│   ${WH}Client: ${YL}$author ${WH}| Version: ${YL}V3.12   ${GR}│${WH}Dev:AcilShop${NC}"
-echo -e "         ${GR}╰──────────────────────────────────╯${NC}"
+echo -e "      ${GR}╭──────────────────────────────────╮${NC}"
+echo -e "      ${GR}│   ${WH}Client: ${YL}$author ${WH}| Version: ${YL}V3.12   ${GR}│${WH}Dev:AcilShop${NC}"
+echo -e "      ${GR}╰──────────────────────────────────╯${NC}"
 echo ""
 
 # --- Statistik Penggunaan ---
-echo -e "${GR}══════════════════•${WH} Bandwidth usage / total Account ${GR}•══════════════════${NC}"
-printf "    ${WH}%-19s: ${YL}%s %s${NC}\n" "Bandwidth Hari Ini" "$today_tx" "$today_txv"
-printf "    ${WH}%-19s: ${YL}%s %s${NC}\n" "Bandwidth Kemarin" "$yesterday_tx" "$yesterday_txv"
-printf "    ${WH}%-19s: ${YL}%s %s${NC}\n" "Bandwidth Bulan Ini" "$month_tx" "$month_txv"
+echo -e "${GR}══════════════•${WH} Bandwidth usage / total Account ${GR}•══════════════${NC}"
+printf "  ${WH}%-19s: ${YL}%s %s${NC}\n" "Bandwidth Hari Ini" "$today_tx" "$today_txv"
+printf "  ${WH}%-19s: ${YL}%s %s${NC}\n" "Bandwidth Kemarin" "$yesterday_tx" "$yesterday_txv"
+printf "  ${WH}%-19s: ${YL}%s %s${NC}\n" "Bandwidth Bulan Ini" "$month_tx" "$month_txv"
 echo ""
-printf "    ${WH}SSH: ${YL}%-2s  ${WH}VMESS: ${YL}%-2s  ${WH}VLESS: ${YL}%-2s  ${WH}TROJAN: ${YL}%-2s  ${WH}TRGO: ${YL}%-2s${NC}\n" "$total_ssh" "$vmess" "$vless" "$trtls" "$jumlah_trgo"
+printf "  ${WH}SSH: ${YL}%-2s ${WH}VMESS: ${YL}%-2s ${WH}VLESS: ${YL}%-2s ${WH}TROJAN: ${YL}%-2s ${WH}TRGO: ${YL}%-2s${NC}\n" "$total_ssh" "$vmess" "$vless" "$trtls" "$jumlah_trgo"
 echo ""
 
 # --- Status Layanan ---
-# Sama seperti sebelumnya, pastikan nama service (cth: xray, nginx, sshd) sudah benar
 cek_status() {
     if [[ $(systemctl is-active "$1") == "active" ]]; then
         echo -e "${GR}ON${NC}"
     else
-        echo -e "\e[31mOFF\e[0m" # Merah
+        echo -e "\e[31mOFF${NC}" # Merah
     fi
 }
-printf "    ${WH}[XRAY:${NC}$(cek_status xray)${WH}] [NGINX:${NC}$(cek_status nginx)${WH}] [SSH:${NC}$(cek_status sshd)${WH}] [WS-TLS:${NC}$(cek_status ws-tls)${WH}] [UDP:${NC}$(cek_status udp-custom)${WH}]\n"
+printf "  ${WH}[XRAY:${NC}$(cek_status xray)${WH}] [NGINX:${NC}$(cek_status nginx)${WH}] [SSH:${NC}$(cek_status sshd)${WH}] [WS-TLS:${NC}$(cek_status ws-tls)${WH}] [UDP:${NC}$(cek_status udp-custom)${WH}]\n"
 echo ""
 
 # --- Menu Utama ---
-echo -e "${GR}══════════════════════════• ${WH}MENU UTAMA${GR} •══════════════════════════${NC}"
-# Kunci perapian ada di sini. Kita buat 2 kolom dengan lebar tetap menggunakan satu printf per baris.
-printf "   ${GR}[${WH}%2s${GR}]${NC} %-26s ${GR}[${WH}%2s${GR}]${NC} %-s\n" "1" "SSH & OpenVPN" "8" "Cek Layanan Aktif"
-printf "   ${GR}[${WH}%2s${GR}]${NC} %-26s ${GR}[${WH}%2s${GR}]${NC} %-s\n" "2" "Vmess" "9" "Restart Layanan"
-printf "   ${GR}[${WH}%2s${GR}]${NC} %-26s ${GR}[${WH}10${GR}]${NC} %-s\n" "3" "Vless" "10" "Menu Sistem"
-printf "   ${GR}[${WH}%2s${GR}]${NC} %-26s ${GR}[${WH}11${GR}]${NC} %-s\n" "4" "Trojan" "11" "Panel Bot Telegram"
-printf "   ${GR}[${WH}%2s${GR}]${NC} %-26s ${GR}[${WH}12${GR}]${NC} %-s\n" "5" "NoobzVPN" "12" "Notifikasi Bot Telegram"
-printf "   ${GR}[${WH}%2s${GR}]${NC} %-26s ${GR}[${WH}13${GR}]${NC} %-s\n" "6" "Trojan-Go" "13" "Backup & Restore"
-printf "   ${GR}[${WH}%2s${GR}]${NC} %-26s ${GR}[${WH}14${GR}]${NC} %-s\n" "7" "Hapus Akun Kadaluarsa" "14" "Menu Rebuild"
-printf "   ${GR}[${WH}15${GR}]${NC} %-s\n" "Update Script"
+echo -e "${GR}══════════════════════• ${WH}MENU UTAMA${GR} •══════════════════════${NC}"
+# --- KOLOM DIPERSEMPIT LAGI DI SINI ---
+# Lebar kolom dikalkulasi ulang menjadi 23 (berdasarkan item terpanjang "Hapus Akun Kadaluarsa" (22) + 1 spasi).
+# Spasi antara kolom kiri dan kanan juga dihilangkan.
+printf "  ${GR}[${WH}%2s${GR}]${NC} %-23s${GR}[${WH}%2s${GR}]${NC} %-s\n" "1" "SSH & OpenVPN" "8" "Cek Layanan Aktif"
+printf "  ${GR}[${WH}%2s${GR}]${NC} %-23s${GR}[${WH}%2s${GR}]${NC} %-s\n" "2" "Vmess" "9" "Restart Layanan"
+printf "  ${GR}[${WH}%2s${GR}]${NC} %-23s${GR}[${WH}10${GR}]${NC} %-s\n" "3" "Vless" "10" "Menu Sistem"
+printf "  ${GR}[${WH}%2s${GR}]${NC} %-23s${GR}[${WH}11${GR}]${NC} %-s\n" "4" "Trojan" "11" "Panel Bot Telegram"
+printf "  ${GR}[${WH}%2s${GR}]${NC} %-23s${GR}[${WH}12${GR}]${NC} %-s\n" "5" "NoobzVPN" "12" "Notifikasi Bot Telegram"
+printf "  ${GR}[${WH}%2s${GR}]${NC} %-23s${GR}[${WH}13${GR}]${NC} %-s\n" "6" "Trojan-Go" "13" "Backup & Restore"
+printf "  ${GR}[${WH}%2s${GR}]${NC} %-23s${GR}[${WH}14${GR}]${NC} %-s\n" "7" "Hapus Akun Kadaluarsa" "14" "Menu Rebuild"
+printf "  ${GR}[${WH}15${GR}]${NC} %-s\n" "Update Script"
 echo ""
 
 # --- Panel Admin (jika aktif) ---
 if [ "$Isadmin" = "ON" ]; then
-  echo -e "${GR}══════════════════════════• ${WH}PANEL ADMIN${GR} •═══════════════════════════${NC}"
-  printf "   ${GR}[${WH}16${GR}]${NC} %-s\n" "Menu Reseller IP"
+  echo -e "${GR}══════════════════════• ${WH}PANEL ADMIN${GR} •══════════════════════${NC}"
+  printf "  ${GR}[${WH}16${GR}]${NC} %-s\n" "Menu Reseller IP"
   ressee="m-ip2"
   bottt="m-bot"
   echo ""
 fi
 
 # --- Footer ---
-echo -e "${GR}══════════════════════════════════════════════════════════════════${NC}"
+echo -e "${GR}════════════════════════════════════════════════════════════════${NC}"
 DATE=$(date +'%Y-%m-%d')
 datediff() {
     d1=$(date -d "$1" +%s)
     d2=$(date -d "$2" +%s)
     echo "$(( (d1 - d2) / 86400 )) Hari"
 }
-echo -e " ${WH}Script Aktif Hingga: ${YL}$Exp2${NC} (${WH}$(datediff "$Exp2" "$DATE")${NC}) ${YL}$sts${NC}"
-echo -e " ${WH}Credit:${YL}@AcilOffcial${NC}"
-echo -e " ${WH}Ketik ${GR}[${WH}0${GR}]${NC} atau tekan ${WH}CTRL+C${NC} untuk keluar."
-echo -e "${GR}══════════════════════════════════════════════════════════════════${NC}"
+echo -e "  ${WH}Script Aktif Hingga: ${YL}$Exp2${NC} (${WH}$(datediff "$Exp2" "$DATE")${NC}) ${YL}$sts${NC}"
+echo -e "  ${WH}Credit:${YL}@AcilOffcial${NC}"
+echo -e "  ${WH}Ketik ${GR}[${WH}0${GR}]${NC} atau tekan ${WH}CTRL+C${NC} untuk keluar."
+echo -e "${GR}════════════════════════════════════════════════════════════════${NC}"
 function new(){
 cat> /etc/cron.d/autocpu << END
 SHELL=/bin/sh
