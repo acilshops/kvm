@@ -306,87 +306,70 @@ menu
 }
 clear
 clear && clear && clear
-clear;clear;clear
-# Hapus semua variabel warna yang tidak perlu jika ada, sisakan yang utama
-# NC (No Color), WH (White), COLOR1 (Warna utama, misal: Cyan atau Green)
-
-# Contoh deklarasi warna (pastikan ini ada di atas skrip Anda)
-COLOR1='\033[0;36m' # Cyan
-WH='\033[1;37m'  # White
-NC='\033[0m'     # No Color
+# --- Deklarasi Warna ---
+GRN='\033[0;32m'
+RED='\033[0;31m'
+YLW='\033[1;33m'
+CYN='\033[0;36m'
+WH='\033[1;37m'
+NC='\033[0m'
 
 # --- Mulai Skrip Menu ---
 clear
-echo -e "${COLOR1}══════════════•${WH} AcilShop | Autoscript Premium ${COLOR1}•══════════════${NC}"
-echo -e " Client: ${WH}$author${NC} | Version: ${WH}V3.12${NC}"
+
+# Bagian Header Utama
+echo -e "${CYN}╔══════════════════════════════════════════════════════════════╗${NC}"
+echo -e "${CYN}║${YLW}            AcilShop | Autoscript Premium v3.12             ${CYN}║${NC}"
+echo -e "${CYN}╚══════════════════════════════════════════════════════════════╝${NC}"
+echo -e " Client: ${WH}$author${NC}"
 echo ""
 
-# Bagian 1: Info Utama Server
-echo -e "${COLOR1} INFO SERVER${NC}"
-echo -e " ├─ OS        : ${WH}$MODEL2${NC}"
-echo -e " ├─ IP/Domain : ${WH}$MYIP${NC} / ${WH}$(cat /etc/xray/domain)${NC}"
-echo -e " ├─ CPU/RAM   : ${WH}$cpu_usage${NC} / ${WH}$uram MB dari $tram MB${NC}"
-echo -e " └─ Lokasi    : ${WH}$ISP - $CITY${NC}"
+# Bagian Informasi & Status (digabung agar lebih ringkas)
+echo -e " ${YLW}INFO SERVER & STATUS LAYANAN${NC}"
+printf " ├─ ${WH}%-12s${NC}: %s\n" "OS" "${WH}$MODEL2${NC}"
+printf " ├─ ${WH}%-12s${NC}: %s\n" "IP/Domain" "${WH}$MYIP${NC} / ${WH}$(cat /etc/xray/domain)${NC}"
+printf " ├─ ${WH}%-12s${NC}: %s / %s\n" "CPU/RAM" "${WH}$cpu_usage${NC}" "${WH}$uram MB dari $tram MB${NC}"
+printf " └─ ${WH}%-12s${NC}: ${GRN}%s${NC} | ${GRN}%s${NC} | ${GRN}%s${NC}\n" "Layanan" "XRAY ${status_xray}" "NGINX ${status_nginx}" "SSH/WS ${status_ws}"
 echo ""
 
-# Bagian 2: Status Layanan
-echo -e "${COLOR1} STATUS LAYANAN${NC}"
-echo -e " ├─ XRAY      : ${status_xray}"
-echo -e " ├─ NGINX     : ${status_nginx}"
-echo -e " ├─ SSH/WS    : ${status_beruangjatuh} / ${status_ws}"
-echo -e " └─ UDP/TRGO  : ${status_udp} / ${stat_trgo}"
+# Bagian Statistik Penggunaan
+echo -e " ${YLW}STATISTIK PENGGUNAAN${NC}"
+printf " ├─ ${WH}%-18s${NC}: %s\n" "Bandwidth Hari Ini" "${WH}$today_tx $today_txv${NC}"
+printf " └─ ${WH}%-18s${NC}: %s\n" "Bandwidth Bulan Ini" "${WH}$month_tx $month_txv${NC}"
+printf " └─ ${WH}%-18s${NC}: SSH:${WH}%-3s${NC} VMESS:${WH}%-3s${NC} VLESS:${WH}%-3s${NC} TROJAN:${WH}%-3s${NC} TRGO:${WH}%-3s${NC}\n" "Total Akun" "$total_ssh" "$vmess" "$vless" "$trtls" "$jumlah_trgo"
 echo ""
 
-# Bagian 3: Statistik Penggunaan
-echo -e "${COLOR1} STATISTIK PENGGUNAAN${NC}"
-echo -e " ├─ Bandwidth Hari Ini   : ${WH}$today_tx $today_txv${NC}"
-echo -e " ├─ Bandwidth Kemarin  : ${WH}$yesterday_tx $yesterday_txv${NC}"
-echo -e " └─ Bandwidth Bulan Ini  : ${WH}$month_tx $month_txv${NC}"
-echo ""
-echo -e " ${COLOR1}TOTAL AKUN${NC}"
-echo -e " ├─ SSH: ${WH}$total_ssh${NC}  VMESS: ${WH}$vmess${NC}  VLESS: ${WH}$vless${NC}"
-echo -e " └─ TROJAN: ${WH}$trtls${NC}  TRGO: ${WH}$jumlah_trgo${NC}  NOOBZVPN: ${WH}$jumlah_noobz${NC}"
-echo ""
+# Bagian Menu Utama (dibuat lebih rapat)
+echo -e "${CYN}━━━━━━━━━━━━━━━━━━━━━━━━━ ${YLW}MENU UTAMA${CYN} ━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+printf " ${CYN}[${WH}1${CYN}]${NC} SSH & OpenVPN       ${CYN}[${WH}7${CYN}]${NC} Hapus Akun Exp      ${CYN}[${WH}11${CYN}]${NC} Panel Bot"
+printf "\n"
+printf " ${CYN}[${WH}2${CYN}]${NC} Vmess               ${CYN}[${WH}8${CYN}]${NC} Cek Layanan         ${CYN}[${WH}12${CYN}]${NC} Notif Bot"
+printf "\n"
+printf " ${CYN}[${WH}3${CYN}]${NC} Vless               ${CYN}[${WH}9${CYN}]${NC} Restart Layanan     ${CYN}[${WH}13${CYN}]${NC} Backup/Restore"
+printf "\n"
+printf " ${CYN}[${WH}4${CYN}]${NC} Trojan              ${CYN}[${WH}10${CYN}]${NC} Menu Sistem         ${CYN}[${WH}14${CYN}]${NC} Menu Rebuild"
+printf "\n"
+printf " ${CYN}[${WH}6${CYN}]${NC} Trojan-Go           ${CYN}[${WH}15${CYN}]${NC} Update Script       ${CYN}[${WH}0${CYN}]${NC} ${RED}Keluar${NC}"
+printf "\n"
+echo -e "${CYN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 
-# Bagian 4: Menu Utama
-echo -e "${COLOR1}═══════════════════════════• MENU •════════════════════════════${NC}"
-# Kolom Kiri: Manajemen Akun
-echo -e " ${WH}Manajemen Akun${NC}                  ${WH}Manajemen Server${NC}"
-echo -e " ${COLOR1}[${WH}1${COLOR1}]${NC} • SSH & OpenVPN             ${COLOR1}[${WH}7${COLOR1}]${NC} • Hapus Akun Kadaluarsa"
-echo -e " ${COLOR1}[${WH}2${COLOR1}]${NC} • Vmess                       ${COLOR1}[${WH}8${COLOR1}]${NC} • Cek Layanan Aktif"
-echo -e " ${COLOR1}[${WH}3${COLOR1}]${NC} • Vless                       ${COLOR1}[${WH}9${COLOR1}]${NC} • Restart Layanan"
-echo -e " ${COLOR1}[${WH}4${COLOR1}]${NC} • Trojan                      ${COLOR1}[${WH}10${COLOR1}]${NC}• Menu Sistem"
-echo -e " ${COLOR1}[${WH}5${COLOR1}]${NC} • NoobzVPN"
-echo -e " ${COLOR1}[${WH}6${COLOR1}]${NC} • Trojan-Go"
-echo ""
-# Kolom Kanan: Utilitas
-echo -e " ${WH}Utilitas${NC}"
-echo -e " ${COLOR1}[${WH}11${COLOR1}]${NC}• Panel Bot Telegram          ${COLOR1}[${WH}13${COLOR1}]${NC}• Backup & Restore"
-echo -e " ${COLOR1}[${WH}12${COLOR1}]${NC}• Notifikasi Bot Telegram     ${COLOR1}[${WH}14${COLOR1}]${NC}• Menu Rebuild"
-echo -e " ${COLOR1}[${WH}15${COLOR1}]${NC}• Update Script"
-echo -e "${COLOR1}══════════════════════════════════════════════════════════════${NC}"
 
 # Panel Admin (jika aktif)
 if [ "$Isadmin" = "ON" ]; then
-  echo -e "${WH}PANEL ADMIN VIP${NC}"
-  echo -e " ${COLOR1}[${WH}16${WH}]${NC} • Menu Reseller IP" # Ganti nomor agar tidak bentrok
+  printf " ${YLW}PANEL ADMIN${NC} ${CYN}[${WH}16${WH}]${NC} • Menu Reseller IP\n"
   ressee="m-ip2"
-  bottt="m-bot"
 fi
-echo ""
 
-# Informasi Masa Aktif & Keluar
+# Informasi Masa Aktif
 DATE=$(date +'%Y-%m-%d')
 datediff() {
     d1=$(date -d "$1" +%s)
     d2=$(date -d "$2" +%s)
     echo "$(( (d1 - d2) / 86400 )) Hari"
 }
-
-echo -e " Skrip Aktif Hingga  : ${WH}$Exp2${NC} (${WH}$(datediff "$Exp2" "$DATE")${NC}) ${WH}$sts${NC}"
-echo -e " Ketik ${COLOR1}[${WH}0${COLOR1}]${NC} atau tekan ${WH}CTRL+C${NC} untuk keluar."
-echo -e "${COLOR1}══════════════════════════════════════════════════════════════${NC}"
-
+echo ""
+echo -e " Skrip Aktif Hingga: ${WH}$Exp2${NC} (${GRN}$(datediff "$Exp2" "$DATE")${NC}) ${GRN}$sts${NC}"
+echo -e "${CYN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 # Jangan lupa untuk menyesuaikan bagian `read -p "Pilih opsi: " opt` di bawahnya
 function new(){
 cat> /etc/cron.d/autocpu << END
